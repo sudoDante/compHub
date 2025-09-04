@@ -1,0 +1,41 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    user-select: none;
+}
+
+/* FLEX POSITIONS */
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* FLOWS */
+
+.absolute {
+    position: absolute;
+}
+
+.relative {
+    position: relative;
+}
+
+/* BORDERS - RADIUS */
+
+.borderR4 {
+    border-radius: 4px;
+}
+
+.borderR8 {
+    border-radius: 8px;
+}
+
+/* MENUS */
+
+.scrool {
+    overflow-y: auto;
+}
