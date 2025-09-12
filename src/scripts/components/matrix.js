@@ -1,5 +1,5 @@
 /* ATTRIBUTES 
-size            size of celds                           default 20px
+size            size in px of cells                           default 20px
 direction       horizontal or vertical animation        default vertical
 back            background color                        default transparent
 interval        time between selections                 default 160ms
@@ -20,6 +20,10 @@ export class matrix extends HTMLElement {
         const style = elements.create(this.dom, "style")
         style.textContent = `
             :host {
+                box-shadow: border-box;
+                margin: 0;
+                padding: 0;
+
                 --cellSize: 20px;
                 --backgroundColor: none;
                 --symbolsColor1: grey;
@@ -48,13 +52,19 @@ export class matrix extends HTMLElement {
                         height: 100%;
 
                         .matrixCellDefault {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
                             width: 100%;
                             height: 100%;
                             color: transparent;
+                            font-size: 80%;
+                            font-family: impact;
                         }
 
                         .matrixCellDrawing {
                             color: var(--symbolsColor2);
+                            font-size: 120%;
                         }
 
                         .matrixCellVisible {
@@ -77,12 +87,12 @@ export class matrix extends HTMLElement {
             // CSS
             const cellSize = this.getAttribute("size") ? Number(this.getAttribute("size")) : null
             const backgroundColor = this.getAttribute("back") ? this.getAttribute("back") : null
-            const symbolsColor1 = this.getAttribute("color") ? this.getAttribute("color") : null
+            const symbolsColor1 = this.getAttribute("color1") ? this.getAttribute("color1") : null
             const symbolsColor2 = this.getAttribute("color2") ? this.getAttribute("color2") : null
             // JS
             const direction = ["horizontal", "vertical"].includes(this.getAttribute("direction")) ? this.getAttribute("direction") : "vertical"
             const interval = this.getAttribute("interval") ? this.getAttribute("interval") : 160
-            const steps = this.getAttribute("step") ? this.getAttribute("step") : 50
+            const steps = this.getAttribute("steps") ? this.getAttribute("steps") : 50
 
             return {
                 "cellSize": cellSize,
@@ -96,7 +106,6 @@ export class matrix extends HTMLElement {
         }
 
         const applyConfCss = (conf) => {
-            console.log(conf)
             if (conf.cellSize) this.style.setProperty("--cellSize", conf.cellSize + "px")
             if (conf.backgroundColor) this.style.setProperty("--backgroundColor", conf.backgroundColor)
             if (conf.symbolsColor1) this.style.setProperty("--symbolsColor1", conf.symbolsColor1)
@@ -112,10 +121,10 @@ export class matrix extends HTMLElement {
             return { "cols": cols, "rows": rows }
         }
 
-        const drawGrid = async (calculedGrid) => {
-            for (let y = 0; y < calculedGrid.rows; y++) {
+        const drawGrid = async (calculated) => {
+            for (let y = 0; y < calculated.rows; y++) {
                 const newRow = elements.create(this.dom.querySelector("#container"), "div", null, "row")
-                for (let x = 0; x < calculedGrid.cols; x++) {
+                for (let x = 0; x < calculated.cols; x++) {
                     elements.create(newRow, "div", null, "cell", { "x": x, "y": y })
                 }
             }
@@ -128,8 +137,8 @@ export class matrix extends HTMLElement {
             return group
         }
 
-        const randomIndex = async (activeGroup, availableNums, conf, calculedGrid, cells) => {
-            const length = conf.direction === "vertical" ? calculedGrid.cols : calculedGrid.rows
+        const randomIndex = async (activeGroup, availableNums, conf, calculated, cells) => {
+            const length = conf.direction === "vertical" ? calculated.cols : calculated.rows
             availableNums = [...Array(length).keys()]
 
             while (true) {
@@ -190,23 +199,24 @@ export class matrix extends HTMLElement {
             }
         }
 
-
         const main = async () => {
             const conf = getConfig()
             applyConfCss(conf)
             const dimensions = [this.container.offsetWidth, this.container.offsetHeight]
-            const calculedGrid = calcGrid(dimensions, conf.cellSize)
-            const cells = await drawGrid(calculedGrid)
+            const calculatedGrid = calcGrid(dimensions, conf.cellSize)
+            const cells = await drawGrid(calculatedGrid)
 
             const initMatrix = async () => {
                 const matrixCells = await insertMatrixCells(cells)
                 await addSymbols(matrixCells)
                 let activeGroup = []
                 let availableNums = []
-                randomIndex(activeGroup, availableNums, conf, calculedGrid, matrixCells)
+                randomIndex(activeGroup, availableNums, conf, calculatedGrid, matrixCells)
             }
 
             initMatrix()
+
+            /* left to implement attributeChangedCallback REACTIVE*/
         }
 
         main()
