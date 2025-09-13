@@ -3,14 +3,27 @@ import { components } from "./../config/components.js"
 
 const loadMenu = async () => {
     const container = document.querySelector(".leftAside")
-    components.forEach((item, num) => {
-        const newOpt = elements.create(container, "label", null, "option hiddenInput center borderR4")
-        const title = elements.create(newOpt, "span")
-        title.textContent = item.name
+    const menu = elements.create(container, "div", null, "menu relative")
 
-        const radio = elements.create(newOpt, "input", null, null, { type: "radio", name: "opt"})
-        if (num === 0) radio.checked = true
+    components.forEach((item, num) => {
+        Object.entries(item).forEach(([key, value]) => {
+            const menuOption = elements.create(menu, "label", null, "option center")
+            const titleBox = elements.create(menuOption, "span", null, "titleBox")
+            const expansor = elements.create(titleBox, "div", null, "expansor")
+            const title = elements.create(titleBox, "div", null, "title")
+            title.textContent = value.name
+
+            const radio = elements.create(menuOption, "input", null, null, { type: "radio", name: "opt", pos: num })
+
+            if (num === 0) radio.checked = true
+        })
     })
+
+    const hiddenBox = elements.create(container, "div", null, "hiddenBox relative")
+    const closeMenu = elements.create(hiddenBox, "div", null, "closeMenu relative center")
+    const icon = elements.create(closeMenu, "div", null, "icon absolute material-symbols-outlined")
+    icon.textContent = "menu"
+    const closeCheck = elements.create(closeMenu, "input", null, "closeCheck hiddenInput", { type: "checkbox"})
 }
 
 const main = async () => {

@@ -13,39 +13,129 @@ body {
     main {
         width: 100%;
         height: 100%;
+        background-color: var(--backgroundColor);
+        background-image: url("https://m.media-amazon.com/images/I/81V2hzNkcsL.jpg");
+        background-size: cover;
     }
 
+
     .leftAside {
-        width: 160px;
+        --asideWidth: 256px;
+        --transition: 140ms;
+        --menuWidth: 210px;
+        --menuTransition: 800ms;
+        --backDark: rgba(0, 0, 0, 0.8);
+
+        left: 0;
+        display: flex;
+        width: var(--asideWidth);
         height: 100%;
-        border: 1px solid grey;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        backdrop-filter: blur(2px);
+        transition: var(--menuTransition);
 
-        .option {
-            width: 100%;
-            height: 60px;
-            cursor: pointer;
-        }
+        .menu {
+            width: var(--menuWidth);
+            height: 100%;
+            background-color: var(--backDark);
+            backdrop-filter: blur(4px);
+            padding: 10px;
+            overflow-y: auto;
 
-        .hiddenInput {
-            position: relative;
-            
-            input {
-                position: absolute;
-                appearance: none;
+            .option {
+                position: relative;
                 width: 100%;
-                height: 100%;
+                height: 48px;
                 cursor: pointer;
-            }
+                border-radius: 4px;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                transition: var(--transition);
 
-            &:has(input:checked) {
-                background-color: grey;
+                &:has(input:not(:checked):hover) .titleBox {
+                    background-color: rgba(255, 255, 255, 0.8);
+                    color: rgb(78, 78, 78);
+                    transition: var(--transition);
+                }
 
-                span {
-                    color: white;
+                &:has(input:checked) .titleBox {
+                    background: linear-gradient(90deg, rgba(0, 171, 177, 0.705) 0%, rgba(0, 0, 0, 0.459) 100%);
+                    box-shadow: inset 10px 0 28px rgba(255, 255, 255, 0.8), inset 0 0 10px rgb(0, 225, 255);
+                    color: whitesmoke;
+                    transition: var(--transition);
+
+                    .expansor {
+                        flex: 1;
+                    }
+                }
+
+                .titleBox {
+                    display: flex;
+                    align-items: center;
+                    justify-content: c;
+                    width: 100%;
+                    height: 100%;
+                    text-indent: 4px;
+                    color: whitesmoke;
+                    border-radius: 4px;
+                    padding: 10px;
+
+                    .expansor {
+                        width: 0px;
+                        height: 100%;
+                        transition: var(--transition);
+                    }
+
+                    .title {
+                        width: auto;
+                        height: auto;
+                        padding-right: 10px;
+                    }
+                }
+
+                input[type="radio"] {
+                    position: absolute;
+                    z-index: 10;
+                    appearance: none;
+                    width: 100%;
+                    height: 100%;
+                    cursor: pointer;
                 }
             }
+        }
+
+        .hiddenBox {
+            display: flex;
+            justify-content: right;
+            width: 46px;
+            height: 100%;
+            padding: 10px 0;
+
+            .closeMenu {
+                top: 0;
+                width: 40px;
+                height: 40px;
+                background-color: var(--backDark);
+                border-radius: 4px;
+                backdrop-filter: blur(2px);
+                transition: var(--menuTransition);
+
+                .icon {
+                    width: auto;
+                    height: auto;
+                    font-size: 20px;
+                    color: whitesmoke;
+                    transition: var(--menuTransition);
+                }
+
+
+                &:has(input:checked) {
+                    top: calc(100% - 40px);
+                    opacity: 0.4;
+                }
+            }
+        }
+
+        &:has(.hiddenBox .closeMenu input:not(:checked)) {
+            left: calc(-1 * var(--asideWidth) + 46px);
         }
     }
 
