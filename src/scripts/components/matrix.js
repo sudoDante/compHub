@@ -1,5 +1,5 @@
 /* ATTRIBUTES 
-size            size in px of cells                           default 20px
+size            size in px of cells                     default 20px - min 20
 direction       horizontal or vertical animation        default vertical
 back            background color                        default transparent
 interval        time between selections                 default 160ms
@@ -7,8 +7,8 @@ steps           time between cells animation            default 50ms
 */
 
 
-import * as elements from "../modules/elements.js"
-import { randomize } from "../modules/extra.js"
+import * as elements from "/src/scripts/modules/elements.js"
+import { randomize } from "/src/scripts/modules/extra.js"
 
 export class matrix extends HTMLElement {
     constructor() {
@@ -23,11 +23,6 @@ export class matrix extends HTMLElement {
                 box-shadow: border-box;
                 margin: 0;
                 padding: 0;
-
-                --cellSize: 20px;
-                --backgroundColor: none;
-                --symbolsColor1: grey;
-                --symbolsColor2: black;
             }
 
             .container {
@@ -85,10 +80,10 @@ export class matrix extends HTMLElement {
 
         const getConfig = () => {
             // CSS
-            const cellSize = this.getAttribute("size") ? Number(this.getAttribute("size")) : null
-            const backgroundColor = this.getAttribute("back") ? this.getAttribute("back") : null
-            const symbolsColor1 = this.getAttribute("color1") ? this.getAttribute("color1") : null
-            const symbolsColor2 = this.getAttribute("color2") ? this.getAttribute("color2") : null
+            const cellSize = this.getAttribute("size") && Number(this.getAttribute("size")) < 20 ? Number(this.getAttribute("size")) : 20
+            const backgroundColor = this.getAttribute("back") ? this.getAttribute("back") : "transparent"
+            const symbolsColor1 = this.getAttribute("color1") ? this.getAttribute("color1") : "grey"
+            const symbolsColor2 = this.getAttribute("color2") ? this.getAttribute("color2") : "black"
             // JS
             const direction = ["horizontal", "vertical"].includes(this.getAttribute("direction")) ? this.getAttribute("direction") : "vertical"
             const interval = this.getAttribute("interval") ? this.getAttribute("interval") : 160

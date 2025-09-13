@@ -1,5 +1,5 @@
 /* ATTRIBUTES 
-size                size in px for cells                default 20px
+size                size in px for cells                default 30px - min 30
 back                background color                    default transparent
 cellColor1          border color in RGBA                default red
 cellColor2          backgrounColor in RGBA              default red
@@ -22,12 +22,8 @@ export class colorizedGrid extends HTMLElement {
                 margin: 0;
                 padding: 0;
 
-                --cellSize: 20px;
-                --backgroundColor: transparent;
-                --cellColor: rgba(255, 0, 0, 0.2);
                 --gridCols: 3;
                 --gridRows: 3;
-                --transition: 0s;
             }
 
             .container {
@@ -78,9 +74,9 @@ export class colorizedGrid extends HTMLElement {
 
         const getConfig = () => {
             // CSS
-            const cellSize = this.getAttribute("size") ? Number(this.getAttribute("size")) : null
-            const backgroundColor = this.getAttribute("back") ? this.getAttribute("back") : null
-            const cellColor = this.getAttribute("color") ? this.getAttribute("color") : null
+            const cellSize = this.getAttribute("size") && Number(this.getAttribute("size")) < 30 ? Number(this.getAttribute("size")) : 30
+            const backgroundColor = this.getAttribute("back") ? this.getAttribute("back") : "transparent"
+            const cellColor = this.getAttribute("color") ? this.getAttribute("color") : "rgba(255, 0, 0, 0.2)"
             // JS
             const interval = this.getAttribute("interval") ? this.getAttribute("interval") : 1000
 
