@@ -1,8 +1,8 @@
 /* ATTRIBUTES 
-size            size in px of cells                     default 20px - min 20
+size            size in px of cells                     default/min 20px
 direction       horizontal or vertical animation        default vertical
 back            background color                        default transparent
-interval        time between selections                 default 160ms
+interval        time between selections                 default/min 80ms
 steps           time between cells animation            default 50ms
 */
 
@@ -86,7 +86,7 @@ export class matrix extends HTMLElement {
             const symbolsColor2 = this.getAttribute("color2") ? this.getAttribute("color2") : "black"
             // JS
             const direction = ["horizontal", "vertical"].includes(this.getAttribute("direction")) ? this.getAttribute("direction") : "vertical"
-            const interval = this.getAttribute("interval") ? this.getAttribute("interval") : 160
+            const interval = this.getAttribute("interval") && Number(this.getAttribute("interval")) >= 80 ? this.getAttribute("interval") : 80
             const steps = this.getAttribute("steps") ? this.getAttribute("steps") : 50
 
             return {

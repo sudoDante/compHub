@@ -5,7 +5,6 @@
 body {
     position: relative;
     display: flex;
-    justify-content: space-between;
     width: 100vw;
     height: 100vh;
     overFlow: hidden;
@@ -13,75 +12,123 @@ body {
     main {
         width: 100%;
         height: 100%;
-/*         background-color: var(--backgroundColor);
+        /*         background-color: var(--backgroundColor);
         background-image: url("https://m.media-amazon.com/images/I/81V2hzNkcsL.jpg");
         background-size: cover;
- */    }
+ */
+    }
 
+    .darkCrystal {
+        backdrop-filter: blur(4px);
+    }
+
+    .leftAside,
+    .rightAside {
+
+        .menuTitleBox {
+            width: 100%;
+            height: 50px;
+            background-color: var(--enphasis);
+
+            .menuTitle {
+                width: auto;
+                height: auto;
+                color: whitesmoke;
+                font-size: 18px;
+                font-family: "anta";
+                padding: 4px;
+            }
+        }
+
+        .menu {
+            font-size: 11px;
+            font-family: "revalia";
+        }
+    }
 
     .leftAside {
-        --asideWidth: 256px;
+        --asideWidth: 210px;
         --transition: 140ms;
-        --menuWidth: 210px;
         --menuTransition: 800ms;
         --backDark: rgba(0, 0, 0, 0.8);
+        --enphasis: rgb(77, 130, 143);
 
         left: 0;
-        display: flex;
         width: var(--asideWidth);
         height: 100%;
+        background-color: var(--backDark);
         transition: var(--menuTransition);
 
         .menu {
-            width: var(--menuWidth);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
             height: 100%;
-            background-color: var(--backDark);
-            backdrop-filter: blur(4px);
             padding: 10px;
             overflow-y: auto;
+
+            .bar {
+                width: 90%;
+                height: 1px;
+                border: none;
+                background-color: rgba(255, 255, 255, 0.1);
+                margin: 6px;
+            }
 
             .option {
                 position: relative;
                 width: 100%;
-                height: 48px;
+                height: 36px;
                 cursor: pointer;
                 border-radius: 4px;
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
-                font-size: 14px;
                 transition: var(--transition);
 
                 &:has(input:not(:checked):hover) .titleBox {
                     background-color: rgba(255, 255, 255, 0.8);
-                    color: rgb(78, 78, 78);
+                    color: rgb(28, 28, 28);
                     transition: var(--transition);
                 }
 
                 &:has(input:checked) .titleBox {
-                    background: linear-gradient(90deg, rgba(0, 171, 177, 0.705) 0%, rgba(0, 0, 0, 0.459) 100%);
-                    box-shadow: inset 10px 0 28px rgba(255, 255, 255, 0.8), inset 0 0 10px rgb(0, 225, 255);
+                    background-color: var(--enphasis);
                     color: whitesmoke;
                     transition: var(--transition);
+                    font-style: italic;
 
-                    .expansor {
+                    .expand {
                         flex: 1;
+
+                        .rotate {
+                            animation: 4s rotate infinite linear;
+                        }
                     }
                 }
 
                 .titleBox {
                     display: flex;
                     align-items: center;
-                    justify-content: c;
                     width: 100%;
                     height: 100%;
                     text-indent: 4px;
                     color: whitesmoke;
                     border-radius: 4px;
-                    padding: 10px;
+                    padding: 0 10px;
 
-                    .expansor {
+                    .expand {
+                        display: flex;
+                        align-items: center;
                         width: 0px;
                         height: 100%;
                         transition: var(--transition);
+                        overflow: hidden;
+
+                        .rotate {
+                            margin-left: 10px;
+                            height: 16px;
+                            aspect-ratio: 1/1;
+                            border: 3px dashed whitesmoke;
+                        }
                     }
 
                     .title {
@@ -102,46 +149,64 @@ body {
             }
         }
 
-        .hiddenBox {
-            display: flex;
-            justify-content: right;
-            width: 46px;
-            height: 100%;
-            padding: 10px 0;
+        .closeMenu {
+            --size: 40px;
+            --margin: 4px;
 
-            .closeMenu {
-                top: 0;
-                width: 40px;
-                height: 40px;
-                background-color: var(--backDark);
-                border-radius: 4px;
-                backdrop-filter: blur(2px);
+            top: 0;
+            width: var(--size);
+            aspect-ratio: 1/1;
+            position: absolute;
+            top: var(--margin);
+            left: calc(var(--asideWidth) + var(--margin));
+            background-color: var(--backDark);
+            border-radius: 4px;
+            backdrop-filter: blur(2px);
+            transition: var(--menuTransition);
+
+            .icon {
+                width: auto;
+                height: auto;
+                font-size: 20px;
+                color: whitesmoke;
                 transition: var(--menuTransition);
+            }
 
-                .icon {
-                    width: auto;
-                    height: auto;
-                    font-size: 20px;
-                    color: whitesmoke;
-                    transition: var(--menuTransition);
-                }
-
-
-                &:has(input:checked) {
-                    top: calc(100% - 40px);
-                    opacity: 0.4;
-                }
+            &:has(input:checked) {
+                top: calc(100% - var(--size) - var(--margin));
+                opacity: 0.4;
             }
         }
 
-        &:has(.hiddenBox .closeMenu input:not(:checked)) {
-            left: calc(-1 * var(--asideWidth) + 46px);
+        &:has(.closeMenu input:not(:checked)) {
+            left: calc(-1 * var(--asideWidth));
         }
     }
 
     .rightAside {
-        width: 100px;
+        --asideWidth: 300px;
+        --transition: 140ms;
+        --menuWidth: 210px;
+        --menuTransition: 800ms;
+        --backDark: rgba(0, 0, 0, 0.8);
+
+        right: 0;
+        width: var(--asideWidth);
         height: 100%;
         border: 1px solid red;
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg)
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }
