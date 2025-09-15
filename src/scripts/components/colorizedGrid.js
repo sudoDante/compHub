@@ -5,7 +5,7 @@ cellColor1          border color in RGBA                default red
 cellColor2          backgrounColor in RGBA              default red
 */
 
-import * as elements from "../modules/elements.js"
+import * as element from "../modules/elements.js"
 import * as extra from "../modules/extra.js"
 
 export class colorizedGrid extends HTMLElement {
@@ -13,9 +13,9 @@ export class colorizedGrid extends HTMLElement {
         super()
 
         this.dom = this.attachShadow({ mode: "open" })
-        this.container = elements.create(this.dom, "div", null, "container")
+        this.container = element.add(this.dom, "div", null, "container")
 
-        const style = elements.create(this.dom, "style")
+        const style = element.add(this.dom, "style")
         style.textContent = `
             :host {
                 box-shadow: border-box;
@@ -33,10 +33,10 @@ export class colorizedGrid extends HTMLElement {
                 flex-direction: column;
                 width: 100%;
                 height: 100%;
-                background-color: var(--backgroundColor);
+/*                 background-color: var(--backgroundColor);
                 background-image: url("https://m.media-amazon.com/images/I/81V2hzNkcsL.jpg");
                 background-size: cover;
-
+ */
                 .row {
                     display: flex;
                     width: 100%;
@@ -74,7 +74,7 @@ export class colorizedGrid extends HTMLElement {
 
         const getConfig = () => {
             // CSS
-            const cellSize = this.getAttribute("size") && Number(this.getAttribute("size")) < 30 ? Number(this.getAttribute("size")) : 30
+            const cellSize = this.getAttribute("size") && Number(this.getAttribute("size")) >= 30 ? Number(this.getAttribute("size")) : 30
             const backgroundColor = this.getAttribute("back") ? this.getAttribute("back") : "transparent"
             const cellColor = this.getAttribute("color") ? this.getAttribute("color") : "rgba(255, 0, 0, 0.2)"
             // JS
@@ -107,10 +107,10 @@ export class colorizedGrid extends HTMLElement {
         const drawGrid = async (calculated) => {
             let idCounter = 0
             for (let y = 0; y < calculated.rows; y++) {
-                const newRow = elements.create(this.container, "div", null, "row")
+                const newRow = element.add(this.container, "div", null, "row")
                 for (let x = 0; x < calculated.cols; x++) {
-                    const cell = elements.create(newRow, "div", null, "cell", { "x": x, "y": y })
-                    elements.create(cell, "div", idCounter, "innerCell")
+                    const cell = element.add(newRow, "div", null, "cell", { "x": x, "y": y })
+                    element.add(cell, "div", idCounter, "innerCell")
                 }
             }
             return Array.from(this.dom.querySelectorAll(".innerCell"))
@@ -118,7 +118,7 @@ export class colorizedGrid extends HTMLElement {
 
         const insertAlphaLayer = async (array) => {
             array.forEach(item => {
-                elements.create(item, "div", null, "layerCell")
+                element.add(item, "div", null, "layerCell")
             })
         }
 

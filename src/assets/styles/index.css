@@ -47,19 +47,20 @@ body {
     }
 
     .leftAside {
-        --asideWidth: 210px;
-        --transition: 140ms;
-        --menuTransition: 800ms;
-        --backDark: rgba(0, 0, 0, 0.8);
-        --enphasis: rgb(77, 130, 143);
 
         left: 0;
-        width: var(--asideWidth);
+        width: 210px;
         height: 100%;
-        background-color: var(--backDark);
-        transition: var(--menuTransition);
 
         .menu {
+            --transition: 140ms;
+            --menuTransition: 800ms;
+            --backDark: rgba(0, 0, 0, 0.8);
+            --enphasis: rgb(77, 130, 143);
+
+            background-color: var(--backDark);
+            transition: var(--menuTransition);
+
             display: flex;
             flex-direction: column;
             align-items: center;

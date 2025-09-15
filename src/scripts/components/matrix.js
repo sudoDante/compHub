@@ -7,7 +7,7 @@ steps           time between cells animation            default 50ms
 */
 
 
-import * as elements from "/src/scripts/modules/elements.js"
+import * as element from "/src/scripts/modules/elements.js"
 import { randomize } from "/src/scripts/modules/extra.js"
 
 export class matrix extends HTMLElement {
@@ -15,9 +15,9 @@ export class matrix extends HTMLElement {
         super()
 
         this.dom = this.attachShadow({ mode: "open" })
-        this.container = elements.create(this.dom, "div", "container", "container")
+        this.container = element.add(this.dom, "div", "container", "container")
 
-        const style = elements.create(this.dom, "style")
+        const style = element.add(this.dom, "style")
         style.textContent = `
             :host {
                 box-shadow: border-box;
@@ -118,9 +118,9 @@ export class matrix extends HTMLElement {
 
         const drawGrid = async (calculated) => {
             for (let y = 0; y < calculated.rows; y++) {
-                const newRow = elements.create(this.dom.querySelector("#container"), "div", null, "row")
+                const newRow = element.add(this.dom.querySelector("#container"), "div", null, "row")
                 for (let x = 0; x < calculated.cols; x++) {
-                    elements.create(newRow, "div", null, "cell", { "x": x, "y": y })
+                    element.add(newRow, "div", null, "cell", { "x": x, "y": y })
                 }
             }
             return Array.from(this.dom.querySelectorAll(".cell"))
@@ -165,7 +165,7 @@ export class matrix extends HTMLElement {
 
         const insertMatrixCells = async (arrayCells) => {
             arrayCells.forEach(item => {
-                elements.create(item, "div", null, "matrixCellDefault")
+                element.add(item, "div", null, "matrixCellDefault")
             })
             return Array.from(this.dom.querySelectorAll(".matrixCellDefault"))
         }
