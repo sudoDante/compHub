@@ -5,16 +5,14 @@ import { components } from "./../config/components.js"
 
 const main = async () => {
     const leftAside = document.getElementById("leftAside")
-    const listTypes = components.map(item => item.type)
 
-    document.addEventListener("listMenu_primary", (e) => {
+    document.addEventListener("listMenu_primary", async (e) => {
         const pos = Number(e.detail.pos)
-        const delay = `${parseFloat(e.detail.time) + 60}ms`
+        const delay = Number(`${parseFloat(e.detail.time) + 60}`)
         console.log(pos, delay)
 
-        // funcion de borrado del contenedor y creacion del nuevo componente
     })
-    const typesMenu = element.add(leftAside, "list-menu", null, "listMenu", {"list": listTypes})
+    const typesMenu = element.add(leftAside, "list-menu", null, "listMenu", {"list": components, title: "Components by type"})
 
 }
 
