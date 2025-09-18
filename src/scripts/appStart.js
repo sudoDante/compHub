@@ -1,9 +1,11 @@
 import * as element from "./modules/elements.js"
 import { listMenu } from "./components/appSpecific/listMenu.js"
-import { components } from "./../config/components.js"
+import { components } from "../config/components.js"
 
 
 const main = async () => {
+    import("./controlCustomEvents.js")
+    
     const leftAside = document.getElementById("leftAside")
 
     document.addEventListener("listMenu_primary", async (e) => {
