@@ -1,6 +1,8 @@
 import * as element from "./modules/elements.js"
-import { listMenu } from "./components/appSpecific/listMenu.js"
 import { components } from "../config/components.js"
+
+// importacion manual
+import { listMenu } from "./components/appSpecific/listMenu.js"
 
 
 const main = async () => {

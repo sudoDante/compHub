@@ -16,6 +16,11 @@ body {
         background-image: url("https://m.media-amazon.com/images/I/81V2hzNkcsL.jpg");
         background-size: cover;
  */
+
+        .compContainer {
+            width: 100%;
+            height: 100%;
+        }
     }
 
     .darkCrystal {

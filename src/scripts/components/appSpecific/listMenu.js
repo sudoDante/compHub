@@ -35,7 +35,7 @@ export class listMenu extends HTMLElement {
         style.textContent = `
             :host {
                 --titleHeight: 40px;
-                --transition: 300ms;
+                --transition: 400ms;
                 --optionHeight: 46px;
                 --optionSubHeight: 36px;
                 --radius: 4px;
@@ -197,12 +197,6 @@ export class listMenu extends HTMLElement {
                     }
                 }
             } 
-                
-            @keyframes rotate {
-                0% {transform: rotate(0deg);}
-                50% {transform: rotate(180deg);}
-                100% {transform: rotate(360deg);}
-            }
         `
     }
 
@@ -266,19 +260,17 @@ export class listMenu extends HTMLElement {
                 const radio = element.add(menuOption, "input", null, "radioHidden maxW maxH", { type: "radio", name: "mainOpt", pos: num })
 
                 const expandMenu = element.add(menu, "div", null, "expandMenu scrollHidden", { pos: num })
-                componentObj.forEach(item => {
+                componentObj.forEach((item, subNum) => {
                     const optionSub = element.add(expandMenu, "div", null, "optionSub center")
                     const nameBoxSub = element.add(optionSub, "span", null, "nameBoxSub radius4")
                     const expandSub = element.add(nameBoxSub, "div", null, "expandSub")
                     const nameSub = element.add(nameBoxSub, "div", null, "nameSub")
                     nameSub.textContent = item.name
-                    const radioSub = element.add(optionSub, "input", null, "radioHidden maxW maxH", { type: "radio", name: "SubOpt", pos: num })
+                    const radioSub = element.add(optionSub, "input", null, "radioHidden maxW maxH", { type: "radio", name: "subOpt", parentIndex: num, pos: subNum })
                 })
 
                 const bar = element.add(menu, "span", null, "bar")
             })
-
-            return Array.from(menu.querySelectorAll("input[name='mainOpt']"))
         }
 
         const expandControl = (array) => {
@@ -288,9 +280,7 @@ export class listMenu extends HTMLElement {
                 item.addEventListener("change", () => {
                     const index = item.getAttribute("pos")
                     const expandMenu = this.dom.querySelector(`.expandMenu[pos='${index}']`)
-                    allExpands.forEach(item => {
-                        item.style.height = "0px"
-                    })
+                    allExpands.forEach(item => { item.style.height = "0px"})
 
                     const multiplier = expandMenu.children.length
                     const height = parseFloat(getComputedStyle(this).getPropertyValue("--optionSubHeight"))
@@ -299,19 +289,26 @@ export class listMenu extends HTMLElement {
             })
         }
 
-        const setCustomEvents = async (array, conf) => {
+        const setCustomEvents = async (array, confList) => {
             const transition = parseFloat(getComputedStyle(this).getPropertyValue("--transition"))
 
             array.forEach(item => {
-                console.log(item)
-                item.addEventListener("click", () => document.dispatchEvent(
-                    new CustomEvent(`listMenu_${conf.menuMode}`, {
+                item.addEventListener("click", (e) => {
+                    const parentIndex = Number(e.target.getAttribute("parentIndex"))
+                    const itemIndex = Number(e.target.getAttribute("pos"))
+                    const path = confList[parentIndex].components[itemIndex].path
+                    const tag = confList[parentIndex].components[itemIndex].tag
+                    const name = confList[parentIndex].components[itemIndex].name.toLowerCase().replace(" ", "-")
+
+                    document.dispatchEvent(new CustomEvent("selectionMenu", {
                         detail: {
-                            pos: item.getAttribute("pos"),
-                            time: transition
+                            defaultName: name, 
+                            url: path,
+                            htmlTag: tag,
+                            time: transition // for ended transitions
                         }
-                    })
-                ))
+                    }))
+                })
             })
         }
 
@@ -319,10 +316,13 @@ export class listMenu extends HTMLElement {
         const main = async () => {
             const conf = getConfig()
             applyConfCss(conf)
-            const mainRadios = await setMenu(conf)
+            await setMenu(conf)
+
+            const mainRadios = Array.from(this.dom.querySelectorAll("input[name='mainOpt']"))
             expandControl(mainRadios)
-/*             setCustomEvents(mainRadios)
- */        }
+            const subRadios = Array.from(this.dom.querySelectorAll("input[name='subOpt']"))
+            setCustomEvents(subRadios, conf.list)
+        }
 
         main()
     }
