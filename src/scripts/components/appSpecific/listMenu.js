@@ -1,11 +1,13 @@
 /* ATTRIBUTES
 
 title               title´s component descrition        required
+close               add or not menu close bottom        no required - default false (boolean true/false)
 list                composed object items list          required
 
     //   Array [] of objects {type, components}, where:
         // - type: the category or group description used for name category
         // - components: an array [] of objects {name, tag, path}
+        // [ {type, components: [ {}, {}, {} ] } ]
 
 
 titleBackColor      title background color              no required
@@ -25,7 +27,7 @@ export class listMenu extends HTMLElement {
 
         this.dom = this.attachShadow({ mode: "open" })
         this.dom.innerHTML = `
-            <div id="container" class="container maxW maxH">
+            <div id="container" class="container maxH crystal">
                 <div id="title" class="title maxW center radius4"></div>
                 <div id="menu" class="menu maxW scrollHidden"></div>
             </div>
@@ -34,17 +36,20 @@ export class listMenu extends HTMLElement {
         const style = element.add(this.dom, "style", null, null)
         style.textContent = `
             :host {
-                --titleHeight: 40px;
+                --titleHeight: 34px;
                 --transition: 400ms;
-                --optionHeight: 46px;
-                --optionSubHeight: 36px;
+                --optionHeight: 34px;
+                --optionSubHeight: 34px;
                 --radius: 4px;
 
+                position: relative;
                 box-sizing: border-box;
                 padding: 0;
                 margin: 0;
                 font-family: "anta";
                 color: var(--colorText2);
+
+                &:has(.container .closeBox input:checked) {}
             }
 
             .center { 
@@ -55,7 +60,7 @@ export class listMenu extends HTMLElement {
                 
             .maxW { width: 100%; }
             .maxH { height: 100%; }
-            .darkCrystal { backdrop-filter: blur(4px); }
+            .crystal { background-color: var(--back); backdrop-filter: blur(4px); }
 
             .scrollHidden { 
                 overflow-y: auto; 
@@ -65,7 +70,7 @@ export class listMenu extends HTMLElement {
 
             .radius4 { border-radius: var(--radius); }
 
-            .radioHidden { 
+            .inputHidden { 
                 position: absolute; 
                 z-index: 10; 
                 appearance: none; 
@@ -73,7 +78,6 @@ export class listMenu extends HTMLElement {
             }
 
             .container {
-                background-color: var(--back);
                 padding: 10px;
 
                 .title {
@@ -113,7 +117,7 @@ export class listMenu extends HTMLElement {
                         .nameBox {
                             display: flex;
                             align-items: center;
-                            height: 34px;
+                            height: 100%;
 
                             .marker {
                                 height: 10px;
@@ -143,6 +147,7 @@ export class listMenu extends HTMLElement {
                     .expandMenu {
                         width: calc(100% - 2px);
                         height: 0;
+                        margin-top: 2px;
                         overflow-y: hidden;
                         transition: var(--transition);
 
@@ -169,7 +174,7 @@ export class listMenu extends HTMLElement {
                                 display: flex;
                                 align-items: center;
                                 width: 100%;
-                                height: calc(100% - 10px);
+                                height: calc(100% - 4px);
                                 padding: 0 10px;
 
                                 .expandSub {
@@ -196,11 +201,36 @@ export class listMenu extends HTMLElement {
                         opacity: 0.2;
                     }
                 }
+
+                .closeBox {
+                    position: relative;
+                    display:flex;
+                    flex-direction: column;
+                    top: calc(-100% + 20px);
+                    left: calc(100% + 20px);
+                    width: var(--titleHeight);
+                    aspect-ratio: 1/1;
+                    transition: 600ms ease-in-out;
+
+                    &:has(input:not(:checked)) {
+                        top: calc(-1 * var(--titleHeight));
+                    }
+
+                    .line {
+                        width: 50%;
+                        height: 2px;
+                        border-radius 50%;
+                        background-color: var(--color1);
+                        margin: 2px;
+                    }
+                }
             } 
         `
     }
 
     connectedCallback() {
+
+        const menu = this.dom.querySelector("#menu")
 
         const getConfig = () => {
             const list = this["list"]
@@ -211,8 +241,8 @@ export class listMenu extends HTMLElement {
             const color3 = this.getAttribute("color3") ? this.getAttribute("color3") : "rgba(38, 157, 165, 1)"
             const colorText1 = this.getAttribute("colorText1") ? this.getAttribute("colorText1") : "rgb(28, 28, 28)"
             const colorText2 = this.getAttribute("colorText2") ? this.getAttribute("colorText2") : "rgb(240, 240, 240)"
-
             const back = this.getAttribute("back") ? this.getAttribute("back") : "rgba(0, 0, 0, 0.8)"
+            const close = this.getAttribute("close") && this.getAttribute("close") === "true" ? true : false
 
             return {
                 "list": list,
@@ -223,7 +253,8 @@ export class listMenu extends HTMLElement {
                 "color2": color2,
                 "color3": color3,
                 "colorText1": colorText1,
-                "colorText2": colorText2
+                "colorText2": colorText2,
+                "close": close
             }
         }
 
@@ -237,7 +268,15 @@ export class listMenu extends HTMLElement {
             if (conf.colorText2) this.style.setProperty("--colorText2", conf.colorText2)
         }
 
-        const setMenu = async (conf) => {
+        const drawClose = async () => {
+            const container = this.dom.querySelector("#container")
+            const closeBox = element.add(container, "div", null, ("closeBox center radius4 crystal"))
+            for (let i = 0; i < 3; i++) { element.add(closeBox, "div", null, "line") }
+            const checkboxClose = element.add(closeBox, "input", "checkboxClose", "inputHidden maxW maxH", { type: "checkbox", checked: true })
+            return checkboxClose
+        }
+
+        const drawMenu = async (conf) => {
             this.dom.querySelector("#title").textContent = conf.title
 
             let list = []
@@ -257,7 +296,7 @@ export class listMenu extends HTMLElement {
                 const expand = element.add(nameBox, "div", null, "expand")
                 const name = element.add(nameBox, "div", null, "name")
                 name.textContent = itemName
-                const radio = element.add(menuOption, "input", null, "radioHidden maxW maxH", { type: "radio", name: "mainOpt", pos: num })
+                const radio = element.add(menuOption, "input", null, "inputHidden maxW maxH", { type: "radio", name: "mainOpt", pos: num })
 
                 const expandMenu = element.add(menu, "div", null, "expandMenu scrollHidden", { pos: num })
                 componentObj.forEach((item, subNum) => {
@@ -266,7 +305,7 @@ export class listMenu extends HTMLElement {
                     const expandSub = element.add(nameBoxSub, "div", null, "expandSub")
                     const nameSub = element.add(nameBoxSub, "div", null, "nameSub")
                     nameSub.textContent = item.name
-                    const radioSub = element.add(optionSub, "input", null, "radioHidden maxW maxH", { type: "radio", name: "subOpt", parentIndex: num, pos: subNum })
+                    const radioSub = element.add(optionSub, "input", null, "inputHidden maxW maxH", { type: "radio", name: "subOpt", parentIndex: num, pos: subNum })
                 })
 
                 const bar = element.add(menu, "span", null, "bar")
@@ -280,7 +319,7 @@ export class listMenu extends HTMLElement {
                 item.addEventListener("change", () => {
                     const index = item.getAttribute("pos")
                     const expandMenu = this.dom.querySelector(`.expandMenu[pos='${index}']`)
-                    allExpands.forEach(item => { item.style.height = "0px"})
+                    allExpands.forEach(item => { item.style.height = "0px" })
 
                     const multiplier = expandMenu.children.length
                     const height = parseFloat(getComputedStyle(this).getPropertyValue("--optionSubHeight"))
@@ -302,7 +341,7 @@ export class listMenu extends HTMLElement {
 
                     document.dispatchEvent(new CustomEvent("selectionMenu", {
                         detail: {
-                            defaultName: name, 
+                            defaultName: name,
                             url: path,
                             htmlTag: tag,
                             time: transition // for ended transitions
@@ -312,16 +351,30 @@ export class listMenu extends HTMLElement {
             })
         }
 
+        const controlMenuDisplay = (input) => {
+            const hostContainer = this.parentElement
+            const hostWidth = hostContainer.offsetWidth
+            const closeBox = input.parentElement
+
+            hostContainer.style.transition = "600ms ease-in-out"
+            hostContainer.style.left = input.checked ? `0px` : `calc(${hostWidth}px * -1)`
+            closeBox.style.opacity = input.checked ? 1 : 0.4
+        }
 
         const main = async () => {
             const conf = getConfig()
             applyConfCss(conf)
-            await setMenu(conf)
+            await drawMenu(conf)
 
             const mainRadios = Array.from(this.dom.querySelectorAll("input[name='mainOpt']"))
             expandControl(mainRadios)
             const subRadios = Array.from(this.dom.querySelectorAll("input[name='subOpt']"))
             setCustomEvents(subRadios, conf.list)
+
+            if (conf.close) {
+                const closeInput = await drawClose()
+                closeInput.addEventListener("change", (e) => controlMenuDisplay(e.target))
+            }
         }
 
         main()

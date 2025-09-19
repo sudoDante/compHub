@@ -13,7 +13,8 @@ const loadComponent = async (par) => {
     compContainer.innerHTML = ""
 
     const comp = await import(url)
-    await new Promise(resolve => {setTimeout(resolve, delay) })
+    await new Promise(resolve => { setTimeout(resolve, delay) })
+
     element.add(compContainer, tag, name, name)
 }
 
