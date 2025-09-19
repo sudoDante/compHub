@@ -2,6 +2,7 @@
 
 title               title´s component descrition        required
 close               add or not menu close bottom        no required - default false (boolean true/false)
+button              botton transition type              no required - rotate / fall
 list                composed object items list          required
 
     //   Array [] of objects {type, components}, where:
@@ -203,6 +204,9 @@ export class listMenu extends HTMLElement {
                 }
 
                 .closeBox {
+                    --dinamicTop: calc(-100% + 20px);
+                    --dinamicRotate: rotate(0deg);
+                
                     position: relative;
                     display:flex;
                     flex-direction: column;
@@ -213,7 +217,8 @@ export class listMenu extends HTMLElement {
                     transition: 600ms ease-in-out;
 
                     &:has(input:not(:checked)) {
-                        top: calc(-1 * var(--titleHeight));
+                        top: var(--dinamicTop);
+                        transform: var(--dinamicRotate);
                     }
 
                     .line {
@@ -243,6 +248,7 @@ export class listMenu extends HTMLElement {
             const colorText2 = this.getAttribute("colorText2") ? this.getAttribute("colorText2") : "rgb(240, 240, 240)"
             const back = this.getAttribute("back") ? this.getAttribute("back") : "rgba(0, 0, 0, 0.8)"
             const close = this.getAttribute("close") && this.getAttribute("close") === "true" ? true : false
+            const button = this.getAttribute("button") ? this.getAttribute("button") : null
 
             return {
                 "list": list,
@@ -254,7 +260,8 @@ export class listMenu extends HTMLElement {
                 "color3": color3,
                 "colorText1": colorText1,
                 "colorText2": colorText2,
-                "close": close
+                "close": close,
+                "button": button
             }
         }
 
@@ -268,11 +275,17 @@ export class listMenu extends HTMLElement {
             if (conf.colorText2) this.style.setProperty("--colorText2", conf.colorText2)
         }
 
-        const drawClose = async () => {
+        const drawClose = async (conf) => {
             const container = this.dom.querySelector("#container")
             const closeBox = element.add(container, "div", null, ("closeBox center radius4 crystal"))
+            const button = conf.button
+
             for (let i = 0; i < 3; i++) { element.add(closeBox, "div", null, "line") }
             const checkboxClose = element.add(closeBox, "input", "checkboxClose", "inputHidden maxW maxH", { type: "checkbox", checked: true })
+
+            if (button === "rotate") closeBox.style.setProperty("--dinamicRotate", "rotate(-180deg)")
+            if (button === "fall") closeBox.style.setProperty("--dinamicTop", "calc(-1 * var(--titleHeight))")
+
             return checkboxClose
         }
 
@@ -280,9 +293,7 @@ export class listMenu extends HTMLElement {
             this.dom.querySelector("#title").textContent = conf.title
 
             let list = []
-            Object.values(conf.list).forEach(item => {
-                list.push(item)
-            })
+            Object.values(conf.list).forEach(item => list.push(item))
 
             const menu = this.dom.querySelector("#menu")
 
@@ -372,7 +383,7 @@ export class listMenu extends HTMLElement {
             setCustomEvents(subRadios, conf.list)
 
             if (conf.close) {
-                const closeInput = await drawClose()
+                const closeInput = await drawClose(conf)
                 closeInput.addEventListener("change", (e) => controlMenuDisplay(e.target))
             }
         }

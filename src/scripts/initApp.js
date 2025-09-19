@@ -16,7 +16,7 @@ const main = async () => {
         console.log(pos, delay)
 
     })
-    const typesMenu = element.add(leftAside, "list-menu", null, "listMenu", { "list": components, title: "Components by type", close: true })
+    const typesMenu = element.add(leftAside, "list-menu", null, "listMenu", { "list": components, title: "Components by type", close: true, button: "rotate" })
 
 }
 

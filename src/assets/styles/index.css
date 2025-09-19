@@ -1,6 +1,7 @@
 :root {
     --backColor: rgb(230, 230, 230);
     --leftAside: 230px;
+    --rightAside: 300px;
 }
 
 body {
@@ -21,11 +22,8 @@ body {
         .compContainer {
             width: 100%;
             height: 100%;
+            border: 1px solid grey;
         }
-    }
-
-    .darkCrystal {
-        backdrop-filter: blur(4px);
     }
 
     .leftAside {
@@ -34,30 +32,29 @@ body {
         height: 100%;
     }
 
-    .rightAside {
-        --asideWidth: 300px;
-        --transition: 140ms;
-        --menuWidth: 210px;
-        --menuTransition: 800ms;
-        --backDark: rgba(0, 0, 0, 0.8);
+    .backsControlBox,
+    .presentationBox {
+        --offset: calc(100% - var(--leftAside) - var(--rightAside) - 100px);
 
+        left: calc(50% - (var(--offset) / 2));
+        width: var(--offset);
+        border: 1px solid blue;
+    }
+
+    .backsControlBox {
+        top: 10px;
+        height: 34px;
+    }
+
+    .presentationBox {
+        bottom: 10px;
+        height: 60px;
+    }
+
+    .rightAside {
         right: 0;
-        width: var(--asideWidth);
+        width: var(--rightAside);
         height: 100%;
         border: 1px solid red;
-    }
-}
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    50% {
-        transform: rotate(180deg)
-    }
-
-    100% {
-        transform: rotate(360deg);
     }
 }
