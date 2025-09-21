@@ -76,9 +76,9 @@ export class colorizedGrid extends HTMLElement {
             // CSS
             const cellSize = this.getAttribute("size") && Number(this.getAttribute("size")) >= 30 ? Number(this.getAttribute("size")) : 30
             const backgroundColor = this.getAttribute("back") ? this.getAttribute("back") : "transparent"
-            const cellColor = this.getAttribute("color") ? this.getAttribute("color") : "rgba(255, 0, 0, 0.2)"
+            const cellColor = this.getAttribute("color") ? this.getAttribute("color") : "rgba(255, 255, 255, 0)"
             // JS
-            const interval = this.getAttribute("interval") ? this.getAttribute("interval") : 1000
+            const interval = this.getAttribute("interval") ? this.getAttribute("interval") : 100
 
             return {
                 "cellSize": cellSize,
@@ -146,7 +146,7 @@ export class colorizedGrid extends HTMLElement {
             while (true) {
                 const randomCell = innerCells[extra.randomize(0, innerCells.length - 1)]
                 colorizedAlpha(randomCell, conf)
-                await new Promise(resolve => setTimeout(resolve, 200))
+                await new Promise(resolve => setTimeout(resolve, conf.interval))
             }
         }
 

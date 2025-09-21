@@ -352,6 +352,7 @@ export class listMenu extends HTMLElement {
 
                     document.dispatchEvent(new CustomEvent("selectionMenu", {
                         detail: {
+                            type: confList[Number(e.target.getAttribute("parentIndex"))].type,
                             defaultName: name,
                             url: path,
                             htmlTag: tag,

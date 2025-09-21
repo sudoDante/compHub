@@ -218,4 +218,4 @@ export class matrix extends HTMLElement {
     }
 }
 
-customElements.define("matrix-efect", matrix)
+customElements.define("matrix-effect", matrix)

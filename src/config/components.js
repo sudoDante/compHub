@@ -3,7 +3,7 @@ export const components = [
         type: "Background",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
+                { name: "Matrix Effect", tag: "matrix-effect", path: "/src/scripts/components/matrix.js" },
                 { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
             ],
 
@@ -12,8 +12,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -21,8 +20,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -30,8 +28,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -39,8 +36,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -48,8 +44,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -57,8 +52,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -66,8 +60,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -75,8 +68,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -84,8 +76,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -93,8 +84,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -102,8 +92,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -111,8 +100,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -120,8 +108,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },
@@ -129,8 +116,7 @@ export const components = [
         type: "otros",
         components:
             [
-                { name: "Matrix Efect", tag: "matrix-efect", path: "/src/scripts/components/matrix.js" },
-                { name: "Colorized Grid", tag: "colorized-grid", path: "/src/scripts/components/colorizedGrid.js" }
+
             ],
 
     },

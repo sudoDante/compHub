@@ -14,10 +14,10 @@ body {
     main {
         width: 100%;
         height: 100%;
-        /*         background-color: var(--backgroundColor);
-        background-image: url("https://m.media-amazon.com/images/I/81V2hzNkcsL.jpg");
+        background-color: var(--backgroundColor);
+        background-image: url("https://images.unsplash.com/photo-1502790671504-542ad42d5189?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D1");
+        background-position: center;
         background-size: cover;
- */
 
         .compContainer {
             width: 100%;
@@ -35,20 +35,50 @@ body {
     .backsControlBox,
     .presentationBox {
         --offset: calc(100% - var(--leftAside) - var(--rightAside) - 100px);
-
-        left: calc(50% - (var(--offset) / 2));
-        width: var(--offset);
-        border: 1px solid blue;
     }
 
     .backsControlBox {
+        left: calc(50% - (var(--offset) / 2));
         top: 10px;
+        width: var(--offset);
         height: 34px;
+        border: 1px solid grey;
     }
 
     .presentationBox {
+        --preTransition: 400ms ease-in-out;
+
+        display: flex;
         bottom: 10px;
-        height: 60px;
+        width: 0;
+        height: 30px;
+        background-color: rgba(225, 225, 225, 0.1);
+        backdrop-filter: blur(4px);
+        font-family: anta;
+        overflow: hidden;
+        transition: var(--preTransition);
+
+        .name,
+        .family {
+            display: flex;
+            align-items: end;
+            width: fit-content;
+            margin-bottom: 2px;
+            transition: var(--preTransition);
+        }
+
+        .name {
+            font-size: 18px;
+            color: whitesmoke;
+            font-style: italic;
+            padding: 0 14px;
+        }
+
+        .family {
+            color: rgb(160, 160, 160);
+            font-size: 14px;
+            padding: 2px 0 0 10px;
+        }
     }
 
     .rightAside {
