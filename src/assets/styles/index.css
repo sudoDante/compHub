@@ -2,6 +2,11 @@
     --backColor: rgb(230, 230, 230);
     --leftAside: 230px;
     --rightAside: 300px;
+    --darkCristal: rgba(0, 0, 0, 0.8);
+    --textInactive: rgb(116, 116, 116);
+    --textActive: whitesmoke;
+    --enphasisColor: rgb(152, 201, 204);
+    --optTime: 100ms;
 }
 
 body {
@@ -15,14 +20,36 @@ body {
         width: 100%;
         height: 100%;
         background-color: var(--backgroundColor);
-        background-image: url("https://images.unsplash.com/photo-1502790671504-542ad42d5189?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D1");
         background-position: center;
         background-size: cover;
+
+        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(1) input[type="radio"]:checked) {
+            background-image: none;
+        }
+
+        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(2) input[type="radio"]:checked) {
+            background-image: url("https://images.pexels.com/photos/36487/above-adventure-aerial-air.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        }
+
+        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(3) input[type="radio"]:checked) {
+            background-image: url("https://images.pexels.com/photos/911738/pexels-photo-911738.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        }
+
+        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(4) input[type="radio"]:checked) {
+            background-image: url("https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        }
+
+        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(5) input[type="radio"]:checked) {
+            background-image: url("https://images.pexels.com/photos/919606/pexels-photo-919606.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        }
+
+        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(6) input[type="radio"]:checked) {
+            background-image: url("https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        }
 
         .compContainer {
             width: 100%;
             height: 100%;
-            border: 1px solid grey;
         }
     }
 
@@ -35,56 +62,137 @@ body {
     .backsControlBox,
     .presentationBox {
         --offset: calc(100% - var(--leftAside) - var(--rightAside) - 100px);
+
+        background-color: var(--darkCristal);
+        backdrop-filter: blur(4px);
+        font-family: anta;
+        border-radius: 4px;
     }
 
     .backsControlBox {
+        display: flex;
+        justify-content: space-between;
         left: calc(50% - (var(--offset) / 2));
         top: 10px;
         width: var(--offset);
         height: 34px;
-        border: 1px solid grey;
-    }
+        padding: 0 14px;
 
-    .presentationBox {
-        --preTransition: 400ms ease-in-out;
-
-        display: flex;
-        bottom: 10px;
-        width: 0;
-        height: 30px;
-        background-color: rgba(225, 225, 225, 0.1);
-        backdrop-filter: blur(4px);
-        font-family: anta;
-        overflow: hidden;
-        transition: var(--preTransition);
-
-        .name,
-        .family {
+        .control {
             display: flex;
-            align-items: end;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .colorsControl {
+            display: flex;
             width: fit-content;
-            margin-bottom: 2px;
-            transition: var(--preTransition);
+            height: 100%;
+
+            .manualIcon {
+                width: auto;
+                height: auto;
+                color: var(--textInactive);
+                transition: var(--optTime);
+            }
+
+            .text {
+                position: relative;
+                top: 2px;
+                margin-left: 4px;
+                font-size: 14px;
+                color: var(--textInactive);
+                transition: var(--optTime);
+            }
+
+            &:hover .manualIcon,
+            &:hover .text {
+                color: var(--textActive)
+            }
+
+            &:has(input:checked) .manualIcon,
+            &:has(input:checked) .text {
+                color: var(--enphasisColor)
+            }
         }
 
-        .name {
-            font-size: 18px;
-            color: whitesmoke;
-            font-style: italic;
-            padding: 0 14px;
-        }
+        .backsControl,
+        .viewsControl {
+            .inputBox {
+                height: 100%;
+                width: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--textInactive);
 
-        .family {
-            color: rgb(160, 160, 160);
-            font-size: 14px;
-            padding: 2px 0 0 10px;
+                .material-symbols-outlined {
+                    width: auto;
+                    font-size: 22px;
+                    transition: var(--optTime);
+                }
+
+                &:has(.material-symbols-outlined) {
+                    margin-left: 8px;
+                }
+
+                .pointer {
+                    font-size: 12px;
+                    font-style: italic;
+                    transition: var(--optTime);
+                }
+
+                &:has(input:checked) .pointer,
+                &:has(input:checked) .material-symbols-outlined {
+                    color: var(--enphasisColor);
+                }
+
+                &:hover .pointer,
+                &:hover .material-symbols-outlined {
+                    color: var(--textActive);
+                }
+            }
         }
     }
+}
 
-    .rightAside {
-        right: 0;
-        width: var(--rightAside);
-        height: 100%;
-        border: 1px solid red;
+.presentationBox {
+    --preTransition: 400ms ease-in-out;
+
+    display: flex;
+    bottom: 10px;
+    width: 0;
+    height: 30px;
+    overflow: hidden;
+    transition: var(--preTransition);
+
+    .name,
+    .family {
+        display: flex;
+        align-items: end;
+        width: fit-content;
+        margin-bottom: 2px;
+        transition: var(--preTransition);
     }
+
+    .name {
+        font-size: 18px;
+        color: whitesmoke;
+        font-style: italic;
+        padding: 0 14px;
+    }
+
+    .family {
+        color: rgb(160, 160, 160);
+        font-size: 14px;
+        padding: 2px 0 2px 10px;
+    }
+}
+
+.rightAside {
+    right: 0;
+    width: var(--rightAside);
+    height: 100%;
+    border: 1px solid red;
 }
