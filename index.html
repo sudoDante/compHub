@@ -2,66 +2,84 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Components</title>
-    <link rel="stylesheet" href="./src/assets/styles/_common.css">
-    <link rel="stylesheet" href="./src/assets/styles/index.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
-    <link rel="shortcut icon" href="src/assets/images/logo_128.png" type="image/x-icon">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Components</title>
+        <link rel="stylesheet" href="./src/assets/styles/_common.css">
+        <link rel="stylesheet" href="./src/assets/styles/index.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
+        <link rel="shortcut icon" href="src/assets/images/logo_128.png" type="image/x-icon">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anta&family=Revalia&display=swap" rel="stylesheet">
-
-
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Anta&family=Revalia&display=swap" rel="stylesheet">
 </head>
 
 <body class="relative">
-    <main class="relative center">
-        <section id="compContainer" class="compContainer"></section>
-        <section id="leftAside" class="leftAside absolute"></section>
-        <section id="rightAside" class="rightAside absolute"></section>
+        <main class="relative center">
+                <div id="componentBox" class="componentBox"></div>
+                <div id="leftAside" class="leftAside absolute"></div>
+                <div id="rightAside" class="rightAside absolute"></div>
 
-        <form id="backsControlBox" class="backsControlBox absolute">
-            <div class="colorsControl control relative">
-                <span class="manualIcon material-symbols-outlined center">colors</span>
-                <span class="text">Color</span>
-                <input type="checkbox" name="" id="" class="hiddenInput">
-            </div>
-            <ul class="backsControl control">
-                <li class="inputBox relative"><span class="material-symbols-outlined">photo</span><input type="radio"
-                        name="back" id="" class="hiddenInput" checked></li>
-                <li class="inputBox relative"><span class="pointer">1</span><input type="radio" name="back" id=""
-                        class="hiddenInput"></li>
-                <li class="inputBox relative"><span class="pointer">2</span><input type="radio" name="back" id=""
-                        class="hiddenInput"></li>
-                <li class="inputBox relative"><span class="pointer">3</span><input type="radio" name="back" id=""
-                        class="hiddenInput"></li>
-                <li class="inputBox relative"><span class="pointer">4</span><input type="radio" name="back" id=""
-                        class="hiddenInput"></li>
-                <li class="inputBox relative"><span class="pointer">5</span><input type="radio" name="back" id=""
-                        class="hiddenInput"></li>
-            </ul>
-            <ul class="viewsControl control">
-                <li class="inputBox relative"><span
-                        class="material-symbols-outlined">display_external_input</span><input type="radio" name="view"
-                        id="normal" class="hiddenInput" checked></li>
-                <li class="inputBox relative"><span class="material-symbols-outlined">crop_free</span><input
-                        type="radio" name="view" id="fullscreen" class="hiddenInput"></li>
-                <li class="inputBox relative"><span class="material-symbols-outlined">screenshot_monitor</span><input
-                        type="radio" name="view" id="fullscreen" class="hiddenInput"></li>
-                <li class="inputBox relative"><span class="material-symbols-outlined">mobile</span><input type="radio"
-                        name="view" id="fullscreen" class="hiddenInput"></li>
-            </ul>
-        </form>
-        <div id="presentationBox" class="presentationBox absolute">
-            <span id="preName" class="name"></span>
-            <span id="preFamily" class="family"></span>
-        </div>
-    </main>
+                <form id="backsControlBox" class="backsControlBox absolute">
+                        <div class="colorsControl control relative">
+                                <span class="manualIcon material-symbols-outlined center">colors</span>
+                                <span class="text">Color</span>
+                                <input type="checkbox" class="hiddenInput">
+                        </div>
+                        <ul class="backsControl control">
+                                <li class="inputBox relative">
+                                        <span class="material-symbols-outlined">photo</span>
+                                        <input type="radio" name="back" class="hiddenInput" checked>
+                                </li>
+                                <li class="inputBox relative">
+                                        <span class="pointer">1</span>
+                                        <input type="radio" name="back" class="hiddenInput">
+                                </li>
+                                <li class="inputBox relative">
+                                        <span class="pointer">2</span>
+                                        <input type="radio" name="back" class="hiddenInput">
+                                </li>
+                                <li class="inputBox relative">
+                                        <span class="pointer">3</span>
+                                        <input type="radio" name="back" class="hiddenInput">
+                                </li>
+                                <li class="inputBox relative">
+                                        <span class="pointer">4</span>
+                                        <input type="radio" name="back" class="hiddenInput">
+                                </li>
+                                <li class="inputBox relative">
+                                        <span class="pointer">5</span>
+                                        <input type="radio" name="back" class="hiddenInput">
+                                </li>
+                        </ul>
+                        <ul class="viewsControl control">
+                                <li class="inputBox relative">
+                                        <span class="material-symbols-outlined">computer</span>
+                                        <input type="radio" name="display" id="normalView" class="hiddenInput" checked>
+                                </li>
+                                <li class="inputBox relative">
+                                        <span class="material-symbols-outlined">tablet</span>
+                                        <input type="radio" name="display" id="tabletView" class="hiddenInput">
+                                </li>
+                                <li class="inputBox relative">
+                                        <span class="material-symbols-outlined">mobile</span>
+                                        <input type="radio" name="display" id="mobileView" class="hiddenInput">
+                                </li>
+                                <li class="inputBox relative">
+                                        <span class="material-symbols-outlined">crop_free</span>
+                                        <input type="checkbox" name="view" id="fullscreenView" class="hiddenInput">
+                                </li>
+                        </ul>
+                </form>
 
-    <script type="module" src="./src/scripts/initApp.js"></script>
+                <div id="presentationBox" class="presentationBox absolute">
+                        <span id="preName" class="name"></span>
+                        <span id="preFamily" class="family"></span>
+                </div>
+        </main>
+
+        <script type="module" src="./src/scripts/appLoad.js"></script>
 </body>
 
 </html>

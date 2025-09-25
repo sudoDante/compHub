@@ -3,7 +3,7 @@
     --leftAside: 230px;
     --rightAside: 300px;
     --darkCristal: rgba(0, 0, 0, 0.8);
-    --textInactive: rgb(116, 116, 116);
+    --textInactive: rgb(153, 153, 153);
     --textActive: whitesmoke;
     --enphasisColor: rgb(152, 201, 204);
     --optTime: 100ms;
@@ -47,9 +47,11 @@ body {
             background-image: url("https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
         }
 
-        .compContainer {
+        .componentBox {
             width: 100%;
             height: 100%;
+            background-color: red;
+            transition: 400ms ease-in-out;
         }
     }
 
@@ -108,12 +110,12 @@ body {
 
             &:hover .manualIcon,
             &:hover .text {
-                color: var(--textActive)
+                color: var(--enphasisColor)
             }
 
             &:has(input:checked) .manualIcon,
             &:has(input:checked) .text {
-                color: var(--enphasisColor)
+                color: var(--textActive)
             }
         }
 
@@ -145,12 +147,12 @@ body {
 
                 &:has(input:checked) .pointer,
                 &:has(input:checked) .material-symbols-outlined {
-                    color: var(--enphasisColor);
+                    color: var(--textActive);
                 }
 
                 &:hover .pointer,
                 &:hover .material-symbols-outlined {
-                    color: var(--textActive);
+                    color: var(--enphasisColor);
                 }
             }
         }

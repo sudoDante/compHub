@@ -7,7 +7,8 @@ import { listMenu } from "./components/appSpecific/listMenu.js"
 
 const main = async () => {
     import("./controlCustomEvents.js")
-
+    import("./viewControls.js")
+    
     const leftAside = document.getElementById("leftAside")
 
     document.addEventListener("listMenu_primary", async (e) => {
@@ -16,7 +17,7 @@ const main = async () => {
         console.log(pos, delay)
 
     })
-    const typesMenu = element.add(leftAside, "list-menu", null, "listMenu", { "list": components, title: "Components by type", close: true, button: "rotate" })
+    const typesMenu = element.add(leftAside, "list-menu", null, "listMenu", { "list": components, title: "Components by type", close: true, button: "fall" })
 
 }
 
