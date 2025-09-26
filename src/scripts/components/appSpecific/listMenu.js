@@ -222,8 +222,8 @@ export class listMenu extends HTMLElement {
                     }
 
                     .line {
-                        width: 50%;
-                        height: 2px;
+                        width: 40%;
+                        height: 1px;
                         border-radius 50%;
                         background-color: var(--color1);
                         margin: 2px;
@@ -343,7 +343,7 @@ export class listMenu extends HTMLElement {
             const transition = parseFloat(getComputedStyle(this).getPropertyValue("--transition"))
 
             array.forEach(item => {
-                item.addEventListener("click", (e) => {
+                item.addEventListener("change", (e) => {
                     const parentIndex = Number(e.target.getAttribute("parentIndex"))
                     const itemIndex = Number(e.target.getAttribute("pos"))
                     const path = confList[parentIndex].components[itemIndex].path
