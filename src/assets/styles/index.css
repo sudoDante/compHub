@@ -7,6 +7,8 @@
     --textActive: whitesmoke;
     --enphasisColor: rgb(152, 201, 204);
     --optTime: 100ms;
+    --controlsMargin: 55px;
+    --controlsAutoWidth: calc(100% - var(--leftAside) - var(--rightAside) - var(--controlsMargin) * 2);
 }
 
 body {
@@ -47,154 +49,184 @@ body {
             background-image: url("https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
         }
 
+        &:has(.controlLeft:checked) .controlsBoxColor {
+            left: 10px;
+            width: calc(var(--controlsAutoWidth) + var(--leftAside) + var(--controlsMargin) - 10px);
+        }
+
+        &:has(.controlRight:checked) .controlsBoxColor {
+            left: calc(var(--leftAside) + var(--controlsMargin));
+            width: calc(var(--controlsAutoWidth) + var(--rightAside) + var(--controlsMargin) - 10px);
+        }
+
+        &:has(.controlExpand:checked) .controlsBoxColor {
+            left: 10px;
+            width: calc(100% - 20px);
+        }
+
         .componentBox {
             width: 100%;
             height: 100%;
             border: 1px solid red;
             transition: 400ms ease-in-out;
         }
-    }
 
-    .leftAside {
-        left: 0;
-        width: var(--leftAside);
-        height: 100%;
-    }
-
-    .backsControlBox,
-    .presentationBox {
-        --offset: calc(100% - var(--leftAside) - var(--rightAside) - 110px);
-
-        background-color: var(--darkCristal);
-        backdrop-filter: blur(4px);
-        font-family: anta;
-        border-radius: 4px;
-    }
-
-    .backsControlBox {
-        display: flex;
-        justify-content: space-between;
-        left: calc(50% - (var(--offset) / 2));
-        top: 10px;
-        width: var(--offset);
-        height: 34px;
-        padding: 0 14px;
-
-        .control {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .leftAside {
+            z-index: 10;
+            left: 0;
+            width: var(--leftAside);
             height: 100%;
         }
 
-        .colorsControl {
-            display: flex;
-            width: fit-content;
-            height: 100%;
-
-            .manualIcon {
-                width: auto;
-                height: auto;
-                color: var(--textInactive);
-                transition: var(--optTime);
-            }
-
-            .text {
-                position: relative;
-                top: 2px;
-                margin-left: 4px;
-                font-size: 14px;
-                color: var(--textInactive);
-                transition: var(--optTime);
-            }
-
-            &:hover .manualIcon,
-            &:hover .text {
-                color: var(--enphasisColor)
-            }
-
-            &:has(input:checked) .manualIcon,
-            &:has(input:checked) .text {
-                color: var(--textActive)
-            }
+        .info {
+            background-color: var(--darkCristal);
+            backdrop-filter: blur(4px);
+            font-family: anta;
+            border-radius: 4px;
         }
 
-        .backsControl,
-        .viewsControl {
-            .inputBox {
-                height: 100%;
-                width: 30px;
+        .controlsBoxColor,
+        .controlBox {
+            top: 10px;
+            width: var(--controlsAutoWidth);
+            height: 34px;
+
+        }
+
+        .controlsBoxColor {
+            left: calc(50% - var(--controlsAutoWidth) / 2);
+            background-color: var(--darkCristal);
+            border-radius: 4px;
+            transition: 1s;
+        }
+
+        .controlBox {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 16px;
+
+            .font {
+                font-family: anta;
+            }
+
+            .controls {
                 display: flex;
-                justify-content: center;
                 align-items: center;
+                width: auto;
+                height: 100%;
                 color: var(--textInactive);
+            }
 
-                .material-symbols-outlined {
-                    width: auto;
-                    font-size: 22px;
-                    transition: var(--optTime);
-                }
+            .colorBox:hover {
 
-                &:has(.material-symbols-outlined) {
-                    margin-left: 8px;
-                }
-
-                .pointer {
-                    font-size: 12px;
-                    font-style: italic;
-                    transition: var(--optTime);
-                }
-
-                &:has(input:checked) .pointer,
-                &:has(input:checked) .material-symbols-outlined {
-                    color: var(--textActive);
-                }
-
-                &:hover .pointer,
-                &:hover .material-symbols-outlined {
+                .colorIcon,
+                .text {
                     color: var(--enphasisColor);
                 }
             }
+
+            .colorBox:has(input:checked) {
+
+                .colorIcon,
+                .text {
+                    color: var(--textActive);
+                }
+            }
+
+            .colorBox .colorIcon {
+                width: auto;
+                height: auto;
+                font-size: 22px;
+            }
+
+            .colorBox .text {
+                margin-left: 6px;
+                font-size: 14px;
+            }
+
+            .backBox .numberBox {
+                width: 20px;
+                height: 100%;
+                font-size: 14px;
+                font-style: italic;
+
+                &:last-of-type {
+                    width: auto;
+                    height: auto;
+                    font-size: 20px;
+                    font-style: normal;
+                    margin-left: 4px;
+                }
+
+                &:hover {
+                    color: var(--enphasisColor);
+                }
+
+                &:has(input:checked) {
+                    color: var(--textActive);
+                }
+            }
+
+            .viewsBox {
+                justify-content: space-between;
+                width: 120px;
+
+                .view {
+                    .iconView {
+                        width: auto;
+                        height: auto;
+                        font-size: 20px;
+                    }
+
+                    &:hover {
+                        color: var(--enphasisColor);
+                    }
+
+                    &:has(input:checked) {
+                        color: var(--textActive);
+                    }
+                }
+            }
         }
     }
-}
 
-.presentationBox {
-    --preTransition: 400ms ease-in-out;
+    .info {
+        --preTransition: 400ms ease-in-out;
 
-    display: flex;
-    bottom: 10px;
-    width: 0;
-    height: 30px;
-    overflow: hidden;
-    transition: var(--preTransition);
-
-    .name,
-    .family {
         display: flex;
-        align-items: end;
-        width: fit-content;
-        margin-bottom: 2px;
+        bottom: 10px;
+        width: 0;
+        height: 30px;
+        overflow: hidden;
         transition: var(--preTransition);
+
+        .name,
+        .family {
+            display: flex;
+            align-items: end;
+            width: fit-content;
+            margin-bottom: 2px;
+            transition: var(--preTransition);
+        }
+
+        .name {
+            font-size: 18px;
+            color: whitesmoke;
+            font-style: italic;
+            padding: 0 14px;
+        }
+
+        .family {
+            color: rgb(160, 160, 160);
+            font-size: 14px;
+            padding: 2px 0 2px 10px;
+        }
     }
 
-    .name {
-        font-size: 18px;
-        color: whitesmoke;
-        font-style: italic;
-        padding: 0 14px;
+    .rightAside {
+        right: 0;
+        width: var(--rightAside);
+        height: 100%;
+        border: 1px solid red;
     }
-
-    .family {
-        color: rgb(160, 160, 160);
-        font-size: 14px;
-        padding: 2px 0 2px 10px;
-    }
-}
-
-.rightAside {
-    right: 0;
-    width: var(--rightAside);
-    height: 100%;
-    border: 1px solid red;
 }

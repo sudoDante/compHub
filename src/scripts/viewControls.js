@@ -6,8 +6,8 @@ const tablet = document.getElementById("tabletView")
 const mobile = document.getElementById("mobileView")
 const componentBox = document.getElementById("componentBox")
 const backsForm = document.getElementById("backsControlBox")
-backsForm.reset()
-
+/* backsForm.reset()
+ */
 const changeView = async (view) => {
     componentBox.innerHTML = ""
     const widthBox = document.body.offsetWidth

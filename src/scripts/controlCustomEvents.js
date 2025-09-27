@@ -7,7 +7,7 @@ console.log("Custom events control READY: waiting")
 // COMPONENTS MENU
 let componentInfo
 const componentBox = document.getElementById("componentBox")
-const info = document.getElementById("presentationBox")
+const info = document.getElementById("info")
 const configBox = document.getElementById("rightAside")
 
 document.addEventListener("selectionMenu", async (e) => {
