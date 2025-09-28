@@ -2,13 +2,15 @@
     --backColor: rgb(230, 230, 230);
     --leftAside: 230px;
     --rightAside: 230px;
-    --darkCristal: rgba(0, 0, 0, 0.8);
+    --darkCristal: rgba(0, 0, 0, 0.6);
     --textInactive: rgb(153, 153, 153);
     --textActive: whitesmoke;
     --enphasisColor: rgb(152, 201, 204);
     --optTime: 100ms;
     --controlsMargin: 55px;
     --controlsAutoWidth: calc(100% - var(--leftAside) - var(--rightAside) - var(--controlsMargin) * 2);
+    --infoTransition: 400ms ease-in-out;
+    --viewTransition: 800ms ease-out;
 }
 
 body {
@@ -21,54 +23,62 @@ body {
     main {
         width: 100%;
         height: 100%;
-        background-color: var(--backgroundColor);
-        background-position: center;
-        background-size: cover;
 
-        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(1) input[type="radio"]:checked) {
-            background-image: none;
+        &:has(.controlBox .backBox .numberBox:nth-of-type(1) input[type="radio"]:checked) .componentBox {
+            background-image: url("https://marketplace.canva.com/EAGQ4hBhXII/1/0/1600w/canva-htGu4av79Lo.jpg");
         }
 
-        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(2) input[type="radio"]:checked) {
-            background-image: url("https://images.pexels.com/photos/36487/above-adventure-aerial-air.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        &:has(.controlBox .backBox .numberBox:nth-of-type(2) input[type="radio"]:checked) .componentBox {
+            background-image: url("https://wallpapers.com/images/hd/1920-x-1080-hd-ydvvfje0bdoimttn.jpg");
         }
 
-        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(3) input[type="radio"]:checked) {
-            background-image: url("https://images.pexels.com/photos/911738/pexels-photo-911738.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        &:has(.controlBox .backBox .numberBox:nth-of-type(3) input[type="radio"]:checked) .componentBox {
+            background-image: url("https://wallpapers.com/images/hd/palm-leaves-plants-digital-artwork-0zxjle8qpguq73cn.jpg");
         }
 
-        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(4) input[type="radio"]:checked) {
-            background-image: url("https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        &:has(.controlBox .backBox .numberBox:nth-of-type(4) input[type="radio"]:checked) .componentBox {
+            background-image: url("https://wallpapers.com/images/hd/smooth-black-hillside-lbg5pll0q0lotvv3.jpg");
         }
 
-        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(5) input[type="radio"]:checked) {
-            background-image: url("https://images.pexels.com/photos/919606/pexels-photo-919606.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        &:has(.controlBox .backBox .numberBox:nth-of-type(5) input[type="radio"]:checked) .componentBox {
+            background-image: url("https://wallpapers.com/images/hd/macbook-retina-ro2bkgblez1y6vlp.jpg");
         }
 
-        &:has(.backsControlBox .backsControl .inputBox:nth-of-type(6) input[type="radio"]:checked) {
-            background-image: url("https://images.pexels.com/photos/33545/sunrise-phu-quoc-island-ocean.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        &:has(.controlLeft:checked) {
+
+            .controlsBoxColor,
+            .infoBoxColor {
+                left: 10px;
+                width: calc(var(--controlsAutoWidth) + var(--leftAside) + var(--controlsMargin) - 10px);
+            }
         }
 
-        &:has(.controlLeft:checked) .controlsBoxColor {
-            left: 10px;
-            width: calc(var(--controlsAutoWidth) + var(--leftAside) + var(--controlsMargin) - 10px);
+        &:has(.controlRight:checked) {
+
+            .controlsBoxColor,
+            .infoBoxColor {
+                left: calc(var(--leftAside) + var(--controlsMargin));
+                width: calc(var(--controlsAutoWidth) + var(--rightAside) + var(--controlsMargin) - 10px);
+            }
         }
 
-        &:has(.controlRight:checked) .controlsBoxColor {
-            left: calc(var(--leftAside) + var(--controlsMargin));
-            width: calc(var(--controlsAutoWidth) + var(--rightAside) + var(--controlsMargin) - 10px);
-        }
+        &:has(.controlExpand:checked) {
 
-        &:has(.controlExpand:checked) .controlsBoxColor {
-            left: 10px;
-            width: calc(100% - 20px);
+            .controlsBoxColor,
+            .infoBoxColor {
+                left: 10px;
+                width: calc(100% - 20px);
+            }
         }
 
         .componentBox {
             width: 100%;
             height: 100%;
-            border: 1px solid red;
-            transition: 400ms ease-in-out;
+            background-color: var(--backgroundColor);
+            background-position: center;
+            background-size: cover;
+            box-shadow: 0 0 14px black;
+            transition: var(--viewTransition);
         }
 
         .leftAside {
@@ -78,11 +88,12 @@ body {
             height: 100%;
         }
 
-        .info {
+        .controlsBoxColor,
+        .infoBoxColor {
+            left: calc(50% - var(--controlsAutoWidth) / 2);
             background-color: var(--darkCristal);
-            backdrop-filter: blur(4px);
-            font-family: anta;
             border-radius: 4px;
+            transition: 1s;
         }
 
         .controlsBoxColor,
@@ -90,24 +101,12 @@ body {
             top: 10px;
             width: var(--controlsAutoWidth);
             height: 34px;
-
-        }
-
-        .controlsBoxColor {
-            left: calc(50% - var(--controlsAutoWidth) / 2);
-            background-color: var(--darkCristal);
-            border-radius: 4px;
-            transition: 1s;
         }
 
         .controlBox {
             display: flex;
             justify-content: space-between;
             padding: 0 16px;
-
-            .font {
-                font-family: anta;
-            }
 
             .controls {
                 display: flex;
@@ -155,7 +154,7 @@ body {
                     height: auto;
                     font-size: 20px;
                     font-style: normal;
-                    margin-left: 4px;
+                    margin-left: 10px;
                 }
 
                 &:hover {
@@ -190,15 +189,20 @@ body {
         }
     }
 
-    .info {
-        --preTransition: 400ms ease-in-out;
 
-        display: flex;
+    .infoBoxColor {
         bottom: 10px;
-        width: 0;
-        height: 30px;
+        width: var(--controlsAutoWidth);
+        height: 34px;
+    }
+
+    .info {
+        bottom: 10px;
+        left: calc(50% - var(--controlsAutoWidth) / 2);
+        display: flex;
+        width: var(--controlsAutoWidth);
+        height: 34px;
         overflow: hidden;
-        transition: var(--preTransition);
 
         .name,
         .family {
@@ -206,7 +210,7 @@ body {
             align-items: end;
             width: fit-content;
             margin-bottom: 2px;
-            transition: var(--preTransition);
+            transition: var(--infoTransition);
         }
 
         .name {

@@ -51,3 +51,8 @@
     cursor: pointer;
     z-index: 10;
 }
+
+/* FONT-FAMILY */
+.anta {
+    font-family: anta;
+}

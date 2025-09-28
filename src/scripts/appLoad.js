@@ -1,15 +1,22 @@
 import * as iface from "./interface.js"
+import * as events from "./eventsControl.js"
 
 const main = async () => {
-    import("./controlCustomEvents.js")
-/*     import("./viewControls.js")
- */
+
     const leftAside = document.getElementById("leftAside")
     const componentBox = document.getElementById("componentBox")
     const main = document.getElementsByTagName("main")[0]
 
+    /* main menu */
+    await import("./components/appSpecific/listMenu.js")
     iface.loadMenu(leftAside)
-    iface.loadControls(main)
+    /* main bars */
+    await iface.loadControls(main)
+    await iface.loadInfoArea(main)
+
+    /* events */
+    events.applyViewsEvents()
+    events.loadMenuEvents()
 }
 
 main()
