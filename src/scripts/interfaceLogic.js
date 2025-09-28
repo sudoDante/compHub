@@ -1,7 +1,43 @@
 import * as event from "./modules/customEvents.js"
 import { componentsConfig } from "./../config/componentsConfig.js"
 
-export const changeView = async (view) => {
+export const applyBacksRestart = () => {
+    const restartBackImage = document.getElementById("restartBackImage")
+
+    restartBackImage.addEventListener("click", () => {
+        const imageInputSelected = Array.from(document.querySelectorAll("input[name='backImage']")).find(item => item.checked === true)
+        if (imageInputSelected) imageInputSelected.checked = false
+    })
+}
+
+export const applyViewsEvents = () => {
+    const computer = document.getElementById("computer")
+    const tablet = document.getElementById("tablet")
+    const mobile = document.getElementById("mobile")
+    const fullscreen = document.getElementById("fullscreen")
+
+    computer.addEventListener("change", () => {
+        changeView("computerView")
+    })
+
+    tablet.addEventListener("change", () => {
+        changeView("tabletView")
+    })
+
+    mobile.addEventListener("change", () => {
+        changeView("mobileView")
+    })
+
+    fullscreen.addEventListener("change", (e) => {
+        if (e.target.checked) {
+            document.documentElement.requestFullscreen()
+        } else {
+            document.exitFullscreen()
+        }
+    })
+}
+
+const changeView = async (view) => {
     const componentBox = document.getElementById("componentBox")
 
     componentBox.innerHTML = ""

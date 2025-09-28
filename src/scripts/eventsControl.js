@@ -26,30 +26,3 @@ export const loadMenuEvents = () => {
         componentInfo ? component.load(componentInfo, componentBox) : null
     })
 }
-
-export const applyViewsEvents = () => {
-    const computer = document.getElementById("computer")
-    const tablet = document.getElementById("tablet")
-    const mobile = document.getElementById("mobile")
-    const fullscreen = document.getElementById("fullscreen")
-
-    computer.addEventListener("change", () => {
-        ifaceLogic.changeView("computerView")
-    })
-
-    tablet.addEventListener("change", () => {
-        ifaceLogic.changeView("tabletView")
-    })
-
-    mobile.addEventListener("change", () => {
-        ifaceLogic.changeView("mobileView")
-    })
-
-    fullscreen.addEventListener("change", (e) => {
-        if (e.target.checked) {
-            document.documentElement.requestFullscreen()
-        } else {
-            document.exitFullscreen()
-        }
-    })
-}

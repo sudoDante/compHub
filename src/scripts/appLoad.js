@@ -1,4 +1,5 @@
 import * as iface from "./interface.js"
+import * as ifaceLogic from "./interfaceLogic.js"
 import * as events from "./eventsControl.js"
 
 const main = async () => {
@@ -15,7 +16,8 @@ const main = async () => {
     await iface.loadInfoArea(main)
 
     /* events */
-    events.applyViewsEvents()
+    ifaceLogic.applyBacksRestart()
+    ifaceLogic.applyViewsEvents()
     events.loadMenuEvents()
 }
 

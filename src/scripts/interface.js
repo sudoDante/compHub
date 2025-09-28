@@ -25,10 +25,10 @@ export const loadControls = async (container) => {
     for (let i = 1; i <= 5; i++) {
         const numberBox = element.add(backBox, "span", null, "numberBox relative center font")
         numberBox.textContent = i
-        const input = element.add(numberBox, "input", null, "hiddenInput", { type: "radio", name: "back" })
+        const input = element.add(numberBox, "input", null, "hiddenInput", { type: "radio", name: "backImage" })
         i === 1 ? input.checked = true : null
     }
-    const restart = element.add(backBox, "span", "restartBacks", "numberBox relative center material-symbols-outlined")
+    const restart = element.add(backBox, "span", "restartBackImage", "numberBox restartBackImage relative center material-symbols-outlined")
     restart.textContent = "replay"
 
     const viewsBox = element.add(controlsBox, "div", null, "viewsBox controls flex")

@@ -1,7 +1,7 @@
 :root {
     --backColor: rgb(230, 230, 230);
     --leftAside: 230px;
-    --rightAside: 230px;
+    --rightAside: 300px;
     --darkCristal: rgba(0, 0, 0, 0.6);
     --textInactive: rgb(153, 153, 153);
     --textActive: whitesmoke;
@@ -46,28 +46,40 @@ body {
 
         &:has(.controlLeft:checked) {
 
-            .controlsBoxColor,
-            .infoBoxColor {
+            .controlsBoxColor {
                 left: 10px;
                 width: calc(var(--controlsAutoWidth) + var(--leftAside) + var(--controlsMargin) - 10px);
+            }
+
+            .infoBoxColor {
+                left: calc(var(--controlsMargin));
+                width: calc(var(--controlsAutoWidth) + var(--leftAside) + var(--controlsMargin) - var(--controlsMargin));
             }
         }
 
         &:has(.controlRight:checked) {
 
-            .controlsBoxColor,
-            .infoBoxColor {
+            .controlsBoxColor {
                 left: calc(var(--leftAside) + var(--controlsMargin));
                 width: calc(var(--controlsAutoWidth) + var(--rightAside) + var(--controlsMargin) - 10px);
+            }
+
+            .infoBoxColor {
+                left: calc(var(--leftAside) + var(--controlsMargin));
+                width: calc(var(--controlsAutoWidth) + var(--rightAside) + var(--controlsMargin) - var(--controlsMargin));
             }
         }
 
         &:has(.controlExpand:checked) {
 
-            .controlsBoxColor,
-            .infoBoxColor {
+            .controlsBoxColor {
                 left: 10px;
                 width: calc(100% - 20px);
+            }
+
+            .infoBoxColor {
+                left: calc(var(--controlsMargin));
+                width: calc(100% - 2 * var(--controlsMargin))
             }
         }
 
@@ -90,7 +102,7 @@ body {
 
         .controlsBoxColor,
         .infoBoxColor {
-            left: calc(50% - var(--controlsAutoWidth) / 2);
+            left: calc(var(--leftAside) + var(--controlsMargin));
             background-color: var(--darkCristal);
             border-radius: 4px;
             transition: 1s;
@@ -99,6 +111,7 @@ body {
         .controlsBoxColor,
         .controlBox {
             top: 10px;
+            left: calc(var(--leftAside) + var(--controlsMargin));
             width: var(--controlsAutoWidth);
             height: 34px;
         }
@@ -166,6 +179,10 @@ body {
                 }
             }
 
+            .restartBackImage {
+                cursor: pointer;
+            }
+
             .viewsBox {
                 justify-content: space-between;
                 width: 120px;
@@ -188,7 +205,6 @@ body {
             }
         }
     }
-
 
     .infoBoxColor {
         bottom: 10px;
