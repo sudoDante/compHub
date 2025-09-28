@@ -20,6 +20,10 @@ export const loadMenuEvents = () => {
         component.load(componentInfo, componentBox)
     })
 
+    document.addEventListener("selectionMenuVisibility", (e) => {
+        ifaceLogic.menuVisibility(e.detail.state)
+    })
+
     /* evento para cargar componente de configuracion especifico */
 
     document.addEventListener("viewChange", (e) => {

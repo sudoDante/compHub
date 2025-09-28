@@ -18,6 +18,7 @@ color2              color selected items menu           no required
 color3              color selected items submenu        no required
 colorText1          color menu items text normal        no required
 colorText2          color menu items text hover         no required
+hostTransition      time transition for host            no required
 */
 
 import * as element from "../../modules/elements.js"
@@ -248,6 +249,7 @@ export class listMenu extends HTMLElement {
             const colorText2 = this.getAttribute("colorText2") ? this.getAttribute("colorText2") : "rgb(240, 240, 240)"
             const back = this.getAttribute("back") ? this.getAttribute("back") : "rgba(0, 0, 0, 0.8)"
             const close = this.getAttribute("close") && this.getAttribute("close") === "true" ? true : false
+            const hostTransition = this.getAttribute("hostTransition") ? this.getAttribute("hostTransition") : "2s"
             const button = this.getAttribute("button") ? this.getAttribute("button") : null
 
             return {
@@ -261,7 +263,9 @@ export class listMenu extends HTMLElement {
                 "colorText1": colorText1,
                 "colorText2": colorText2,
                 "close": close,
-                "button": button
+                "hostTransition": hostTransition,
+                "button": button,
+                "id": this.id
             }
         }
 
@@ -363,17 +367,18 @@ export class listMenu extends HTMLElement {
             })
         }
 
-        const controlMenuDisplay = (input) => {
+        const controlMenuDisplay = (input, par) => {
             const hostContainer = this.parentElement
             const hostWidth = hostContainer.offsetWidth
             const closeBox = input.parentElement
 
-            hostContainer.style.transition = "600ms ease-in-out"
+            hostContainer.style.transition = par
             hostContainer.style.left = input.checked ? `0px` : `calc(${hostWidth}px * -1)`
             closeBox.style.opacity = input.checked ? 1 : 0.4
         }
 
         const main = async () => {
+
             const conf = getConfig()
             applyConfCss(conf)
             await drawMenu(conf)
@@ -385,7 +390,11 @@ export class listMenu extends HTMLElement {
 
             if (conf.close) {
                 const closeInput = await drawClose(conf)
-                closeInput.addEventListener("change", (e) => controlMenuDisplay(e.target))
+                closeInput.addEventListener("change", (e) => {
+                    controlMenuDisplay(e.target, conf.hostTransition)
+                    const state = closeInput.checked
+                    document.dispatchEvent(new CustomEvent("selectionMenuVisibility", {detail: {state}}))
+                })
             }
         }
 

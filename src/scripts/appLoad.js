@@ -11,6 +11,8 @@ const main = async () => {
     /* main menu */
     await import("./components/appSpecific/listMenu.js")
     iface.loadMenu(leftAside)
+    /* hiddensInputs */
+    iface.loadHiddenInputs(main)
     /* main bars */
     await iface.loadControls(main)
     await iface.loadInfoArea(main)

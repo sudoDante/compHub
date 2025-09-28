@@ -62,6 +62,12 @@ const changeView = async (view) => {
     componentBox.addEventListener("transitionend", () => { event.send(document, "viewChange", { detail: view }) }, { once: true })
 }
 
+export const menuVisibility = (par) => {
+    console.log(par)
+    const check = document.getElementById("leftControl")
+    check.checked = par
+}
+
 export const drawInfo = async (par, container) => {
     const infoFamily = document.getElementById("infoFamily")
     const infoName = document.getElementById("infoName")

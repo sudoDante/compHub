@@ -1,7 +1,7 @@
 :root {
     --backColor: rgb(230, 230, 230);
-    --leftAside: 230px;
-    --rightAside: 300px;
+    --leftAside: 200px;
+    --rightAside: 200px;
     --darkCristal: rgba(0, 0, 0, 0.6);
     --textInactive: rgb(153, 153, 153);
     --textActive: whitesmoke;
@@ -11,6 +11,7 @@
     --controlsAutoWidth: calc(100% - var(--leftAside) - var(--rightAside) - var(--controlsMargin) * 2);
     --infoTransition: 400ms ease-in-out;
     --viewTransition: 800ms ease-out;
+    --barsTransition: 600ms ease-in-out;
 }
 
 body {
@@ -44,7 +45,7 @@ body {
             background-image: url("https://wallpapers.com/images/hd/macbook-retina-ro2bkgblez1y6vlp.jpg");
         }
 
-        &:has(.controlLeft:checked) {
+        &:has(.leftControl:not(:checked)) {
 
             .controlsBoxColor {
                 left: 10px;
@@ -57,7 +58,7 @@ body {
             }
         }
 
-        &:has(.controlRight:checked) {
+        &:has(.rightControl:not(:checked)) {
 
             .controlsBoxColor {
                 left: calc(var(--leftAside) + var(--controlsMargin));
@@ -70,7 +71,7 @@ body {
             }
         }
 
-        &:has(.controlExpand:checked) {
+        &:has(.bothControl:not(:checked)) {
 
             .controlsBoxColor {
                 left: 10px;
@@ -90,6 +91,7 @@ body {
             background-position: center;
             background-size: cover;
             box-shadow: 0 0 14px black;
+            overflow: hidden;
             transition: var(--viewTransition);
         }
 
@@ -105,7 +107,7 @@ body {
             left: calc(var(--leftAside) + var(--controlsMargin));
             background-color: var(--darkCristal);
             border-radius: 4px;
-            transition: 1s;
+            transition: var(--barsTransition);
         }
 
         .controlsBoxColor,

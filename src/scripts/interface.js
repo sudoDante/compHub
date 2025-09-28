@@ -1,6 +1,13 @@
 import * as element from "./modules/elements.js"
 import { components } from "../config/components.js"
 
+export const loadHiddenInputs = async (container) => {
+    const hiddenInputsBox = element.add(container, "div", null, "absolute")
+    element.add(hiddenInputsBox, "input", "leftControl", "leftControl hiddenInput", { id: "leftControl", type: "checkbox", checked: false })
+    element.add(hiddenInputsBox, "input", "rightControl", "rightControl hiddenInput", { id: "rightControl", type: "checkbox", checked: true })
+    element.add(hiddenInputsBox, "input", "bothControl", "bothControl hiddenInput", { id: "bothControl", type: "checkbox", checked: false })
+}
+
 export const loadMenu = async (container) => {
     document.addEventListener("listMenu_primary", async (e) => {
         const pos = Number(e.detail.pos)
@@ -8,7 +15,8 @@ export const loadMenu = async (container) => {
         console.log(pos, delay)
     })
     const backColor = getComputedStyle(document.documentElement).getPropertyValue("--darkCristal")
-    element.add(container, "list-menu", null, "listMenu", { "list": components, title: "Components by type", back: backColor, close: true, button: "fall" })
+    const barsTransition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
+    element.add(container, "list-menu", "listMenu", "listMenu", { "list": components, title: "Components by type", back: backColor, close: true, button: "fall", hostTransition: barsTransition })
 }
 
 export const loadControls = async (container) => {
