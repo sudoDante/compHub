@@ -30,7 +30,7 @@ export class listMenu extends HTMLElement {
         this.dom = this.attachShadow({ mode: "open" })
         this.dom.innerHTML = `
             <div id="container" class="container maxH crystal">
-                <div id="title" class="title maxW center radius4"></div>
+                <div id="title" class="title maxW center"></div>
                 <div id="menu" class="menu maxW scrollHidden"></div>
             </div>
         `
@@ -84,9 +84,8 @@ export class listMenu extends HTMLElement {
 
                 .title {
                     height: var(--titleHeight);
-                    background-color: var(--titleBack);
                     font-size: 18px;
-                    color: var(--colorText1);
+                    color: var(--color1);
                     margin-bottom: 10px
                 }
 
@@ -97,12 +96,15 @@ export class listMenu extends HTMLElement {
                                         
                     & .option:has(input:not(:checked):hover) .nameBox {
                         background-color: var(--color1);
-                        color: rgb(28, 28, 28);
+
+                        .name { color: var(--colorText1) };
                     }
 
                     & .option:has(input:checked) {
                         .nameBox { background-color: var(--color2); font-style: italic; }
                         .expand { flex: 1; }
+
+                        .name { color: var(--colorText2) };
                     }
 
                     & .option:has(+.expandMenu .optionSub input:checked) .marker { 
@@ -142,6 +144,7 @@ export class listMenu extends HTMLElement {
                                 width: auto;
                                 height: auto;
                                 padding-right: 10px;
+                                color: var(--colorText3);
                             }
                         }
                     }
@@ -161,7 +164,8 @@ export class listMenu extends HTMLElement {
 
                             &:hover:has(input:not(:checked)) .nameBoxSub { 
                                 background-color: var(--color1); 
-                                color: rgb(28, 28, 28); 
+
+                                    .nameSub { color: var(--colorText1) };
                             }
 
                             &:has(input:checked) .nameBoxSub {
@@ -189,6 +193,7 @@ export class listMenu extends HTMLElement {
                                     width: auto;
                                     height: auto;
                                     padding-right: 10px;
+                                    color: var(--colorText3);
                                 }
                             }
                         }
@@ -245,8 +250,9 @@ export class listMenu extends HTMLElement {
             const color1 = this.getAttribute("color1") ? this.getAttribute("color1") : "rgba(221, 221, 221, 1)"
             const color2 = this.getAttribute("color2") ? this.getAttribute("color2") : "rgba(106, 161, 165, 1)"
             const color3 = this.getAttribute("color3") ? this.getAttribute("color3") : "rgba(38, 157, 165, 1)"
-            const colorText1 = this.getAttribute("colorText1") ? this.getAttribute("colorText1") : "rgb(28, 28, 28)"
-            const colorText2 = this.getAttribute("colorText2") ? this.getAttribute("colorText2") : "rgb(240, 240, 240)"
+            const colorText1 = this.getAttribute("colorText1") ? this.getAttribute("colorText1") : "rgb(80, 80, 80)"
+            const colorText2 = this.getAttribute("colorText2") ? this.getAttribute("colorText2") : "rgba(240, 240, 240, 1)"
+            const colorText3 = this.getAttribute("colorText3") ? this.getAttribute("colorText3") : "rgba(160, 160, 160, 1)"
             const back = this.getAttribute("back") ? this.getAttribute("back") : "rgba(0, 0, 0, 0.8)"
             const close = this.getAttribute("close") && this.getAttribute("close") === "true" ? true : false
             const hostTransition = this.getAttribute("hostTransition") ? this.getAttribute("hostTransition") : "2s"
@@ -262,6 +268,7 @@ export class listMenu extends HTMLElement {
                 "color3": color3,
                 "colorText1": colorText1,
                 "colorText2": colorText2,
+                "colorText3": colorText3,
                 "close": close,
                 "hostTransition": hostTransition,
                 "button": button,
@@ -277,6 +284,7 @@ export class listMenu extends HTMLElement {
             if (conf.color3) this.style.setProperty("--color3", conf.color3)
             if (conf.colorText1) this.style.setProperty("--colorText1", conf.colorText1)
             if (conf.colorText2) this.style.setProperty("--colorText2", conf.colorText2)
+            if (conf.colorText3) this.style.setProperty("--colorText3", conf.colorText3)
         }
 
         const drawClose = async (conf) => {
@@ -393,7 +401,7 @@ export class listMenu extends HTMLElement {
                 closeInput.addEventListener("change", (e) => {
                     controlMenuDisplay(e.target, conf.hostTransition)
                     const state = closeInput.checked
-                    document.dispatchEvent(new CustomEvent("selectionMenuVisibility", {detail: {state}}))
+                    document.dispatchEvent(new CustomEvent("selectionMenuVisibility", { detail: { state } }))
                 })
             }
         }

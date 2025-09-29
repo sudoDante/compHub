@@ -1,7 +1,7 @@
 :root {
     --backColor: rgb(230, 230, 230);
     --leftAside: 200px;
-    --rightAside: 200px;
+    --rightAside: 280px;
     --darkCristal: rgba(0, 0, 0, 0.6);
     --textInactive: rgb(153, 153, 153);
     --textActive: whitesmoke;
@@ -90,7 +90,7 @@ body {
             background-color: var(--backgroundColor);
             background-position: center;
             background-size: cover;
-            box-shadow: 0 0 14px black;
+            box-shadow: 2px 10px 20px black;
             overflow: hidden;
             transition: var(--viewTransition);
         }
@@ -167,7 +167,7 @@ body {
                 &:last-of-type {
                     width: auto;
                     height: auto;
-                    font-size: 20px;
+                    font-size: 22px;
                     font-style: normal;
                     margin-left: 10px;
                 }

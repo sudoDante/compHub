@@ -37,7 +37,7 @@ export const loadControls = async (container) => {
         i === 1 ? input.checked = true : null
     }
     const restart = element.add(backBox, "span", "restartBackImage", "numberBox restartBackImage relative center material-symbols-outlined")
-    restart.textContent = "replay"
+    restart.textContent = "settings_backup_restore"
 
     const viewsBox = element.add(controlsBox, "div", null, "viewsBox controls flex")
     const icons = ["computer", "view_compact_alt", "mobile_3", "crop_free"]
