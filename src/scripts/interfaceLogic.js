@@ -72,10 +72,17 @@ const changeView = async (view) => {
     componentBox.addEventListener("transitionend", () => { event.send(document, "viewChange", { detail: view }) }, { once: true })
 }
 
-export const menuVisibility = (par) => {
-    console.log(par)
-    const check = document.getElementById("leftControl")
-    check.checked = par
+export const menuVisibility = (obj) => {
+    const list = document.getElementById("listMenuHidden")
+    const config = document.getElementById("configMenuHidden")
+    const panels = document.getElementById("bothMenuHidden")
+
+    console.log(list, config)
+    const check = document.getElementById(`${obj.item}Hidden`)
+    console.log(check)
+    check.checked = obj.state
+
+    panels.checked = (!list.checked && !config.checked) ? false : true
 }
 
 export const drawInfo = async (par, container) => {

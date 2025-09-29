@@ -2,10 +2,10 @@ import * as element from "./modules/elements.js"
 import { components } from "../config/components.js"
 
 export const loadHiddenInputs = async (container) => {
-    const hiddenInputsBox = element.add(container, "div", null, "absolute")
-    element.add(hiddenInputsBox, "input", "leftControl", "leftControl hiddenInput", { id: "leftControl", type: "checkbox", checked: false })
-    element.add(hiddenInputsBox, "input", "rightControl", "rightControl hiddenInput", { id: "rightControl", type: "checkbox", checked: true })
-    element.add(hiddenInputsBox, "input", "bothControl", "bothControl hiddenInput", { id: "bothControl", type: "checkbox", checked: false })
+    const hiddenInputsBox = element.add(container, "div", null, "panelsControl absolute")
+    element.add(hiddenInputsBox, "input", "listMenuHidden", "leftControl hiddenInput", { type: "checkbox", checked: true })
+    element.add(hiddenInputsBox, "input", "configMenuHidden", "rightControl hiddenInput", { type: "checkbox", checked: true })
+    element.add(hiddenInputsBox, "input", "bothMenuHidden", "bothControl hiddenInput", { type: "checkbox", checked: true })
 }
 
 export const loadMenu = async (container) => {

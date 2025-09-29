@@ -401,7 +401,7 @@ export class listMenu extends HTMLElement {
                 closeInput.addEventListener("change", (e) => {
                     controlMenuDisplay(e.target, conf.hostTransition)
                     const state = closeInput.checked
-                    document.dispatchEvent(new CustomEvent("selectionMenuVisibility", { detail: { state } }))
+                    document.dispatchEvent(new CustomEvent("menuVisibility", { detail: { item: this.id, "state": state } }))
                 })
             }
         }

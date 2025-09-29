@@ -24,8 +24,8 @@ export const loadMenuEvents = () => {
         }
     })
 
-    document.addEventListener("selectionMenuVisibility", (e) => {
-        ifaceLogic.menuVisibility(e.detail.state)
+    document.addEventListener("menuVisibility", (e) => {
+        ifaceLogic.menuVisibility(e.detail)
     })
 
     document.addEventListener("viewChange", (e) => {

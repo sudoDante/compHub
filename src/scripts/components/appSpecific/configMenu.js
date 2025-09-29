@@ -98,13 +98,11 @@ export class configMenu extends HTMLElement {
         const controlMenuDisplay = (input, size) => {
             const hostContainer = this.parentElement
             hostContainer.style.right = input.checked ? 0 : `${hostContainer.offsetWidth * -1}px`
-            console.log(input.checked)
 
             const closeBox = this.dom.querySelector(".closeBox")
             closeBox.style.top = input.checked ? "10px" : `calc(100% - ${size} - 10px`
             closeBox.querySelector(".icon").style.color = input.checked ? "whitesmoke" : "grey"
         }
-
 
         const main = async () => {
             const jsonConf = JSON.parse(this.getAttribute("config"))
@@ -116,7 +114,11 @@ export class configMenu extends HTMLElement {
             applyConfCss(conf)
 
             const closeButton = this.dom.querySelector("#buttonClose")
-            closeButton.addEventListener("change", () => { controlMenuDisplay(closeButton, conf.buttonSize) })
+            closeButton.addEventListener("change", () => {
+                controlMenuDisplay(closeButton, conf.buttonSize)
+                const state = closeButton.checked
+                document.dispatchEvent(new CustomEvent("menuVisibility", { detail: { item: this.id, "state": state } }))
+            })
 
             /* initial animation */
             closeButton.checked = true
