@@ -1,14 +1,14 @@
 :root {
     --backColor: rgb(230, 230, 230);
-    --leftAside: 200px;
-    --rightAside: 280px;
-    --darkCristal: rgba(0, 0, 0, 0.6);
+    --leftPanelBox: 200px;
+    --rightPanelBox: 280px;
+    --backColor: rgba(0, 0, 0, 0.6);
     --textInactive: rgb(153, 153, 153);
     --textActive: whitesmoke;
     --enphasisColor: rgb(152, 201, 204);
     --optTime: 100ms;
     --controlsMargin: 55px;
-    --controlsAutoWidth: calc(100% - var(--leftAside) - var(--rightAside) - var(--controlsMargin) * 2);
+    --controlsAutoWidth: calc(100% - var(--leftPanelBox) - var(--rightPanelBox) - var(--controlsMargin) * 2);
     --infoTransition: 400ms ease-in-out;
     --viewTransition: 800ms ease-out;
     --barsTransition: 600ms ease-in-out;
@@ -49,25 +49,25 @@ body {
 
             .controlsBoxColor {
                 left: 10px;
-                width: calc(var(--controlsAutoWidth) + var(--leftAside) + var(--controlsMargin) - 10px);
+                width: calc(var(--controlsAutoWidth) + var(--leftPanelBox) + var(--controlsMargin) - 10px);
             }
 
             .infoBoxColor {
                 left: calc(var(--controlsMargin));
-                width: calc(var(--controlsAutoWidth) + var(--leftAside) + var(--controlsMargin) - var(--controlsMargin));
+                width: calc(var(--controlsAutoWidth) + var(--leftPanelBox) + var(--controlsMargin) - var(--controlsMargin));
             }
         }
 
         &:has(.rightControl:not(:checked)) {
 
             .controlsBoxColor {
-                left: calc(var(--leftAside) + var(--controlsMargin));
-                width: calc(var(--controlsAutoWidth) + var(--rightAside) + var(--controlsMargin) - 10px);
+                left: calc(var(--leftPanelBox) + var(--controlsMargin));
+                width: calc(var(--controlsAutoWidth) + var(--rightPanelBox) + var(--controlsMargin) - 10px);
             }
 
             .infoBoxColor {
-                left: calc(var(--leftAside) + var(--controlsMargin));
-                width: calc(var(--controlsAutoWidth) + var(--rightAside) + var(--controlsMargin) - var(--controlsMargin));
+                left: calc(var(--leftPanelBox) + var(--controlsMargin));
+                width: calc(var(--controlsAutoWidth) + var(--rightPanelBox) + var(--controlsMargin) - var(--controlsMargin));
             }
         }
 
@@ -95,17 +95,17 @@ body {
             transition: var(--viewTransition);
         }
 
-        .leftAside {
+        .leftPanelBox {
             z-index: 10;
             left: 0;
-            width: var(--leftAside);
+            width: var(--leftPanelBox);
             height: 100%;
         }
 
         .controlsBoxColor,
         .infoBoxColor {
-            left: calc(var(--leftAside) + var(--controlsMargin));
-            background-color: var(--darkCristal);
+            left: calc(var(--leftPanelBox) + var(--controlsMargin));
+            background-color: var(--backColor);
             border-radius: 4px;
             transition: var(--barsTransition);
         }
@@ -113,7 +113,7 @@ body {
         .controlsBoxColor,
         .controlBox {
             top: 10px;
-            left: calc(var(--leftAside) + var(--controlsMargin));
+            left: calc(var(--leftPanelBox) + var(--controlsMargin));
             width: var(--controlsAutoWidth);
             height: 34px;
         }
@@ -245,10 +245,10 @@ body {
         }
     }
 
-    .rightAside {
-        right: 0;
-        width: var(--rightAside);
+    .rightPanelBox {
+        right: calc(-1 * var(--rightPanelBox));
+        width: var(--rightPanelBox);
         height: 100%;
-        border: 1px solid red;
+        transition: var(--barsTransition);
     }
 }

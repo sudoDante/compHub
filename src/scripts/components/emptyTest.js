@@ -37,8 +37,6 @@ export class emptyTest extends HTMLElement {
                 }
             }
         `
-
-        console.log(this.container, style)
     }
 }
 customElements.define("empty-test", emptyTest)

@@ -1,5 +1,15 @@
 import * as event from "./modules/customEvents.js"
 import { componentsConfig } from "./../config/componentsConfig.js"
+import * as element from "./modules/elements.js"
+
+export const loadComponent = async (par, container) => {
+    componentBox.innerHTML = ""
+    const url = par.url
+    const tag = par.htmlTag
+    const name = par.defaultName
+    const comp = await import(url)
+    await element.add(container, tag, name, name)
+}
 
 export const applyBacksRestart = () => {
     const restartBackImage = document.getElementById("restartBackImage")
@@ -93,11 +103,23 @@ export const drawInfo = async (par, container) => {
     await new Promise(resolve => { setTimeout(resolve, delay) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
 }
 
-export const loadConfig = async (par, container) => {
-/*     console.log(container, par)
- */    const componentTag = par.defaultName
+export const loadConfig = async (par) => {
+    const componentTag = par.htmlTag
     const confJson = componentsConfig
-    const componentConf = Object.values(confJson).find(item => item.name === componentTag)
-/*     console.log(componentConf)
-    console.log(componentConf.config)
- */}
+    const componentConf = Object.values(confJson).find(item => item.tag === componentTag)
+    return componentConf.config
+}
+
+export const drawPanelConfig = async (conf, container) => {
+    const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
+    const transition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
+    const width = getComputedStyle(document.documentElement).getPropertyValue("--rightPanelBox")
+
+    await import("./components/appSpecific/configMenu.js")
+    element.add(container, "config-menu", null, null, {
+        config: JSON.stringify(conf),
+        back: backColor,
+        transition: transition,
+        parentWidth: width
+    })
+}
