@@ -5,7 +5,19 @@ export class configMenu extends HTMLElement {
         super()
 
         this.dom = this.attachShadow({ mode: "open" })
-        this.container = element.add(this.dom, "div", null, "container")
+        this.container = element.add(this.dom, "div", null, "container relative")
+        this.container.innerHTML = `
+            <div class="closeBox relative center radius4">
+                <span class="icon material-symbols-outlined">arrow_menu_open</span>
+                <input id="buttonClose" class="absolute hiddenInput" type="checkbox">
+            </div>
+            <section id="configBox" class="configBox"></section>
+        `
+
+        element.add(this.dom, "link", null, null, {
+            rel: "stylesheet",
+            href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
+        })
 
         const style = element.add(this.dom, "style", null, null)
         style.textContent += `
@@ -15,11 +27,50 @@ export class configMenu extends HTMLElement {
                 margin: 0;
             }
 
+            .relative {
+                position: relative;
+            }
+
+            .absolute {
+                position: absolute;
+            }
+
+            .center {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .hiddenInput { 
+                position: absolute; 
+                width: 100%;
+                height: 100%;
+                z-index: 10; 
+                appearance: none; 
+                cursor: pointer; 
+            }
+
             .container {
                 width: 100%;
                 height: 100%;
                 background-color: var(--backColor);
                 transition: var(--transition);
+
+                .closeBox {
+                    left: calc(-1 * var(--buttonSize) - 10px);
+                    top: 10px;
+                    width: var(--buttonSize);
+                    aspect-ratio: 1/1;
+                    background-color: var(--backColor);
+                    border-radius: 4px;
+                    transition: var(--transition);
+
+                    .icon {
+                        color: whitesmoke;
+                        font-size: 22px;
+                        transition: var(--transition);
+                    }
+                }
             }
         `
     }
@@ -28,31 +79,48 @@ export class configMenu extends HTMLElement {
 
         const getConfig = () => {
             const backColor = this.getAttribute("back") ? this.getAttribute("back") : "red"
+            const buttonSize = this.getAttribute("buttonSize") ? this.getAttribute("buttonSize") : "30px"
+            const transition = this.getAttribute("transition") ? this.getAttribute("transition") : "30px"
 
             return {
                 "backColor": backColor,
+                "buttonSize": buttonSize,
+                "transition": transition
             }
         }
 
         const applyConfCss = (conf) => {
             this.style.setProperty("--backColor", conf.backColor)
+            this.style.setProperty("--buttonSize", conf.buttonSize)
+            this.style.setProperty("--transition", conf.transition)
         }
 
-        const moveContainer = () => {
-            const parent = this.parentElement
-            parent.style.right = 0
+        const controlMenuDisplay = (input, size) => {
+            const hostContainer = this.parentElement
+            hostContainer.style.right = input.checked ? 0 : `${hostContainer.offsetWidth * -1}px`
+            console.log(input.checked)
+
+            const closeBox = this.dom.querySelector(".closeBox")
+            closeBox.style.top = input.checked ? "10px" : `calc(100% - ${size} - 10px`
+            closeBox.querySelector(".icon").style.color = input.checked ? "whitesmoke" : "grey"
         }
+
 
         const main = async () => {
             const jsonConf = JSON.parse(this.getAttribute("config"))
+            console.log(jsonConf)
+
             const conf = await getConfig()
             console.log("conf", conf)
-            
+
             applyConfCss(conf)
 
+            const closeButton = this.dom.querySelector("#buttonClose")
+            closeButton.addEventListener("change", () => { controlMenuDisplay(closeButton, conf.buttonSize) })
 
-            /* ultimo paso */
-            moveContainer()
+            /* initial animation */
+            closeButton.checked = true
+            controlMenuDisplay(closeButton, conf.buttonSize)
         }
 
         main()

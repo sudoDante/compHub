@@ -18,8 +18,10 @@ export const loadMenuEvents = () => {
         ifaceLogic.loadComponent(componentInfo, componentBox)
 
 
-        const config = await ifaceLogic.loadConfig(componentInfo)
-        await ifaceLogic.drawPanelConfig(config, rightPanelBox)
+        if (!document.getElementById("configMenu")) {
+            const config = await ifaceLogic.loadConfig(componentInfo)
+            await ifaceLogic.drawPanelConfig(config, rightPanelBox)
+        }
     })
 
     document.addEventListener("selectionMenuVisibility", (e) => {

@@ -114,11 +114,13 @@ export const drawPanelConfig = async (conf, container) => {
     const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
     const transition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
     const width = getComputedStyle(document.documentElement).getPropertyValue("--rightPanelBox")
+    const buttonSize = getComputedStyle(document.documentElement).getPropertyValue("--barHeight")
 
     await import("./components/appSpecific/configMenu.js")
-    element.add(container, "config-menu", null, null, {
+    element.add(container, "config-menu", "configMenu", null, {
         config: JSON.stringify(conf),
         back: backColor,
+        buttonSize: buttonSize,
         transition: transition,
         parentWidth: width
     })

@@ -12,6 +12,7 @@
     --infoTransition: 400ms ease-in-out;
     --viewTransition: 800ms ease-out;
     --barsTransition: 600ms ease-in-out;
+    --barHeight: 34px;
 }
 
 body {
@@ -115,7 +116,7 @@ body {
             top: 10px;
             left: calc(var(--leftPanelBox) + var(--controlsMargin));
             width: var(--controlsAutoWidth);
-            height: 34px;
+            height: var(--barHeight);
         }
 
         .controlBox {
@@ -211,15 +212,15 @@ body {
     .infoBoxColor {
         bottom: 10px;
         width: var(--controlsAutoWidth);
-        height: 34px;
+        height: var(--barHeight);
     }
 
     .info {
         bottom: 10px;
-        left: calc(50% - var(--controlsAutoWidth) / 2);
+        left: calc(var(--leftPanelBox) + var(--controlsMargin));
         display: flex;
         width: var(--controlsAutoWidth);
-        height: 34px;
+        height: var(--barHeight);
         overflow: hidden;
 
         .name,
