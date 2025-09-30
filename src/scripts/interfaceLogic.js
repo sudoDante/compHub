@@ -76,10 +76,7 @@ export const menuVisibility = (obj) => {
     const list = document.getElementById("listMenuHidden")
     const config = document.getElementById("configMenuHidden")
     const panels = document.getElementById("bothMenuHidden")
-
-    console.log(list, config)
     const check = document.getElementById(`${obj.item}Hidden`)
-    console.log(check)
     check.checked = obj.state
 
     panels.checked = (!list.checked && !config.checked) ? false : true
@@ -117,7 +114,7 @@ export const loadConfig = async (par) => {
     return componentConf.config
 }
 
-export const drawPanelConfig = async (conf, container) => {
+export const drawPanelConfig = async (container) => {
     const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
     const transition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
     const width = getComputedStyle(document.documentElement).getPropertyValue("--rightPanelBox")
@@ -125,10 +122,15 @@ export const drawPanelConfig = async (conf, container) => {
 
     await import("./components/appSpecific/configMenu.js")
     element.add(container, "config-menu", "configMenu", null, {
-        config: JSON.stringify(conf),
         back: backColor,
         buttonSize: buttonSize,
         transition: transition,
         parentWidth: width
     })
 }
+
+export const drawConfig = async (config) => {
+    const container = document.getElementById("configMenu").shadowRoot.getElementById("config")
+    const configItems = config
+    console.log(configItems)
+ }

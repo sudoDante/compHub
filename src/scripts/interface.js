@@ -42,7 +42,7 @@ export const loadControls = async (container) => {
     const viewsBox = element.add(controlsBox, "div", null, "viewsBox controls flex")
     const icons = ["computer", "view_compact_alt", "mobile_3", "crop_free"]
     const ids = ["computer", "tablet", "mobile", "fullscreen"]
-    for (let i = 0; i <= 3; i++) {
+    for (let i = 0; i <= 4; i++) {
         const view = element.add(viewsBox, "div", null, "view relative center")
         const iconView = element.add(view, "span", null, "iconView material-symbols-outlined")
         iconView.textContent = icons[i]

@@ -7,11 +7,11 @@ export class configMenu extends HTMLElement {
         this.dom = this.attachShadow({ mode: "open" })
         this.container = element.add(this.dom, "div", null, "container relative")
         this.container.innerHTML = `
+            <div id="configBox" class="configBox center"></div>
             <div class="closeBox relative center radius4">
                 <span class="icon material-symbols-outlined">arrow_menu_open</span>
                 <input id="buttonClose" class="absolute hiddenInput" type="checkbox">
             </div>
-            <section id="configBox" class="configBox"></section>
         `
 
         element.add(this.dom, "link", null, null, {
@@ -21,7 +21,7 @@ export class configMenu extends HTMLElement {
 
         const style = element.add(this.dom, "style", null, null)
         style.textContent += `
-            :host {
+            * {
                 box-sizing: border-box;
                 padding: 0;
                 margin: 0;
@@ -55,6 +55,13 @@ export class configMenu extends HTMLElement {
                 height: 100%;
                 background-color: var(--backColor);
                 transition: var(--transition);
+
+                .configBox {
+                    width: 100%;
+                    height: 100%;
+                    padding: 20px;
+                    border: 1px solid red;
+                }
 
                 .closeBox {
                     left: calc(-1 * var(--buttonSize) - 10px);
@@ -105,12 +112,7 @@ export class configMenu extends HTMLElement {
         }
 
         const main = async () => {
-            const jsonConf = JSON.parse(this.getAttribute("config"))
-            console.log(jsonConf)
-
             const conf = await getConfig()
-            console.log("conf", conf)
-
             applyConfCss(conf)
 
             const closeButton = this.dom.querySelector("#buttonClose")

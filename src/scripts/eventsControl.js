@@ -17,11 +17,9 @@ export const loadMenuEvents = () => {
         /* inyectar animacion de cambio para la salida del componente y esperar transicion*/
         ifaceLogic.loadComponent(componentInfo, componentBox)
 
-
-        if (!document.getElementById("configMenu")) {
-            const config = await ifaceLogic.loadConfig(componentInfo)
-            await ifaceLogic.drawPanelConfig(config, rightPanelBox)
-        }
+        const config = await ifaceLogic.loadConfig(componentInfo)
+        if (!document.getElementById("configMenu")) await ifaceLogic.drawPanelConfig(rightPanelBox)
+        ifaceLogic.drawConfig(config)
     })
 
     document.addEventListener("menuVisibility", (e) => {

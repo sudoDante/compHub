@@ -27,11 +27,11 @@ body {
         height: 100%;
 
         &:has(.controlBox .backBox .numberBox:nth-of-type(1) input[type="radio"]:checked) .componentBox {
-            background-image: url("https://marketplace.canva.com/EAGQ4hBhXII/1/0/1600w/canva-htGu4av79Lo.jpg");
+            background-image: url("https://wallpapers.com/images/hd/particle-dark-color-98jq6aj43pdnwkq0.jpg");
         }
 
         &:has(.controlBox .backBox .numberBox:nth-of-type(2) input[type="radio"]:checked) .componentBox {
-            background-image: url("https://wallpapers.com/images/hd/1920-x-1080-hd-ydvvfje0bdoimttn.jpg");
+            background-image: url("https://wallpapers.com/images/hd/brisk-wall-in-dark-colors-x4kg76xvn08t3jxg.jpg");
         }
 
         &:has(.controlBox .backBox .numberBox:nth-of-type(3) input[type="radio"]:checked) .componentBox {
