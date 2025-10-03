@@ -15,6 +15,7 @@ export const loadMenu = async (container) => {
         console.log(pos, delay)
     })
     const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
+    console.log(backColor)
     const barsTransition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
     element.add(container, "list-menu", "listMenu", "listMenu", { "list": components, title: "Components by type", back: backColor, close: true, button: "fall", hostTransition: barsTransition })
 }

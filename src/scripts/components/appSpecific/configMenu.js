@@ -5,12 +5,12 @@ export class configMenu extends HTMLElement {
         super()
 
         this.dom = this.attachShadow({ mode: "open" })
-        this.container = element.add(this.dom, "div", null, "container relative")
+        this.container = element.add(this.dom, "div", null, "container")
         this.container.innerHTML = `
-            <div id="configBox" class="configBox center"></div>
-            <div class="closeBox relative center radius4">
+            <div id="configBox" class="configBox"></div>
+            <div class="closeBox radius4">
                 <span class="icon material-symbols-outlined">arrow_menu_open</span>
-                <input id="buttonClose" class="absolute hiddenInput" type="checkbox">
+                <input id="buttonClose" class="hiddenInput" type="checkbox">
             </div>
         `
 
@@ -27,45 +27,30 @@ export class configMenu extends HTMLElement {
                 margin: 0;
             }
 
-            .relative {
-                position: relative;
-            }
-
-            .absolute {
-                position: absolute;
-            }
-
-            .center {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .hiddenInput { 
-                position: absolute; 
-                width: 100%;
-                height: 100%;
-                z-index: 10; 
-                appearance: none; 
-                cursor: pointer; 
-            }
-
             .container {
+                position: relative;
                 width: 100%;
                 height: 100%;
                 background-color: var(--backColor);
                 transition: var(--transition);
 
                 .configBox {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
                     width: 100%;
                     height: 100%;
                     padding: 20px;
-                    border: 1px solid red;
+                    overflow-Y: auto;
                 }
 
                 .closeBox {
+                    position: absolute;
                     left: calc(-1 * var(--buttonSize) - 10px);
                     top: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     width: var(--buttonSize);
                     aspect-ratio: 1/1;
                     background-color: var(--backColor);
@@ -76,6 +61,15 @@ export class configMenu extends HTMLElement {
                         color: whitesmoke;
                         font-size: 22px;
                         transition: var(--transition);
+                    }
+
+                    .hiddenInput { 
+                        position: absolute; 
+                        width: 100%;
+                        height: 100%;
+                        z-index: 10; 
+                        appearance: none; 
+                        cursor: pointer; 
                     }
                 }
             }
@@ -123,9 +117,9 @@ export class configMenu extends HTMLElement {
             })
 
             /* initial animation */
-            closeButton.checked = true
+/*             closeButton.checked = true
             controlMenuDisplay(closeButton, conf.buttonSize)
-        }
+ */        }
 
         main()
     }

@@ -2,23 +2,23 @@ export const componentsConfig = [
     {
         tag: "empty-test",
         config: [
-            [
-                { tag: "input", type: "range", value: 25, label: "size" },
-                { tag: "input", type: "range", value: 50, label: "size" },
-                { tag: "input", type: "range", value: 75, label: "size" }
-            ]
-        ]
+            {
+                title: "ranges",
+                items: [
+                    { tag: "input", type: "range", min: 0, max: 100, value: 75, label: "size" },
+                    { tag: "input", type: "range", min: 0, max: 50, value: 50, label: "size" },
+                ]
+            }]
     },
     {
         tag: "matrix-effect",
         config: [
-            { tag: "input", type: "range", value: 20, label: "size" }
-        ]
+            {
+                title: "ranges",
+                items: [
+                    { tag: "input", type: "range", min: 0, max: 100, value: 75, label: "dddd" },
+                    { tag: "input", type: "range", min: 0, max: 50, value: 50, label: "dddd" },
+                ]
+            }]
     },
-    {
-        tag: "colorized-grid",
-        config: [
-            { tag: "input", type: "range", value: 20, label: "size" }
-        ]
-    }
 ]

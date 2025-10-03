@@ -12,7 +12,6 @@ export const add = (container, tag, idName = null, classNames = null, objAttr = 
         if (!Array.isArray(value)) createdElement.setAttribute(key, value)
     })
     container.appendChild(createdElement)
-
     return createdElement
 }
 

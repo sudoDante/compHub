@@ -50,8 +50,6 @@ export class listMenu extends HTMLElement {
                 margin: 0;
                 font-family: "anta";
                 color: var(--colorText2);
-
-                &:has(.container .closeBox input:checked) {}
             }
 
             .center { 
@@ -253,7 +251,7 @@ export class listMenu extends HTMLElement {
             const colorText1 = this.getAttribute("colorText1") ? this.getAttribute("colorText1") : "rgb(80, 80, 80)"
             const colorText2 = this.getAttribute("colorText2") ? this.getAttribute("colorText2") : "rgba(240, 240, 240, 1)"
             const colorText3 = this.getAttribute("colorText3") ? this.getAttribute("colorText3") : "rgba(160, 160, 160, 1)"
-            const back = this.getAttribute("back") ? this.getAttribute("back") : "rgba(0, 0, 0, 0.8)"
+            const back = this.getAttribute("back") ? this.getAttribute("back") : "rgba(0, 0, 0, 1)"
             const close = this.getAttribute("close") && this.getAttribute("close") === "true" ? true : false
             const hostTransition = this.getAttribute("hostTransition") ? this.getAttribute("hostTransition") : "2s"
             const button = this.getAttribute("button") ? this.getAttribute("button") : null
@@ -388,6 +386,7 @@ export class listMenu extends HTMLElement {
         const main = async () => {
 
             const conf = getConfig()
+            console.log(conf)
             applyConfCss(conf)
             await drawMenu(conf)
 

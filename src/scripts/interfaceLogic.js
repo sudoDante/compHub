@@ -3,12 +3,12 @@ import { componentsConfig } from "./../config/componentsConfig.js"
 import * as element from "./modules/elements.js"
 
 export const loadComponent = async (par, container) => {
-    componentBox.innerHTML = ""
+    container.innerHTML = ""
     const url = par.url
     const tag = par.htmlTag
     const name = par.defaultName
-    const comp = await import(url)
-    await element.add(container, tag, name, name)
+    await import(url)
+    element.add(container, tag, name, name)
 }
 
 export const applyBacksRestart = () => {
@@ -48,6 +48,7 @@ export const applyViewsEvents = () => {
 }
 
 const changeView = async (view) => {
+    const componentBoxContainer = document.getElementById("componentBoxContainer")
     const componentBox = document.getElementById("componentBox")
 
     componentBox.innerHTML = ""
@@ -55,21 +56,21 @@ const changeView = async (view) => {
     const heightBox = document.body.offsetHeight
 
     if (view === "computerView") {
-        componentBox.style.height = `${heightBox}px`
-        componentBox.style.width = `${widthBox}px`
-        componentBox.style.borderRadius = "0px"
+        componentBoxContainer.style.height = `${heightBox}px`
+        componentBoxContainer.style.width = `${widthBox}px`
+        componentBoxContainer.style.borderRadius = "0px"
     }
     if (view === "tabletView") {
-        componentBox.style.height = `${heightBox * 0.8}px`
-        componentBox.style.width = `${16 / 9 * (0.8 * heightBox)}px`
-        componentBox.style.borderRadius = "16px"
+        componentBoxContainer.style.height = `${heightBox * 0.8}px`
+        componentBoxContainer.style.width = `${16 / 9 * (0.8 * heightBox)}px`
+        componentBoxContainer.style.borderRadius = "16px"
     }
     if (view === "mobileView") {
-        componentBox.style.height = `${heightBox * 0.8}px`
-        componentBox.style.width = `${9 / 16 * (0.8 * heightBox)}px`
-        componentBox.style.borderRadius = "8px"
+        componentBoxContainer.style.height = `${heightBox * 0.8}px`
+        componentBoxContainer.style.width = `${9 / 16 * (0.8 * heightBox)}px`
+        componentBoxContainer.style.borderRadius = "16px"
     }
-    componentBox.addEventListener("transitionend", () => { event.send(document, "viewChange", { detail: view }) }, { once: true })
+    componentBoxContainer.addEventListener("transitionend", () => { event.send(document, "viewChange", { detail: view }) }, { once: true })
 }
 
 export const menuVisibility = (obj) => {
@@ -82,29 +83,64 @@ export const menuVisibility = (obj) => {
     panels.checked = (!list.checked && !config.checked) ? false : true
 }
 
-export const drawInfo = async (par, container) => {
+export const drawInfo = async (par) => {
+    const info = document.getElementById("info")
     const infoFamily = document.getElementById("infoFamily")
     const infoName = document.getElementById("infoName")
+    const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--infoTransition"))
+
     const family = par.type
     const delay = par.time
     const name = par.defaultName
-    const transition = parseFloat(getComputedStyle(container).getPropertyValue("--infoTransition"))
-
-    container.style.width = "var(--controlsAutoWidth)"
-    infoFamily.style.clipPath = "polygon(0 0, 0 0, 0 100%, 0% 100%)"
-    infoName.style.clipPath = "polygon(0 0, 0 0, 0 100%, 0% 100%)"
-    await new Promise(resolve => setTimeout(resolve, transition))
 
     infoFamily.textContent = ""
     infoName.textContent = ""
     infoName.textContent = name.toUpperCase()
     infoFamily.textContent = family
-    await new Promise(resolve => setTimeout(resolve, transition))
 
-    infoName.style.clipPath = "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)"
-    await new Promise(resolve => { setTimeout(resolve, transition) })
-    infoFamily.style.clipPath = "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)"
-    await new Promise(resolve => { setTimeout(resolve, delay) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
+    info.style.clipPath = "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)"
+    await new Promise(resolve => { setTimeout(resolve, transition) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
+}
+
+export const clearInfo = async () => {
+    const info = document.getElementById("info")
+    const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--infoTransition"))
+    info.style.transition = transition
+    info.style.clipPath = "polygon(0 0, 0 0, 0 100%, 0% 100%)"
+    info.style.transition = transition
+    await new Promise(resolve => { setTimeout(resolve, transition) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
+}
+
+export const moveHalo = async (par, time) => {
+    const line = document.getElementById("line")
+    line.style.boxShadow = "0 0 30px rgb(0, 255, 208), 0 0 30px rgb(0, 255, 208), 0 0 30px rgb(0, 255, 208)"
+    if (par === true) {
+        line.style.top = "100%"
+    } else {
+        line.style.top = 0
+    }
+    await new Promise(resolve => setTimeout(resolve, time))
+    line.style.boxShadow = "none"
+
+}
+
+export const movePanel = async (panel, par) => {
+    if (par === true) {
+        panel.style.right = `-${rightPanelBox.offsetWidth}px`
+
+    } else {
+        panel.style.right = 0
+    }
+}
+
+export const moveMask = async (par, box, time) => {
+    if (par === true) {
+        componentBox.style.clipPath = "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)"
+    } else {
+        componentBox.style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)"
+        await new Promise(resolve => setTimeout(resolve, time))
+        box.innerHTML = ""
+    }
 }
 
 export const loadConfig = async (par) => {
@@ -122,15 +158,52 @@ export const drawPanelConfig = async (container) => {
 
     await import("./components/appSpecific/configMenu.js")
     element.add(container, "config-menu", "configMenu", null, {
-        back: backColor,
-        buttonSize: buttonSize,
-        transition: transition,
-        parentWidth: width
+        "back": backColor,
+        "buttonSize": buttonSize,
+        "transition": transition,
+        "parentWidth": width
     })
 }
 
 export const drawConfig = async (config) => {
-    const container = document.getElementById("configMenu").shadowRoot.getElementById("config")
+    const container = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
+    const font = "anta"
+    const fontSize = "14px"
+    const fontColor = "rgba(160, 160, 160, 1)"
+    const enphasisColor = "red"
     const configItems = config
-    console.log(configItems)
- }
+
+    for (const array of configItems) {
+        const title = array.title
+        const items = array.items
+
+        const section = element.add(container, "section", null, "section")
+
+        for (const obj of items) {
+            const tag = obj.tag
+            let type = obj.type || null
+
+            if (tag === "input" && obj.type === "range") {
+                await import("./components/nano/rangeSlim2.js")
+                const value = obj.value
+                const min = obj.min
+                const max = obj.max
+
+                const rangeBox = element.add(section, "div", null, "rangeBox")
+                const range = element.add(rangeBox, "range-slim", null, null, {
+                    "title": obj.label,
+                    "fontFamily": font,
+                    "fontSize": fontSize,
+                    "fontColor": fontColor,
+                    "trackColor": "rgba(200, 200, 200, 0.2)",
+                    "progressColor": "rgba(200, 200, 200, 0.6)",
+                    "thumbColor": "rgba(200, 200, 200, 1)",
+                    "enphasisColor": enphasisColor,
+                    "min": min,
+                    "max": max,
+                    "value": value
+                })
+            }
+        }
+    }
+}

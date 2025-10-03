@@ -1,18 +1,19 @@
 :root {
     --backColor: rgb(230, 230, 230);
     --leftPanelBox: 200px;
-    --rightPanelBox: 280px;
-    --backColor: rgba(0, 0, 0, 0.6);
+    --rightPanelBox: 200px;
+    --backColor: rgba(0, 0, 0, 0.8);
     --textInactive: rgb(153, 153, 153);
     --textActive: whitesmoke;
     --enphasisColor: rgb(152, 201, 204);
     --optTime: 100ms;
     --controlsMargin: 55px;
     --controlsAutoWidth: calc(100% - var(--leftPanelBox) - var(--rightPanelBox) - var(--controlsMargin) * 2);
-    --infoTransition: 400ms ease-in-out;
+    --infoTransition: 1200ms ease-in-out;
     --viewTransition: 800ms ease-out;
     --barsTransition: 600ms ease-in-out;
     --barHeight: 34px;
+    --lineWidth: 40px;
 }
 
 body {
@@ -26,24 +27,24 @@ body {
         width: 100%;
         height: 100%;
 
-        &:has(.controlBox .backBox .numberBox:nth-of-type(1) input[type="radio"]:checked) .componentBox {
-            background-image: url("https://wallpapers.com/images/hd/particle-dark-color-98jq6aj43pdnwkq0.jpg");
+        &:has(.controlBox .backBox .numberBox:nth-of-type(1) input[type="radio"]:checked) .componentBoxContainer .back {
+            background-image: url("https://wallpapers.com/images/hd/3d-desktop-gray-squares-s67e2cx0nbsysjqk.jpg");
         }
 
-        &:has(.controlBox .backBox .numberBox:nth-of-type(2) input[type="radio"]:checked) .componentBox {
+        &:has(.controlBox .backBox .numberBox:nth-of-type(2) input[type="radio"]:checked) .componentBoxContainer .back {
             background-image: url("https://wallpapers.com/images/hd/brisk-wall-in-dark-colors-x4kg76xvn08t3jxg.jpg");
         }
 
-        &:has(.controlBox .backBox .numberBox:nth-of-type(3) input[type="radio"]:checked) .componentBox {
+        &:has(.controlBox .backBox .numberBox:nth-of-type(3) input[type="radio"]:checked) .componentBoxContainer .back {
             background-image: url("https://wallpapers.com/images/hd/palm-leaves-plants-digital-artwork-0zxjle8qpguq73cn.jpg");
         }
 
-        &:has(.controlBox .backBox .numberBox:nth-of-type(4) input[type="radio"]:checked) .componentBox {
+        &:has(.controlBox .backBox .numberBox:nth-of-type(4) input[type="radio"]:checked) .componentBoxContainer .back {
             background-image: url("https://wallpapers.com/images/hd/smooth-black-hillside-lbg5pll0q0lotvv3.jpg");
         }
 
-        &:has(.controlBox .backBox .numberBox:nth-of-type(5) input[type="radio"]:checked) .componentBox {
-            background-image: url("https://wallpapers.com/images/hd/macbook-retina-ro2bkgblez1y6vlp.jpg");
+        &:has(.controlBox .backBox .numberBox:nth-of-type(5) input[type="radio"]:checked) .componentBoxContainer .back {
+            background-image: url("https://wallpapers.com/images/hd/black-and-white-heart-words-1bz680sj1o9qd28o.jpg");
         }
 
         &:has(.leftControl:not(:checked)) {
@@ -85,15 +86,38 @@ body {
             }
         }
 
-        .componentBox {
+        .componentBoxContainer {
             width: 100%;
             height: 100%;
-            background-color: var(--backgroundColor);
-            background-position: center;
-            background-size: cover;
             box-shadow: 2px 10px 20px black;
             overflow: hidden;
             transition: var(--viewTransition);
+
+            .back {
+                width: 100%;
+                height: 100%;
+                background-color: var(--backgroundColor);
+                background-position: center;
+                background-size: cover;
+            }
+
+            .componentBox {
+                z-index: 1;
+                width: 100%;
+                height: 100%;
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                transition: var(--infoTransition);
+            }
+
+            .line {
+                z-index: 2;
+                top: 0px;
+                width: 100%;
+                height: 3px;
+                background-color: rgba(255, 255, 255, 0.777);
+                box-shadow: 0 0 0px rgb(0, 255, 208), 0 0 0px rgb(0, 255, 208), 0 0 0px rgb(0, 255, 208);
+                transition: top var(--infoTransition);
+            }
         }
 
         .leftPanelBox {
@@ -105,6 +129,7 @@ body {
 
         .controlsBoxColor,
         .infoBoxColor {
+            z-index: 10;
             left: calc(var(--leftPanelBox) + var(--controlsMargin));
             background-color: var(--backColor);
             border-radius: 4px;
@@ -120,6 +145,7 @@ body {
         }
 
         .controlBox {
+            z-index: 10;
             display: flex;
             justify-content: space-between;
             padding: 0 16px;
@@ -216,12 +242,16 @@ body {
     }
 
     .info {
+        z-index: 10;
         bottom: 10px;
         left: calc(var(--leftPanelBox) + var(--controlsMargin));
         display: flex;
         width: var(--controlsAutoWidth);
         height: var(--barHeight);
         overflow: hidden;
+        transition: var(--infoTransition);
+        clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+        border: 1px solid red;
 
         .name,
         .family {
@@ -229,7 +259,6 @@ body {
             align-items: end;
             width: fit-content;
             margin-bottom: 2px;
-            transition: var(--infoTransition);
         }
 
         .name {
@@ -247,9 +276,11 @@ body {
     }
 
     .rightPanelBox {
+        z-index: 10;
         right: calc(-1 * var(--rightPanelBox));
         width: var(--rightPanelBox);
         height: 100%;
         transition: var(--barsTransition);
+        border: 1px solid red;
     }
 }
