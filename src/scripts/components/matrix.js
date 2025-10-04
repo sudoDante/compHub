@@ -4,6 +4,7 @@ direction       horizontal or vertical animation        default vertical
 back            background color                        default transparent
 interval        time between selections                 default/min 80ms
 steps           time between cells animation            default 50ms
+pause           pause effect                            bollean default false
 */
 
 
@@ -76,6 +77,18 @@ export class matrix extends HTMLElement {
         `
     }
 
+    static get observedAttributes() {
+        return ["pause"]
+    }
+
+    state = false
+
+    attributeChangedCallback(name) {
+        if (name === "pause") {
+            this.state = this.hasAttribute("pause")
+        }
+    }
+
     connectedCallback() {
 
         const getConfig = () => {
@@ -96,7 +109,7 @@ export class matrix extends HTMLElement {
                 "symbolsColor2": symbolsColor2,
                 "direction": direction,
                 "interval": interval,
-                "steps": steps
+                "steps": steps,
             }
         }
 
@@ -132,11 +145,14 @@ export class matrix extends HTMLElement {
             return group
         }
 
-        const randomIndex = async (activeGroup, availableNums, conf, calculated, cells) => {
+        /* pause config */
+        const randomIndex = async (activeGroup, availableNums, conf, calculated, cells, pause) => {
             const length = conf.direction === "vertical" ? calculated.cols : calculated.rows
             availableNums = [...Array(length).keys()]
 
             while (true) {
+                while (this.state === true) await new Promise(resolve => setTimeout(resolve, 100)) // PAUSE
+
                 let waiting = conf.interval
 
                 const index = randomize(0, availableNums.length - 1)
@@ -171,10 +187,12 @@ export class matrix extends HTMLElement {
         }
 
         const animatingGroup = async (activeGroup, availableNums, selectedNum, conf, cells) => {
+
             const group = identifyGroup(selectedNum, conf.direction, cells)
             const animationTempo = conf.steps
 
             for (let i = 0; i < group.length * 3; i++) {
+                while (this.state === true) await new Promise(resolve => setTimeout(resolve, 100)) // PAUSE
 
                 if (i < group.length) group[i].classList.add("matrixCellDrawing")
                 if (i < group.length && group[i - 1]) group[i - 1].classList.replace("matrixCellDrawing", "matrixCellVisible")

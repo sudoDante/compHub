@@ -8,7 +8,8 @@ export const loadComponent = async (par, container) => {
     const tag = par.htmlTag
     const name = par.defaultName
     await import(url)
-    element.add(container, tag, name, name)
+    const component = await element.add(container, tag, name, name)
+    return component
 }
 
 export const applyBacksRestart = () => {
@@ -111,58 +112,44 @@ export const clearInfo = async () => {
     await new Promise(resolve => { setTimeout(resolve, transition) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
 }
 
-export const moveHalo = async (par, time) => {
+export const moveHalo = async (time) => {
     const line = document.getElementById("line")
-    line.style.boxShadow = "0 0 30px rgb(0, 255, 208), 0 0 30px rgb(0, 255, 208), 0 0 30px rgb(0, 255, 208)"
-    if (par === true) {
-        line.style.top = "100%"
-    } else {
-        line.style.top = 0
-    }
+    line.style.opacity = 1
+    line.style.boxShadow = "0 0 14px cyan, 0 0 10px cyan"
+    line.style.transition = time
+    line.style.top = "100%"
     await new Promise(resolve => setTimeout(resolve, time))
-    line.style.boxShadow = "none"
-
+    line.style.top = 0
+    line.style.opacity = 0
 }
 
 export const movePanel = async (panel, par) => {
     if (par === true) {
         panel.style.right = `-${rightPanelBox.offsetWidth}px`
-
     } else {
         panel.style.right = 0
     }
 }
 
-export const moveMask = async (par, box, time) => {
-    if (par === true) {
-        componentBox.style.clipPath = "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)"
-    } else {
-        componentBox.style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)"
-        await new Promise(resolve => setTimeout(resolve, time))
-        box.innerHTML = ""
-    }
+export const moveMask = async (box, toEmpty, time) => {
+    box.style.transition = 0
+    box.style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)"
+    box.style.transition = time
+    box.style.clipPath = "polygon(0 100%, 100% 100%, 100% 0, 0 0)"
+
+    toEmpty.style.clipPath = "polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)"
+    await new Promise(resolve => setTimeout(resolve, time))
+    toEmpty.style.transition = 0
+    toEmpty.style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)"
+    toEmpty.innerHTML = ""
+
 }
 
-export const loadConfig = async (par) => {
+export const importConfig = async (par) => {
     const componentTag = par.htmlTag
     const confJson = componentsConfig
     const componentConf = Object.values(confJson).find(item => item.tag === componentTag)
     return componentConf.config
-}
-
-export const drawPanelConfig = async (container) => {
-    const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
-    const transition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
-    const width = getComputedStyle(document.documentElement).getPropertyValue("--rightPanelBox")
-    const buttonSize = getComputedStyle(document.documentElement).getPropertyValue("--barHeight")
-
-    await import("./components/appSpecific/configMenu.js")
-    element.add(container, "config-menu", "configMenu", null, {
-        "back": backColor,
-        "buttonSize": buttonSize,
-        "transition": transition,
-        "parentWidth": width
-    })
 }
 
 export const drawConfig = async (config) => {
@@ -184,7 +171,7 @@ export const drawConfig = async (config) => {
             let type = obj.type || null
 
             if (tag === "input" && obj.type === "range") {
-                await import("./components/nano/rangeSlim2.js")
+                await import("./components/nano/rangeSlim.js")
                 const value = obj.value
                 const min = obj.min
                 const max = obj.max

@@ -386,8 +386,8 @@ export class listMenu extends HTMLElement {
         const main = async () => {
 
             const conf = getConfig()
-            console.log(conf)
-            applyConfCss(conf)
+/*             console.log(conf)
+ */            applyConfCss(conf)
             await drawMenu(conf)
 
             const mainRadios = Array.from(this.dom.querySelectorAll("input[name='mainOpt']"))

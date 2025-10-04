@@ -15,7 +15,6 @@ export const loadMenu = async (container) => {
         console.log(pos, delay)
     })
     const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
-    console.log(backColor)
     const barsTransition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
     element.add(container, "list-menu", "listMenu", "listMenu", { "list": components, title: "Components by type", back: backColor, close: true, button: "fall", hostTransition: barsTransition })
 }
@@ -59,3 +58,18 @@ export const loadInfoArea = async (container) => {
     element.add(info, "span", "infoFamily", "family")
 }
 
+export const loadPanelConfig = async (container) => {
+    const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
+    const transition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
+    const width = getComputedStyle(document.documentElement).getPropertyValue("--rightPanelBox")
+    const buttonSize = getComputedStyle(document.documentElement).getPropertyValue("--barHeight")
+
+    await import("./components/appSpecific/configMenu.js")
+    const configMenu = await element.add(container, "config-menu", "configMenu", null, {
+        "back": backColor,
+        "buttonSize": buttonSize,
+        "transition": transition,
+        "parentWidth": width
+    })
+    return configMenu
+}

@@ -27,6 +27,11 @@ export class configMenu extends HTMLElement {
                 margin: 0;
             }
 
+            :host {
+                width: 100%;
+                height: 100%;
+            }
+
             .container {
                 position: relative;
                 width: 100%;

@@ -14,3 +14,7 @@ export const toRgba = ((color, alpha = null) => {
     alpha ? rgbColor = `rgba(${[r, g, b, alpha]})` : rgbColor = `rgba(${[r, g, b]})`
     return rgbColor
 })
+
+export const checkPar = (num) => {
+    return num % 2 === 0
+}

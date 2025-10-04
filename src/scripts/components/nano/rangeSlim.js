@@ -1,4 +1,4 @@
-import * as element from "./../../modules/elements.js"
+import * as element from "../../modules/elements.js"
 
 export class rangeSlim extends HTMLElement {
     constructor() {
@@ -9,11 +9,7 @@ export class rangeSlim extends HTMLElement {
         this.container.innerHTML = `
             <span class="title"></span>
             <div class="rangeBox">
-                <div class="range">
-                    <div class="bar"></div>
-                    <div class="pointer">
-                    </div>
-                </div>
+                <input type="range" class="range">
                 <span class="valueBox"></span>
             </div> 
         `
@@ -32,55 +28,58 @@ export class rangeSlim extends HTMLElement {
                     display: flex;
                     width: fit-content;
                     height: fit-content;
-                    font-family: var(--font);
+                    font-family: var(--fontFamily);
+                    font-size: var(--fontSize); 
                     color: var(--fontColor);   
                 }
 
                 .rangeBox {
+                    position: relative;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     width: 100%;
                     height: 30px;
-                    padding: 0 20px 0 20px;
-                    border: 1px solid red;
 
                     .range {
+                        -webkit-appearance: none;
+                        appearance: none;
                         position: relative;
+                        bottom: -1px;
                         width: calc(100% - 68px);
-                        height: 20px;
+                        height: 30px;
+                        background-color: transparent;
                         cursor: pointer;
 
-                        .bar {
-                            position: absolute;
-                            bottom: 14px;
-                            width: 100%;
-                            height: 2px;
-                            background-color: rgba(255, 255, 255, 0.1);
-                            border-radius: 10px;
+                        &::-moz-range-track {
+                            background-color: var(--trackColor);
+                            height: 1px;
                         }
 
-                        .pointer {
-                            position: absolute;
-                            bottom: 11px;
-                            left: 0;
-                            width: 20px;
-                            height: 8px;
-                            background-color: rgba(255, 255, 255, 1);
-                            outline: 8px solid transparent;
-                            border-radius: 2px;
-                            background-color: whitesmoke;
-                        }                
+                        &::-moz-range-progress {
+                            background-color: var(--progressColor);
+                            height: 2px;
+                        }
+
+                        &::-moz-range-thumb {
+                            width: 12px;
+                            height: 12px;
+                            background-color: red;
+                            border: none;
+                            border-radius: 50%;
+                            background-color: var(--thumbColor);
+                        }
                     }
 
                     .valueBox {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
                         width: 30px;
                         height: 30px;
                         color: grey;
-                        font-family: var(--font);
-                        font-size: 14px; 
+                        font-family: var(--fontFamily);
                         font-style: italic; 
-                        valueBox.style.transform = "scale(100%)" 
                     }
                 }
             }
@@ -88,61 +87,90 @@ export class rangeSlim extends HTMLElement {
     }
     connectedCallback() {
 
-        const write = () => {
+        const getConfig = () => {
+            const title = this.getAttribute("title") ? this.getAttribute("title") : "empty title"
+            const fontFamily = this.getAttribute("fontFamily") ? this.getAttribute("fontFamily") : "initial"
+            const fontSize = this.getAttribute("fontSize") ? this.getAttribute("fontSize") : "initial"
+            const fontColor = this.getAttribute("fontColor") ? this.getAttribute("fontColor") : "initial"
+            const trackColor = this.getAttribute("trackColor") ? this.getAttribute("trackColor") : "red"
+            const progressColor = this.getAttribute("progressColor") ? this.getAttribute("progressColor") : "red"
+            const thumbColor = this.getAttribute("thumbColor") ? this.getAttribute("thumbColor") : "red"
+            const enphasisColor = this.getAttribute("enphasisColor") ? this.getAttribute("enphasisColor") : "red"
+
+            const steps = this.getAttribute("steps") ? this.getAttribute("steps") : 1
+            const min = this.getAttribute("min") ? this.getAttribute("min") : 0
+            const max = this.getAttribute("max") ? this.getAttribute("max") : 100
+            const value = this.getAttribute("value") ? this.getAttribute("value") : min
+
+            return {
+                css: {
+                    "fontFamily": fontFamily,
+                    "fontSize": fontSize,
+                    "fontColor": fontColor,
+                    "trackColor": trackColor,
+                    "progressColor": progressColor,
+                    "thumbColor": thumbColor,
+                    "enphasisColor": enphasisColor
+                },
+                logic: {
+                    "title": title,
+                    "steps": Number(steps),
+                    "min": Number(min),
+                    "max": Number(max),
+                    "value": Number(value)
+                }
+            }
+        }
+
+        const applyConfCss = (config) => {
+            Object.entries(config).forEach(([key, value]) => {
+                this.style.setProperty(`--${key}`, value)
+            })
+            return config
+        }
+
+        const applyRangeConf = (config, range) => {
+            Object.entries(config).forEach(([key, value]) => {
+                range.setAttribute(key, value)
+            })
+        }
+
+        const applyInfoValue = (range, valueBox) => {
+            valueBox.textContent = range.value
+        }
+
+        const colorizeValue = async (item, par, color) => {
+            if (par === true) {
+                item.style.transition = "0s"
+                item.style.transform = "scale(140%)"
+                item.style.color = color
+            } else {
+                item.style.transition = "1400ms ease-in-out"
+                item.style.transform = "scale(100%)"
+                item.style.color = "grey"
+            }
+        }
+
+        const main = async () => {
             const title = this.dom.querySelector(".title")
-            if (this.getAttribute("title")) title.textContent = this.getAttribute("title")
-            if (this.getAttribute("font")) this.style.setProperty("--font", this.getAttribute("font"))
-            if (this.getAttribute("fontSize")) title.style.fontSize = this.getAttribute("fontSize")
-            if (this.getAttribute("fontColor")) this.style.setProperty("--fontColor", this.getAttribute("fontColor"))
-        }
-
-        const activeDrag = () => {
             const range = this.dom.querySelector(".range")
-            const min = Number(this.getAttribute("min"))
-            const max = Number(this.getAttribute("max"))
-            const value = Number(this.getAttribute("value"))
-            const selected = this.dom.querySelector(".pointer")
             const valueBox = this.dom.querySelector(".valueBox")
+            const config = getConfig()
+            title.textContent = config.logic.title
 
-            const boxWidth = range.offsetWidth
-            const initialValue = ((value - min) / (max - min)) * boxWidth
-            selected.style.left = `${initialValue}px`
-            valueBox.textContent = value
+            applyConfCss(config.css)
+            applyRangeConf(config.logic, range)
+            applyInfoValue(range, valueBox)
 
-            const select = () => {
-                document.addEventListener("mousemove", move)
-                document.addEventListener("mouseup", release)
-            }
+            range.addEventListener("input", () => {
+                colorizeValue(valueBox, true, config.css.enphasisColor)
+                applyInfoValue(range, valueBox)
+            })
 
-            const move = (e) => {
-                if (selected) {
-                    let x = e.clientX - range.getBoundingClientRect().left
-                    if (x >= 0 && x <= boxWidth) {
-                        selected.style.left = `${x}px`
-                        let userValue = Math.round(min + ((max - min) * (x / boxWidth)))
-                        valueBox.textContent = userValue
-                        valueBox.style.transition = "200ms"
-                        valueBox.style.color = "greenyellow"
-                        valueBox.style.transform = "scale(140%)"
-                    }
-                } else { return }
-            }
-
-            const release = () => {
-                valueBox.style.color = "grey"
-                valueBox.style.transform = "scale(100%)"
-                valueBox.style.transition = "3000ms"
-                document.removeEventListener("mousemove", move)
-                document.removeEventListener("mouseup", release)
-            }
-
-            range.addEventListener("mousedown", move)
-            range.addEventListener("mousedown", select)
-            selected.addEventListener("mousedown", select)
+            range.addEventListener("mouseup", () => colorizeValue(valueBox, false))
         }
 
-        write()
-        activeDrag()
+        main()
     }
 }
 customElements.define("range-slim", rangeSlim)
