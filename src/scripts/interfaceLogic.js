@@ -2,8 +2,8 @@ import * as event from "./modules/customEvents.js"
 import { componentsConfig } from "./../config/componentsConfig.js"
 import * as element from "./modules/elements.js"
 
-export const loadComponent = async (par, container) => {
-    container.innerHTML = ""
+export const loadComponent = async (par) => {
+    const container = identifyBoxes("active")
     const url = par.url
     const tag = par.htmlTag
     const name = par.defaultName
@@ -21,38 +21,10 @@ export const applyBacksRestart = () => {
     })
 }
 
-export const applyViewsEvents = () => {
-    const computer = document.getElementById("computer")
-    const tablet = document.getElementById("tablet")
-    const mobile = document.getElementById("mobile")
-    const fullscreen = document.getElementById("fullscreen")
+export const changeView = async (view) => {
 
-    computer.addEventListener("change", () => {
-        changeView("computerView")
-    })
-
-    tablet.addEventListener("change", () => {
-        changeView("tabletView")
-    })
-
-    mobile.addEventListener("change", () => {
-        changeView("mobileView")
-    })
-
-    fullscreen.addEventListener("change", (e) => {
-        if (e.target.checked) {
-            document.documentElement.requestFullscreen()
-        } else {
-            document.exitFullscreen()
-        }
-    })
-}
-
-const changeView = async (view) => {
-    const componentBoxContainer = document.getElementById("componentBoxContainer")
-    const componentBox = document.getElementById("componentBox")
-
-    componentBox.innerHTML = ""
+    const inactiveBox = identifyBoxes("inactive")
+    inactiveBox.innerHTML = ""
     const widthBox = document.body.offsetWidth
     const heightBox = document.body.offsetHeight
 
@@ -71,8 +43,14 @@ const changeView = async (view) => {
         componentBoxContainer.style.width = `${9 / 16 * (0.8 * heightBox)}px`
         componentBoxContainer.style.borderRadius = "16px"
     }
-    componentBoxContainer.addEventListener("transitionend", () => { event.send(document, "viewChange", { detail: view }) }, { once: true })
+/*     componentBoxContainer.addEventListener("transitionend", () => { event.send(document, "viewChange", { detail: view }) }, { once: true })
+ */}
+
+export const identifyBoxes = (par) => {
+    const componentBoxes = Array.from(document.querySelectorAll(".componentBox"))
+    return componentBoxes.find(item => item.classList.contains(par))
 }
+
 
 export const menuVisibility = (obj) => {
     const list = document.getElementById("listMenuHidden")
@@ -80,7 +58,6 @@ export const menuVisibility = (obj) => {
     const panels = document.getElementById("bothMenuHidden")
     const check = document.getElementById(`${obj.item}Hidden`)
     check.checked = obj.state
-
     panels.checked = (!list.checked && !config.checked) ? false : true
 }
 
@@ -123,26 +100,26 @@ export const moveHalo = async (time) => {
     line.style.opacity = 0
 }
 
+export const moveMask = async (time) => {
+    const active = identifyBoxes("active")
+    const inactive = identifyBoxes("inactive")
+
+    active.classList.add("maskOpen")
+    inactive.classList.replace("maskOpen", "maskClose")
+    await new Promise(resolve => setTimeout(resolve, time))
+    inactive.classList.remove("maskClose")
+    inactive.innerHTML = ""
+
+    active.classList.replace("active", "inactive")
+    inactive.classList.replace("inactive", "active")
+}
+
 export const movePanel = async (panel, par) => {
     if (par === true) {
         panel.style.right = `-${rightPanelBox.offsetWidth}px`
     } else {
         panel.style.right = 0
     }
-}
-
-export const moveMask = async (box, toEmpty, time) => {
-    box.style.transition = 0
-    box.style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)"
-    box.style.transition = time
-    box.style.clipPath = "polygon(0 100%, 100% 100%, 100% 0, 0 0)"
-
-    toEmpty.style.clipPath = "polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)"
-    await new Promise(resolve => setTimeout(resolve, time))
-    toEmpty.style.transition = 0
-    toEmpty.style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)"
-    toEmpty.innerHTML = ""
-
 }
 
 export const importConfig = async (par) => {

@@ -2,111 +2,96 @@ import { componentsConfig } from "../config/componentsConfig.js"
 import * as ifaceLogic from "./interfaceLogic.js"
 import * as extra from "./modules/extra.js"
 
-export const loadMenuEvents = () => {
-    console.log("Custom events control READY: waiting")
 
-    // COMPONENTS MENU
+export const loadInterfaceEvents = () => {
     let eventDetail
-    let containerExchanger = 0
-    const componentBox0 = document.getElementById("componentBox0")
-    const componentBox1 = document.getElementById("componentBox1")
+    const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
     const rightPanelBox = document.getElementById("rightPanelBox")
-    const configMenu = document.getElementById("configMenu")
-    const infoTransition = getComputedStyle(document.documentElement).getPropertyValue("--infoTransition")
-    const panelTransition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
 
-    document.addEventListener("selectionMenu", async (e) => {
-        eventDetail = e.detail
-        const importedConfig = await ifaceLogic.importConfig(eventDetail)
+    const fullLoad = async () => {
+        ifaceLogic.movePanel(rightPanelBox, true)
+        /*         await new Promise(resolve => setTimeout(resolve, parseFloat(panelTransition)))
+         */
+        await new Promise(resolve => setTimeout(resolve, parseFloat(componentLoadTransition)))
+        ifaceLogic.loadComponent(eventDetail)
+        ifaceLogic.moveHalo(parseFloat(componentLoadTransition))
+        await ifaceLogic.moveMask(parseFloat(componentLoadTransition))
+    }
+
+    const loadMenuEvents = async () => {
+        console.log("custom events control READY: waiting")
+
+        // COMPONENTS MENU
+        const configMenu = document.getElementById("configMenu")
         const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
+        console.log(configBox)
 
-        const componentBox = extra.checkPar(containerExchanger)
-            ? componentBox0
-            : componentBox1
-
-        const toEmptyComponentBox = extra.checkPar(containerExchanger)
-            ? componentBox1
-            : componentBox0
-
-        /*         if (configBox.children.length > 0) {
-                    ifaceLogic.movePanel(rightPanelBox, true)
-                    await new Promise(resolve => setTimeout(resolve, parseFloat(panelTransition)))
-        
-                    ifaceLogic.moveMask(false, componentBox, toEmptyComponentBox, parseFloat(infoTransition))
-                    ifaceLogic.moveHalo(false, parseFloat(infoTransition))
-        
-                    await ifaceLogic.clearInfo()
-                }
-         */
-        ifaceLogic.drawConfig(importedConfig)
-        ifaceLogic.drawInfo(eventDetail)
-
-
-        const component = await ifaceLogic.loadComponent(eventDetail, componentBox, configBox)
-
-        ifaceLogic.moveMask(componentBox, toEmptyComponentBox, parseFloat(infoTransition))
-        ifaceLogic.moveHalo(parseFloat(infoTransition))
-        await new Promise(resolve => setTimeout(resolve, parseFloat(infoTransition)))
-
-        configMenu.style.display = "flex"
-        ifaceLogic.movePanel(rightPanelBox, false)
-
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        /*         component.setAttribute("pause", "")
-         */
-        containerExchanger += 1
-    })
-
-
-
-
-
-
-
-
-
-
-
-    /*     const panelTransition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
-    
         document.addEventListener("selectionMenu", async (e) => {
             eventDetail = e.detail
-            const config = await ifaceLogic.loadConfig(eventDetail)
-            const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
-    
+            const importedConfig = await ifaceLogic.importConfig(eventDetail)
+
             if (configBox.children.length > 0) {
-                ifaceLogic.movePanel(rightPanelBox, true)
-                await new Promise(resolve => setTimeout(resolve, parseFloat(panelTransition)))
-    
-                ifaceLogic.moveHalo(false, parseFloat(infoTransition))
-                ifaceLogic.moveMask(false, componentBox, parseFloat(infoTransition))
                 await ifaceLogic.clearInfo()
             }
-    
-            ifaceLogic.drawConfig(config)
+
+            ifaceLogic.drawConfig(importedConfig)
             ifaceLogic.drawInfo(eventDetail)
-    
-            const component = await ifaceLogic.loadComponent(eventDetail, componentBox, configBox)
-    
-            ifaceLogic.moveMask(true, componentBox)
-            ifaceLogic.moveHalo(true, parseFloat(infoTransition))
-            await new Promise(resolve => setTimeout(resolve, parseFloat(infoTransition)))
-    
+            await fullLoad()
+
             configMenu.style.display = "flex"
             ifaceLogic.movePanel(rightPanelBox, false)
-    
+
             await new Promise(resolve => setTimeout(resolve, 1000))
-            component.setAttribute("pause", "") 
-            PAUSE ATTR 
-    
+            /*         component.setAttribute("pause", "")
+             */
         })
-     */
 
-    document.addEventListener("menuVisibility", (e) => {
-        ifaceLogic.menuVisibility(e.detail)
-    })
+        document.addEventListener("menuVisibility", (e) => {
+            ifaceLogic.menuVisibility(e.detail)
+        })
+    }
 
-    document.addEventListener("viewChange", (e) => {
-        eventDetail ? ifaceLogic.loadComponent(eventDetail, componentBox) : null
-    })
+    const loadViewsEvents = () => {
+        console.log("views events control READY: waiting")
+
+        const computer = document.getElementById("computer")
+        const tablet = document.getElementById("tablet")
+        const mobile = document.getElementById("mobile")
+        const fullscreen = document.getElementById("fullscreen")
+
+        computer.addEventListener("change", async () => {
+            await ifaceLogic.changeView("computerView")
+            await fullLoad()
+        })
+
+        tablet.addEventListener("change", async () => {
+            await ifaceLogic.changeView("tabletView")
+            await fullLoad()
+        })
+
+        mobile.addEventListener("change", async () => {
+            await ifaceLogic.changeView("mobileView")
+            await fullLoad()
+        })
+
+        fullscreen.addEventListener("change", async (e) => {
+            if (e.target.checked) {
+                document.documentElement.requestFullscreen()
+            } else {
+                document.exitFullscreen()
+            }
+        })
+
+
+/*         if (eventDetail) {
+            console.log(eventDetail)
+            ifaceLogic.loadComponent(eventDetail)
+            ifaceLogic.moveHalo(parseFloat(componentLoadTransition))
+            ifaceLogic.moveMask(parseFloat(componentLoadTransition))
+        }
+ */    }
+
+
+    loadMenuEvents()
+    loadViewsEvents()
 }

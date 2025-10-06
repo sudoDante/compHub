@@ -22,8 +22,7 @@ const main = async () => {
     iface.loadHiddenInputs(main)
     /* events controls bar */
     ifaceLogic.applyBacksRestart()
-    ifaceLogic.applyViewsEvents()
-    events.loadMenuEvents()
+    events.loadInterfaceEvents()
 }
 
 main()
