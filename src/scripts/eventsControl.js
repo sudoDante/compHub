@@ -6,11 +6,12 @@ import * as extra from "./modules/extra.js"
 export const loadInterfaceEvents = () => {
     let eventDetail
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
+    const rightPanelCloseButton = document.getElementById("configMenu").shadowRoot.getElementById("closeInput")
 
     const fullLoad = async (par) => {
-        ifaceLogic.movePanel(par)
-
+        ifaceLogic.movePanel(par, "right")
         await new Promise(resolve => setTimeout(resolve, parseFloat(componentLoadTransition)))
+
         if (eventDetail) {
             ifaceLogic.loadComponent(eventDetail)
             ifaceLogic.moveHalo(parseFloat(componentLoadTransition))
@@ -31,13 +32,14 @@ export const loadInterfaceEvents = () => {
 
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
 
-            ifaceLogic.drawConfig(importedConfig)
             ifaceLogic.drawInfo(eventDetail)
             await fullLoad(true)
 
 
             configMenu.style.display = "flex"
-            ifaceLogic.movePanel(false)
+            ifaceLogic.movePanel(false, "right")
+            rightPanelCloseButton.checked = true
+            ifaceLogic.drawConfig(importedConfig)
 
             await new Promise(resolve => setTimeout(resolve, 1000))
             /*         component.setAttribute("pause", "")
@@ -52,6 +54,7 @@ export const loadInterfaceEvents = () => {
     const loadViewsEvents = () => {
         console.log("views events control READY: waiting")
         let view = "computerView"
+        let fullState = false
 
         const computer = document.getElementById("computer")
         const tablet = document.getElementById("tablet")
@@ -60,29 +63,32 @@ export const loadInterfaceEvents = () => {
 
         computer.addEventListener("change", async () => {
             view = "computerView"
-            await ifaceLogic.changeView("computerView")
-            await fullLoad(true)
+            await ifaceLogic.changeView("computerView", fullState)
+            eventDetail ? await fullLoad(false) : await fullLoad(true)
         })
 
         tablet.addEventListener("change", async () => {
             view = "tabletView"
-            await ifaceLogic.changeView("tabletView")
-            await fullLoad(true)
+            await ifaceLogic.changeView("tabletView", fullState)
+            eventDetail ? await fullLoad(false) : await fullLoad(true)
         })
 
         mobile.addEventListener("change", async () => {
             view = "mobileView"
-            await ifaceLogic.changeView("mobileView")
-            await fullLoad(true)        })
+            await ifaceLogic.changeView("mobileView", fullState)
+            eventDetail ? await fullLoad(false) : await fullLoad(true)
+        })
 
         fullscreen.addEventListener("change", async (e) => {
             if (e.target.checked) {
                 await document.documentElement.requestFullscreen()
+                fullState = true
             } else {
                 await document.exitFullscreen()
+                fullState = false
             }
-            await ifaceLogic.changeView(view)
-            await fullLoad(true)
+            await ifaceLogic.changeView(view, fullState)
+            eventDetail ? await fullLoad(false) : await fullLoad(true)
         })
     }
 

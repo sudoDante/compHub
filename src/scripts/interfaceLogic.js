@@ -21,16 +21,16 @@ export const applyBacksRestart = () => {
     })
 }
 
-export const changeView = async (view) => {
+export const changeView = async (view, fullscreen) => {
+    console.log(fullscreen)
 
     const inactiveBox = identifyBoxes("inactive")
     inactiveBox.innerHTML = ""
     const widthBox = window.innerWidth
     const heightBox = window.innerHeight
     const componentBoxContainer = document.getElementById("componentBoxContainer")
-console.log(widthBox, heightBox)
 
-if (view === "computerView") {
+    if (view === "computerView") {
         componentBoxContainer.style.height = `${heightBox}px`
         componentBoxContainer.style.width = `${widthBox}px`
         componentBoxContainer.style.borderRadius = "0px"
@@ -105,12 +105,23 @@ export const moveMask = async (time) => {
     inactive.classList.replace("inactive", "active")
 }
 
-export const movePanel = async (par) => {
+export const movePanel = async (par, side) => {
     const rightPanelBox = document.getElementById("rightPanelBox")
-    const closeButton = document.getElementById("configMenu").shadowRoot.querySelector("#closeButton")
-    rightPanelBox.style.right = par === true ? `-${rightPanelBox.offsetWidth}px` : 0
-    if (!par === true) closeButton.checked = true
-}
+    const leftPanelBox = document.getElementById("leftPanelBox")
+    const panelBox = side === "left" ? leftPanelBox : rightPanelBox
+    const configClose = document.getElementById("configMenu").shadowRoot.querySelector("#closeButton")
+    const menuClose = document.getElementById("configMenu").shadowRoot.querySelector("#closeInput")
+    const closeButton = side === "right" ? configClose : menuClose
+
+    if (side === "right") {
+        panelBox.style.right = par === true ? `-${panelBox.offsetWidth}px` : 0
+    }
+    if (side === "left") {
+        panelBox.style.left = par === true ? `-${panelBox.offsetWidth}px` : 0
+    }
+
+/*      closeButton.checked = par === true ? true : false
+ */}
 
 export const importConfig = async (par) => {
     const componentTag = par.htmlTag

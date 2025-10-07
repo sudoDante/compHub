@@ -380,7 +380,6 @@ export class listMenu extends HTMLElement {
 
             hostContainer.style.transition = par
             hostContainer.style.left = input.checked ? `0px` : `calc(${hostWidth}px * -1)`
-            closeBox.style.opacity = input.checked ? 1 : 0.4
         }
 
         const main = async () => {

@@ -10,7 +10,7 @@ export class configMenu extends HTMLElement {
             <div id="configBox" class="configBox"></div>
             <div class="closeBox radius4">
                 <span class="icon material-symbols-outlined">arrow_menu_open</span>
-                <input id="closeButton" class="hiddenInput" type="checkbox">
+                <input id="closeInput" class="hiddenInput" type="checkbox">
             </div>
         `
 
@@ -114,7 +114,7 @@ export class configMenu extends HTMLElement {
             const conf = await getConfig()
             applyConfCss(conf)
 
-            const closeButton = this.dom.querySelector("#closeButton")
+            const closeButton = this.dom.querySelector("#closeInput")
             closeButton.checked = true
 
             closeButton.addEventListener("change", (e) => controlMenuDisplay(e.target))
