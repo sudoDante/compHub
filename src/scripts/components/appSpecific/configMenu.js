@@ -10,7 +10,7 @@ export class configMenu extends HTMLElement {
             <div id="configBox" class="configBox"></div>
             <div class="closeBox radius4">
                 <span class="icon material-symbols-outlined">arrow_menu_open</span>
-                <input id="buttonClose" class="hiddenInput" type="checkbox">
+                <input id="closeButton" class="hiddenInput" type="checkbox">
             </div>
         `
 
@@ -76,6 +76,10 @@ export class configMenu extends HTMLElement {
                         appearance: none; 
                         cursor: pointer; 
                     }
+
+                    &:has(input:not(:checked)) {
+                        top: calc(100% - var(--buttonSize) - 10px);
+                    }
                 }
             }
         `
@@ -101,32 +105,22 @@ export class configMenu extends HTMLElement {
             this.style.setProperty("--transition", conf.transition)
         }
 
-        const controlMenuDisplay = (input, size) => {
+        const controlMenuDisplay = (input) => {
             const hostContainer = this.parentElement
             hostContainer.style.right = input.checked ? 0 : `${hostContainer.offsetWidth * -1}px`
-
-            const closeBox = this.dom.querySelector(".closeBox")
-            closeBox.style.top = input.checked ? "10px" : `calc(100% - ${size} - 10px`
-            closeBox.querySelector(".icon").style.color = input.checked ? "whitesmoke" : "grey"
         }
 
         const main = async () => {
             const conf = await getConfig()
             applyConfCss(conf)
 
-            const closeButton = this.dom.querySelector("#buttonClose")
-            closeButton.addEventListener("change", () => {
-                controlMenuDisplay(closeButton, conf.buttonSize)
-                const state = closeButton.checked
-                document.dispatchEvent(new CustomEvent("menuVisibility", { detail: { item: this.id, "state": state } }))
-            })
+            const closeButton = this.dom.querySelector("#closeButton")
+            closeButton.checked = true
 
-            /* initial animation */
-/*             closeButton.checked = true
-            controlMenuDisplay(closeButton, conf.buttonSize)
- */        }
+            closeButton.addEventListener("change", (e) => controlMenuDisplay(e.target))
+        }
 
-        main()
+        this.dom.addEventListener("DOMContentLoaded", main())
     }
 }
 customElements.define("config-menu", configMenu)

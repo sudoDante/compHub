@@ -1,13 +1,6 @@
 import * as element from "./modules/elements.js"
 import { components } from "../config/components.js"
 
-export const loadHiddenInputs = async (container) => {
-    const hiddenInputsBox = element.add(container, "div", null, "panelsControl absolute")
-    element.add(hiddenInputsBox, "input", "listMenuHidden", "leftControl hiddenInput", { type: "checkbox", checked: true })
-    element.add(hiddenInputsBox, "input", "configMenuHidden", "rightControl hiddenInput", { type: "checkbox", checked: true })
-    element.add(hiddenInputsBox, "input", "bothMenuHidden", "bothControl hiddenInput", { type: "checkbox", checked: true })
-}
-
 export const loadMenu = async (container) => {
     document.addEventListener("listMenu_primary", async (e) => {
         const pos = Number(e.detail.pos)

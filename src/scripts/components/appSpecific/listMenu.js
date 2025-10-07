@@ -291,7 +291,7 @@ export class listMenu extends HTMLElement {
             const button = conf.button
 
             for (let i = 0; i < 3; i++) { element.add(closeBox, "div", null, "line") }
-            const checkboxClose = element.add(closeBox, "input", "checkboxClose", "inputHidden maxW maxH", { type: "checkbox", checked: true })
+            const checkboxClose = element.add(closeBox, "input", "closeInput", "inputHidden maxW maxH", { type: "checkbox", checked: true })
 
             if (button === "rotate") closeBox.style.setProperty("--dinamicRotate", "rotate(-180deg)")
             if (button === "fall") closeBox.style.setProperty("--dinamicTop", "calc(-1 * var(--titleHeight))")
@@ -397,11 +397,7 @@ export class listMenu extends HTMLElement {
 
             if (conf.close) {
                 const closeInput = await drawClose(conf)
-                closeInput.addEventListener("change", (e) => {
-                    controlMenuDisplay(e.target, conf.hostTransition)
-                    const state = closeInput.checked
-                    document.dispatchEvent(new CustomEvent("menuVisibility", { detail: { item: this.id, "state": state } }))
-                })
+                closeInput.addEventListener("change", (e) => controlMenuDisplay(e.target, conf.hostTransition))
             }
         }
 

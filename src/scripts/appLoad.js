@@ -18,8 +18,6 @@ const main = async () => {
     /* main bars */
     await iface.loadControls(main)
     await iface.loadInfoArea(main)
-    /* hiddensInputs views control*/
-    iface.loadHiddenInputs(main)
     /* events controls bar */
     ifaceLogic.applyBacksRestart()
     events.loadInterfaceEvents()

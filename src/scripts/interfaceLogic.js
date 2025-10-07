@@ -25,10 +25,12 @@ export const changeView = async (view) => {
 
     const inactiveBox = identifyBoxes("inactive")
     inactiveBox.innerHTML = ""
-    const widthBox = document.body.offsetWidth
-    const heightBox = document.body.offsetHeight
+    const widthBox = window.innerWidth
+    const heightBox = window.innerHeight
+    const componentBoxContainer = document.getElementById("componentBoxContainer")
+console.log(widthBox, heightBox)
 
-    if (view === "computerView") {
+if (view === "computerView") {
         componentBoxContainer.style.height = `${heightBox}px`
         componentBoxContainer.style.width = `${widthBox}px`
         componentBoxContainer.style.borderRadius = "0px"
@@ -43,22 +45,11 @@ export const changeView = async (view) => {
         componentBoxContainer.style.width = `${9 / 16 * (0.8 * heightBox)}px`
         componentBoxContainer.style.borderRadius = "16px"
     }
-/*     componentBoxContainer.addEventListener("transitionend", () => { event.send(document, "viewChange", { detail: view }) }, { once: true })
- */}
+}
 
 export const identifyBoxes = (par) => {
     const componentBoxes = Array.from(document.querySelectorAll(".componentBox"))
     return componentBoxes.find(item => item.classList.contains(par))
-}
-
-
-export const menuVisibility = (obj) => {
-    const list = document.getElementById("listMenuHidden")
-    const config = document.getElementById("configMenuHidden")
-    const panels = document.getElementById("bothMenuHidden")
-    const check = document.getElementById(`${obj.item}Hidden`)
-    check.checked = obj.state
-    panels.checked = (!list.checked && !config.checked) ? false : true
 }
 
 export const drawInfo = async (par) => {
@@ -114,12 +105,11 @@ export const moveMask = async (time) => {
     inactive.classList.replace("inactive", "active")
 }
 
-export const movePanel = async (panel, par) => {
-    if (par === true) {
-        panel.style.right = `-${rightPanelBox.offsetWidth}px`
-    } else {
-        panel.style.right = 0
-    }
+export const movePanel = async (par) => {
+    const rightPanelBox = document.getElementById("rightPanelBox")
+    const closeButton = document.getElementById("configMenu").shadowRoot.querySelector("#closeButton")
+    rightPanelBox.style.right = par === true ? `-${rightPanelBox.offsetWidth}px` : 0
+    if (!par === true) closeButton.checked = true
 }
 
 export const importConfig = async (par) => {
