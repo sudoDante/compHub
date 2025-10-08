@@ -89,7 +89,14 @@ export const loadInterfaceEvents = () => {
         })
     }
 
+    const loadComponentEvents = () => {
+        console.log("custom events config READY: waiting")
+        document.addEventListener("componentChanged", (e) => {
+            console.log(e.detail)
+        })
+    }
 
-    loadMenuEvents()
     loadViewsEvents()
+    loadMenuEvents()
+    loadComponentEvents()
 }

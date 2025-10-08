@@ -39,7 +39,7 @@ export class rangeSlim extends HTMLElement {
 
                 .title {
                     position: absolute;
-                    top: 2px;
+                    top: -2px;
                     display: flex;
                     width: 100%;
                     height: fit-content;
@@ -73,7 +73,7 @@ export class rangeSlim extends HTMLElement {
                         appearance: none;
                         position: relative;
                         bottom: -1px;
-                        width: calc(100% - 40px);
+                        width: calc(100% - 44px);
                         height: 100%;
                         background-color: transparent;
                         cursor: pointer;
@@ -101,7 +101,7 @@ export class rangeSlim extends HTMLElement {
                         justify-content: center;
                         align-items: center;
                         width: 30px;
-                        height: 30px;
+                        height: 100%;
                         color: var(--fontColor);  
                         font-family: var(--fontFamily2);
                         font-size: 14px;
@@ -115,7 +115,6 @@ export class rangeSlim extends HTMLElement {
     connectedCallback() {
 
         const getConfig = () => {
-            const title = this.getAttribute("title") ? this.getAttribute("title") : "empty title"
             const fontFamily1 = this.getAttribute("fontFamily1") ? this.getAttribute("fontFamily1") : "initial"
             const fontFamily2 = this.getAttribute("fontFamily2") ? this.getAttribute("fontFamily2") : "initial"
             const fontSize = this.getAttribute("fontSize") ? this.getAttribute("fontSize") : "initial"
@@ -124,10 +123,11 @@ export class rangeSlim extends HTMLElement {
             const progressColor = this.getAttribute("progressColor") ? this.getAttribute("progressColor") : "red"
             const enphasisColor = this.getAttribute("enphasisColor") ? this.getAttribute("enphasisColor") : "red"
 
-            const steps = this.getAttribute("steps") ? this.getAttribute("steps") : 1
+            const title = this.getAttribute("title") ? this.getAttribute("title") : "empty title"
             const min = this.getAttribute("min") ? this.getAttribute("min") : 0
             const max = this.getAttribute("max") ? this.getAttribute("max") : 100
             const value = this.getAttribute("value") ? this.getAttribute("value") : min
+            const event = this.getAttribute("event") ? this.getAttribute("event") : "noEventConfigured"
 
             return {
                 css: {
@@ -137,14 +137,14 @@ export class rangeSlim extends HTMLElement {
                     "fontColor": fontColor,
                     "trackColor": trackColor,
                     "progressColor": progressColor,
-                    "enphasisColor": enphasisColor
+                    "enphasisColor": enphasisColor,
                 },
                 logic: {
                     "title": title,
-                    "steps": Number(steps),
                     "min": Number(min),
                     "max": Number(max),
-                    "value": Number(value)
+                    "value": Number(value),
+                    "event": event
                 }
             }
         }
@@ -192,6 +192,7 @@ export class rangeSlim extends HTMLElement {
 
             range.addEventListener("mouseup", () => {
                 valueBox.style.color = "var(--fontColor)"
+                document.dispatchEvent(new CustomEvent("componentChanged", { detail: { [config.logic.event]: range.value } }))
             })
         }
 

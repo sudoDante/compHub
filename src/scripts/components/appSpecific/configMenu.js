@@ -147,9 +147,11 @@ export class configMenu extends HTMLElement {
                     if (item.tag === "input" && item.type === "range") {
                         await import("./../nano/rangeSlim.js")
                         element.add(section, "range-slim", null, null, {
+                            "title": item.label,
                             "min": item.min,
                             "max": item.max,
                             "value": item.value,
+                            "event": item.event,
                             "fontFamily1": "Nunito Sans",
                             "fontFamily2": "Anta",
                             "fontSize": "13px",
