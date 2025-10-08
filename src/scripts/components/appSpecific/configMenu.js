@@ -150,13 +150,13 @@ export class configMenu extends HTMLElement {
                             "min": item.min,
                             "max": item.max,
                             "value": item.value,
-                            "fontFamily": "anta",
-                            "fontSize": "12px",
+                            "fontFamily1": "Nunito Sans",
+                            "fontFamily2": "Anta",
+                            "fontSize": "13px",
                             "fontColor": "rgba(129, 129, 129, 1)",
                             "enphasisColor": "rgba(174, 232, 240, 0.76)",
-                            "trackColor": "rgba(100, 100, 100, 1)",
-                            "progressColor": "rgba(200, 200, 200, 1)",
-                            "thumbColor": "rgba(187, 187, 187, 1)",
+                            "trackColor": "rgba(80, 80, 80, 1)",
+                            "progressColor": "rgba(200, 200, 200, 1)"
                         })
                     }
                 }

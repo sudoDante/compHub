@@ -8,6 +8,7 @@ export class rangeSlim extends HTMLElement {
         this.container = element.add(this.dom, "div", null, "container")
         this.container.innerHTML = `
             <span class="title"></span>
+            <div class="fakeThumb"></div>
             <div class="rangeBox">
                 <input type="range" class="range">
                 <span class="valueBox"></span>
@@ -17,6 +18,8 @@ export class rangeSlim extends HTMLElement {
         const style = element.add(this.dom, "style", null, null)
         style.textContent = `
             .container {
+                --transition: 200ms;
+
                 position: relative;
                 display: flex;
                 flex-direction: column;
@@ -26,20 +29,35 @@ export class rangeSlim extends HTMLElement {
                 margin-bottom: 20px;
 
                 &:hover .title {
-                    color: var(--progressColor);
+                    text-indent: 8px;
+                    color: var(--enphasisColor)
+                }
+
+                &:hover .fakeThumb {
+                    background-color: var(--enphasisColor);
                 }
 
                 .title {
                     position: absolute;
-                    top: 6px;
+                    top: 2px;
                     display: flex;
                     width: 100%;
                     height: fit-content;
-                    font-family: var(--fontFamily);
+                    font-family: var(--fontFamily1);
                     font-size: var(--fontSize);
                     font-style: italic;
-                    color: var(--trackColor);  
-                    transition: 200ms; 
+                    color: var(--fontColor);  
+                    transition: var(--transition); 
+                }
+
+                .fakeThumb {
+                    position: absolute;
+                    bottom: 10px;
+                    width: 24px;
+                    height: 5px;
+                    border-radius: 2px;
+                    background-color: var(--trackColor);
+                    transition: background-color var(--transition); 
                 }
 
                 .rangeBox {
@@ -59,6 +77,7 @@ export class rangeSlim extends HTMLElement {
                         height: 100%;
                         background-color: transparent;
                         cursor: pointer;
+                        margin: 0; /* reset for browsers */
 
                         &::-moz-range-track {
                             background-color: var(--trackColor);
@@ -66,19 +85,14 @@ export class rangeSlim extends HTMLElement {
                         }
 
                         &::-moz-range-progress {
-                            background-color: var(--enphasisColor);
-                            height: 1px;
-                            transition: 200ms;
+                            background-color: var(--progressColor);
+                            height: 3px;
+                            transition: var(--transition);
+                            box-shadow: 0 0 2px var(--enphasisColor);
                         }
 
                         &::-moz-range-thumb {
-                            top: 40px;
-                            width: 30px;
-                            height: 20px;
-                            border: none;
-                            border-radius: 0;
-                            background-color: var(--trackColor);
-                            clip-path: polygon(0 76%, 100% 76%, 100% 100%, 0% 100%);
+                            opacity: 0;
                         }
                     }
 
@@ -88,11 +102,11 @@ export class rangeSlim extends HTMLElement {
                         align-items: center;
                         width: 30px;
                         height: 30px;
-                        color: var(--trackColor);
-                        font-family: var(--fontFamily);
+                        color: var(--fontColor);  
+                        font-family: var(--fontFamily2);
                         font-size: 14px;
                         font-style: italic; 
-                        transition: 200ms;
+                        transition: var(--transition);
                     }
                 }
             }
@@ -102,12 +116,12 @@ export class rangeSlim extends HTMLElement {
 
         const getConfig = () => {
             const title = this.getAttribute("title") ? this.getAttribute("title") : "empty title"
-            const fontFamily = this.getAttribute("fontFamily") ? this.getAttribute("fontFamily") : "initial"
+            const fontFamily1 = this.getAttribute("fontFamily1") ? this.getAttribute("fontFamily1") : "initial"
+            const fontFamily2 = this.getAttribute("fontFamily2") ? this.getAttribute("fontFamily2") : "initial"
             const fontSize = this.getAttribute("fontSize") ? this.getAttribute("fontSize") : "initial"
             const fontColor = this.getAttribute("fontColor") ? this.getAttribute("fontColor") : "red"
             const trackColor = this.getAttribute("trackColor") ? this.getAttribute("trackColor") : "red"
             const progressColor = this.getAttribute("progressColor") ? this.getAttribute("progressColor") : "red"
-            const thumbColor = this.getAttribute("thumbColor") ? this.getAttribute("thumbColor") : "red"
             const enphasisColor = this.getAttribute("enphasisColor") ? this.getAttribute("enphasisColor") : "red"
 
             const steps = this.getAttribute("steps") ? this.getAttribute("steps") : 1
@@ -117,12 +131,12 @@ export class rangeSlim extends HTMLElement {
 
             return {
                 css: {
-                    "fontFamily": fontFamily,
+                    "fontFamily1": fontFamily1,
+                    "fontFamily2": fontFamily2,
                     "fontSize": fontSize,
                     "fontColor": fontColor,
                     "trackColor": trackColor,
                     "progressColor": progressColor,
-                    "thumbColor": thumbColor,
                     "enphasisColor": enphasisColor
                 },
                 logic: {
@@ -152,25 +166,32 @@ export class rangeSlim extends HTMLElement {
             valueBox.textContent = range.value
         }
 
+        const applyPosition = (item, fake, copyWidth) => {
+            const left = ((item.value - item.min) / (item.max - item.min)) * (copyWidth - fake.offsetWidth)
+            fake.style.left = `${left}px `
+        }
+
         const main = async () => {
             const title = this.dom.querySelector(".title")
             const range = this.dom.querySelector(".range")
+            const rangeWidth = range.offsetWidth
             const valueBox = this.dom.querySelector(".valueBox")
+            const fakeThumb = this.dom.querySelector(".fakeThumb")
             const config = getConfig()
-            console.log(config)
             title.textContent = config.logic.title
 
             applyConfCss(config.css)
             applyRangeConf(config.logic, range)
             applyInfoValue(range, valueBox)
 
-            range.addEventListener("input", () => {
+            range.addEventListener("input", (e) => {
                 applyInfoValue(range, valueBox)
-                valueBox.style.color = "var(--enphasisColor)"
+                applyPosition(e.target, fakeThumb, rangeWidth)
+                valueBox.style.color = "var(--progressColor)"
             })
 
             range.addEventListener("mouseup", () => {
-                valueBox.style.color = "var(--trackColor)"
+                valueBox.style.color = "var(--fontColor)"
             })
         }
 

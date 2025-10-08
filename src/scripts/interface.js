@@ -69,7 +69,7 @@ export const loadPanelConfig = async (container) => {
         "back": backColor,
         "buttonSize": buttonSize,
         "transition": transition,
-        "fontFamily": "anta",
+        "fontFamily": "Baumans",
         "fontColor": "rgba(160, 160, 160, 1)",
         "fontSize": "16px"
     })
