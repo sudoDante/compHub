@@ -119,56 +119,11 @@ export const movePanel = async (par, side) => {
     if (side === "left") {
         panelBox.style.left = par === true ? `-${panelBox.offsetWidth}px` : 0
     }
-
-/*      closeButton.checked = par === true ? true : false
- */}
+}
 
 export const importConfig = async (par) => {
     const componentTag = par.htmlTag
     const confJson = componentsConfig
     const componentConf = Object.values(confJson).find(item => item.tag === componentTag)
     return componentConf.config
-}
-
-export const drawConfig = async (config) => {
-    const container = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
-    const font = "anta"
-    const fontSize = "14px"
-    const fontColor = "rgba(160, 160, 160, 1)"
-    const enphasisColor = "red"
-    const configItems = config
-
-    for (const array of configItems) {
-        const title = array.title
-        const items = array.items
-
-        const section = element.add(container, "section", null, "section")
-
-        for (const obj of items) {
-            const tag = obj.tag
-            let type = obj.type || null
-
-            if (tag === "input" && obj.type === "range") {
-                await import("./components/nano/rangeSlim.js")
-                const value = obj.value
-                const min = obj.min
-                const max = obj.max
-
-                const rangeBox = element.add(section, "div", null, "rangeBox")
-                const range = element.add(rangeBox, "range-slim", null, null, {
-                    "title": obj.label,
-                    "fontFamily": font,
-                    "fontSize": fontSize,
-                    "fontColor": fontColor,
-                    "trackColor": "rgba(200, 200, 200, 0.2)",
-                    "progressColor": "rgba(200, 200, 200, 0.6)",
-                    "thumbColor": "rgba(200, 200, 200, 1)",
-                    "enphasisColor": enphasisColor,
-                    "min": min,
-                    "max": max,
-                    "value": value
-                })
-            }
-        }
-    }
 }

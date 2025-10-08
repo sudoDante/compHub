@@ -1,10 +1,11 @@
 import { componentsConfig } from "../config/componentsConfig.js"
 import * as ifaceLogic from "./interfaceLogic.js"
 import * as extra from "./modules/extra.js"
-
+import * as events from "./modules/customEvents.js"
 
 export const loadInterfaceEvents = () => {
     let eventDetail
+    const configMenu = document.getElementById("configMenu")
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
     const rightPanelCloseButton = document.getElementById("configMenu").shadowRoot.getElementById("closeInput")
 
@@ -12,38 +13,34 @@ export const loadInterfaceEvents = () => {
         ifaceLogic.movePanel(par, "right")
         await new Promise(resolve => setTimeout(resolve, parseFloat(componentLoadTransition)))
 
+        let component
         if (eventDetail) {
-            ifaceLogic.loadComponent(eventDetail)
+            component = await ifaceLogic.loadComponent(eventDetail)
             ifaceLogic.moveHalo(parseFloat(componentLoadTransition))
             await ifaceLogic.moveMask(parseFloat(componentLoadTransition))
         }
+        return component
     }
 
     const loadMenuEvents = async () => {
         console.log("custom events control READY: waiting")
-
-        // COMPONENTS MENU
         const configMenu = document.getElementById("configMenu")
         const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
 
         document.addEventListener("selectionMenu", async (e) => {
             eventDetail = e.detail
             const importedConfig = await ifaceLogic.importConfig(eventDetail)
-
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
 
             ifaceLogic.drawInfo(eventDetail)
-            await fullLoad(true)
-
+            const component = await fullLoad(true)
 
             configMenu.style.display = "flex"
             ifaceLogic.movePanel(false, "right")
             rightPanelCloseButton.checked = true
-            ifaceLogic.drawConfig(importedConfig)
-
+            events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
             await new Promise(resolve => setTimeout(resolve, 1000))
-            /*         component.setAttribute("pause", "")
-             */
+            component.setAttribute("pause", "") /* PAUSE */
         })
 
         document.addEventListener("menuVisibility", (e) => {

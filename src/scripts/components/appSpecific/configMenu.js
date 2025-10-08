@@ -47,6 +47,18 @@ export class configMenu extends HTMLElement {
                     height: 100%;
                     padding: 20px;
                     overflow-Y: auto;
+
+                    .section {
+                    margin-bottom: 30px;
+
+                        .titleBox {
+                            display: flex;
+                            font-family: var(--fontFamily);
+                            font-size: var(--fontSize);
+                            color: var(--fontColor); 
+                            margin-bottom: 28px; 
+                        }
+                    }
                 }
 
                 .closeBox {
@@ -86,23 +98,33 @@ export class configMenu extends HTMLElement {
     }
 
     connectedCallback() {
-
         const getConfig = () => {
-            const backColor = this.getAttribute("back") ? this.getAttribute("back") : "red"
-            const buttonSize = this.getAttribute("buttonSize") ? this.getAttribute("buttonSize") : "30px"
-            const transition = this.getAttribute("transition") ? this.getAttribute("transition") : "30px"
+            const backColor = this.getAttribute("back") || "red"
+            const buttonSize = this.getAttribute("buttonSize") || "30px"
+            const transition = this.getAttribute("transition") || "0s"
+            const fontFamily = this.getAttribute("fontFamily") || "initial"
+            const fontColor = this.getAttribute("fontColor") || "initial"
+            const fontSize = this.getAttribute("fontSize") || "initial"
 
             return {
-                "backColor": backColor,
-                "buttonSize": buttonSize,
-                "transition": transition
+                css: {
+                    "backColor": backColor,
+                    "buttonSize": buttonSize,
+                    "transition": transition,
+                    "fontFamily": fontFamily,
+                    "fontColor": fontColor,
+                    "fontSize": fontSize
+                }
             }
         }
 
-        const applyConfCss = (conf) => {
-            this.style.setProperty("--backColor", conf.backColor)
-            this.style.setProperty("--buttonSize", conf.buttonSize)
-            this.style.setProperty("--transition", conf.transition)
+        const applyConfCss = (css) => {
+            this.style.setProperty("--backColor", css.backColor)
+            this.style.setProperty("--buttonSize", css.buttonSize)
+            this.style.setProperty("--transition", css.transition)
+            this.style.setProperty("--fontFamily", css.fontFamily)
+            this.style.setProperty("--fontColor", css.fontColor)
+            this.style.setProperty("--fontSize", css.fontSize)
         }
 
         const controlMenuDisplay = (input) => {
@@ -110,14 +132,46 @@ export class configMenu extends HTMLElement {
             hostContainer.style.right = input.checked ? 0 : `${hostContainer.offsetWidth * -1}px`
         }
 
+        const drawConfig = async (config) => {
+            const configBox = this.dom.getElementById("configBox")
+            configBox.innerHTML = ""
+
+            for (const obj of config.detail) {
+                const section = element.add(configBox, "div", null, "section")
+                const titleBox = element.add(section, "span", null, "titleBox")
+                titleBox.textContent = obj.title
+
+                const configObject = obj.items
+                for (const item of configObject) {
+
+                    if (item.tag === "input" && item.type === "range") {
+                        await import("./../nano/rangeSlim.js")
+                        element.add(section, "range-slim", null, null, {
+                            "min": item.min,
+                            "max": item.max,
+                            "value": item.value,
+                            "fontFamily": "anta",
+                            "fontSize": "12px",
+                            "fontColor": "rgba(129, 129, 129, 1)",
+                            "enphasisColor": "rgba(174, 232, 240, 0.76)",
+                            "trackColor": "rgba(100, 100, 100, 1)",
+                            "progressColor": "rgba(200, 200, 200, 1)",
+                            "thumbColor": "rgba(187, 187, 187, 1)",
+                        })
+                    }
+                }
+            }
+        }
+
         const main = async () => {
             const conf = await getConfig()
-            applyConfCss(conf)
+            applyConfCss(conf.css)
 
             const closeButton = this.dom.querySelector("#closeInput")
             closeButton.checked = true
 
             closeButton.addEventListener("change", (e) => controlMenuDisplay(e.target))
+            this.dom.addEventListener("loadConfig", (e) => drawConfig(e.detail))
         }
 
         this.dom.addEventListener("DOMContentLoaded", main())

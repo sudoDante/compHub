@@ -17,37 +17,46 @@ export class rangeSlim extends HTMLElement {
         const style = element.add(this.dom, "style", null, null)
         style.textContent = `
             .container {
+                position: relative;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
                 width: 100%;
                 height: 50px;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
+
+                &:hover .title {
+                    color: var(--progressColor);
+                }
 
                 .title {
+                    position: absolute;
+                    top: 6px;
                     display: flex;
-                    width: fit-content;
+                    width: 100%;
                     height: fit-content;
                     font-family: var(--fontFamily);
-                    font-size: var(--fontSize); 
-                    color: var(--fontColor);   
+                    font-size: var(--fontSize);
+                    font-style: italic;
+                    color: var(--trackColor);  
+                    transition: 200ms; 
                 }
 
                 .rangeBox {
-                    position: relative;
+                    position: absolute;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     width: 100%;
-                    height: 30px;
+                    height: 100%;
 
                     .range {
                         -webkit-appearance: none;
                         appearance: none;
                         position: relative;
                         bottom: -1px;
-                        width: calc(100% - 68px);
-                        height: 30px;
+                        width: calc(100% - 40px);
+                        height: 100%;
                         background-color: transparent;
                         cursor: pointer;
 
@@ -57,17 +66,19 @@ export class rangeSlim extends HTMLElement {
                         }
 
                         &::-moz-range-progress {
-                            background-color: var(--progressColor);
-                            height: 2px;
+                            background-color: var(--enphasisColor);
+                            height: 1px;
+                            transition: 200ms;
                         }
 
                         &::-moz-range-thumb {
-                            width: 12px;
-                            height: 12px;
-                            background-color: red;
+                            top: 40px;
+                            width: 30px;
+                            height: 20px;
                             border: none;
-                            border-radius: 50%;
-                            background-color: var(--thumbColor);
+                            border-radius: 0;
+                            background-color: var(--trackColor);
+                            clip-path: polygon(0 76%, 100% 76%, 100% 100%, 0% 100%);
                         }
                     }
 
@@ -77,9 +88,11 @@ export class rangeSlim extends HTMLElement {
                         align-items: center;
                         width: 30px;
                         height: 30px;
-                        color: grey;
+                        color: var(--trackColor);
                         font-family: var(--fontFamily);
+                        font-size: 14px;
                         font-style: italic; 
+                        transition: 200ms;
                     }
                 }
             }
@@ -91,7 +104,7 @@ export class rangeSlim extends HTMLElement {
             const title = this.getAttribute("title") ? this.getAttribute("title") : "empty title"
             const fontFamily = this.getAttribute("fontFamily") ? this.getAttribute("fontFamily") : "initial"
             const fontSize = this.getAttribute("fontSize") ? this.getAttribute("fontSize") : "initial"
-            const fontColor = this.getAttribute("fontColor") ? this.getAttribute("fontColor") : "initial"
+            const fontColor = this.getAttribute("fontColor") ? this.getAttribute("fontColor") : "red"
             const trackColor = this.getAttribute("trackColor") ? this.getAttribute("trackColor") : "red"
             const progressColor = this.getAttribute("progressColor") ? this.getAttribute("progressColor") : "red"
             const thumbColor = this.getAttribute("thumbColor") ? this.getAttribute("thumbColor") : "red"
@@ -139,23 +152,12 @@ export class rangeSlim extends HTMLElement {
             valueBox.textContent = range.value
         }
 
-        const colorizeValue = async (item, par, color) => {
-            if (par === true) {
-                item.style.transition = "0s"
-                item.style.transform = "scale(140%)"
-                item.style.color = color
-            } else {
-                item.style.transition = "1400ms ease-in-out"
-                item.style.transform = "scale(100%)"
-                item.style.color = "grey"
-            }
-        }
-
         const main = async () => {
             const title = this.dom.querySelector(".title")
             const range = this.dom.querySelector(".range")
             const valueBox = this.dom.querySelector(".valueBox")
             const config = getConfig()
+            console.log(config)
             title.textContent = config.logic.title
 
             applyConfCss(config.css)
@@ -163,11 +165,13 @@ export class rangeSlim extends HTMLElement {
             applyInfoValue(range, valueBox)
 
             range.addEventListener("input", () => {
-                colorizeValue(valueBox, true, config.css.enphasisColor)
                 applyInfoValue(range, valueBox)
+                valueBox.style.color = "var(--enphasisColor)"
             })
 
-            range.addEventListener("mouseup", () => colorizeValue(valueBox, false))
+            range.addEventListener("mouseup", () => {
+                valueBox.style.color = "var(--trackColor)"
+            })
         }
 
         main()

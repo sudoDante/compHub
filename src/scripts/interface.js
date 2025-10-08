@@ -9,7 +9,14 @@ export const loadMenu = async (container) => {
     })
     const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
     const barsTransition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
-    element.add(container, "list-menu", "listMenu", "listMenu", { "list": components, title: "Components by type", back: backColor, close: true, button: "fall", hostTransition: barsTransition })
+    element.add(container, "list-menu", "listMenu", "listMenu", {
+        "list": components,
+        title: "Components by type",
+        back: backColor,
+        close: true,
+        button: "fall",
+        hostTransition: barsTransition
+    })
 }
 
 export const loadControls = async (container) => {
@@ -62,7 +69,9 @@ export const loadPanelConfig = async (container) => {
         "back": backColor,
         "buttonSize": buttonSize,
         "transition": transition,
-        "parentWidth": width
+        "fontFamily": "anta",
+        "fontColor": "rgba(160, 160, 160, 1)",
+        "fontSize": "16px"
     })
     return configMenu
 }
