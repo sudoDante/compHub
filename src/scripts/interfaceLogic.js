@@ -53,30 +53,27 @@ export const identifyBoxes = (par) => {
 }
 
 export const drawInfo = async (par) => {
-    const info = document.getElementById("info")
+    const infoTitlesBox = document.getElementById("infoTitlesBox")
     const infoFamily = document.getElementById("infoFamily")
     const infoName = document.getElementById("infoName")
-    const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--infoTransition"))
-
     const family = par.type
     const delay = par.time
     const name = par.defaultName
-
     infoFamily.textContent = ""
     infoName.textContent = ""
     infoName.textContent = name.toUpperCase()
     infoFamily.textContent = family
 
-    info.style.clipPath = "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)"
-    await new Promise(resolve => { setTimeout(resolve, transition) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
+    infoTitlesBox.style.clipPath = "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)"
+    await new Promise(resolve => { setTimeout(resolve, delay) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
 }
 
 export const clearInfo = async () => {
-    const info = document.getElementById("info")
+    const infoTitlesBox = document.getElementById("infoTitlesBox")
     const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--infoTransition"))
-    info.style.transition = transition
-    info.style.clipPath = "polygon(0 0, 0 0, 0 100%, 0% 100%)"
-    info.style.transition = transition
+    infoTitlesBox.style.transition = transition
+    infoTitlesBox.style.clipPath = "polygon(0 0, 0 0, 0 100%, 0% 100%)"
+    infoTitlesBox.style.transition = transition
     await new Promise(resolve => { setTimeout(resolve, transition) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
 }
 
@@ -126,4 +123,24 @@ export const importConfig = async (par) => {
     const confJson = componentsConfig
     const componentConf = Object.values(confJson).find(item => item.tag === componentTag)
     return componentConf.config
+}
+
+export const componentPause = async (component) => {
+    component.setAttribute("pause", "")
+}
+
+export const checkTestMode = () => {
+    return localStorage.getItem("testMode")
+}
+
+export const testMode = () => {
+        document.dispatchEvent(new CustomEvent("selectionMenu", {
+        detail: {
+            type: "Background",
+            defaultName: "test",
+            url: "/src/scripts/components/_backgrounds/emptyTest.js",
+            htmlTag: "empty-test",
+            time: 400
+        }
+    }))
 }

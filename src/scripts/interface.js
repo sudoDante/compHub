@@ -52,16 +52,37 @@ export const loadControls = async (container) => {
     }
 }
 
-export const loadInfoArea = async (container) => {
+export const loadInfoArea = async (container, testMode) => {
     const info = element.add(container, "div", "info", "info absolute anta")
-    element.add(info, "span", "infoName", "name")
-    element.add(info, "span", "infoFamily", "family")
+    const infoTitlesBox = element.add(info, "div", "infoTitlesBox", "infoTitlesBox")
+    element.add(infoTitlesBox, "span", "infoName", "name")
+    element.add(infoTitlesBox, "span", "infoFamily", "family")
+    
+    if (testMode) {
+        const testModeBox = element.add(info, "div", null, "testModeBox center")
+        import("./components/nano/switchSlim.js")
+
+        element.add(testModeBox, "switch-slim", null, null, {
+            "title": "Test Mode",
+            "fontColor": "rgba(129, 129, 129, 1)",
+            "enphasisColor": "rgba(174, 232, 240, 0.76)",
+            "fontFamily1": "Nunito Sans",
+            "fontFamily2": "Anta",
+            "fontSize": "13px",
+            "backColor": "rgba(53, 53, 53, 1)",
+            "trueText": "I",
+            "falseText": "0",
+            "trueColor": "whitesmoke",
+            "falseColor": "rgb(60,60,60)",
+            "value": localStorage.getItem("testMode"),
+            "event": "testMode"
+        })
+    }
 }
 
 export const loadPanelConfig = async (container) => {
     const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
     const transition = getComputedStyle(document.documentElement).getPropertyValue("--barsTransition")
-    const width = getComputedStyle(document.documentElement).getPropertyValue("--rightPanelBox")
     const buttonSize = getComputedStyle(document.documentElement).getPropertyValue("--barHeight")
 
     await import("./components/appSpecific/configMenu.js")

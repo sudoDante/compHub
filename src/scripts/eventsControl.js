@@ -40,7 +40,6 @@ export const loadInterfaceEvents = () => {
             rightPanelCloseButton.checked = true
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
             await new Promise(resolve => setTimeout(resolve, 1000))
-            component.setAttribute("pause", "") /* PAUSE */
         })
 
         document.addEventListener("menuVisibility", (e) => {
@@ -91,8 +90,16 @@ export const loadInterfaceEvents = () => {
 
     const loadComponentEvents = () => {
         console.log("custom events config READY: waiting")
-        document.addEventListener("componentChanged", (e) => {
-            console.log(e.detail)
+
+        document.addEventListener("componentChanged", async (e) => {
+            const event = Object.entries(e.detail)[0][0]
+            const value = Object.entries(e.detail)[0][1]
+
+            if (event === "testMode") {
+                localStorage.setItem("testMode", value)
+                await new Promise(resolve => setTimeout(resolve, 300))
+                window.location.replace(window.location.href)
+            }
         })
     }
 

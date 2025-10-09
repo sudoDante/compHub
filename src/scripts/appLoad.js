@@ -1,6 +1,7 @@
 import * as iface from "./interface.js"
 import * as ifaceLogic from "./interfaceLogic.js"
 import * as events from "./eventsControl.js"
+import { appConfig } from "./../config/config.js"
 
 const main = async () => {
 
@@ -17,22 +18,13 @@ const main = async () => {
     configMenu.style.display = "none"
     /* main bars */
     await iface.loadControls(main)
-    await iface.loadInfoArea(main)
+    await iface.loadInfoArea(main, appConfig.testMode)
     /* events controls bar */
     ifaceLogic.applyBacksRestart()
     events.loadInterfaceEvents()
-
-    /* autoload test mode */
-    document.dispatchEvent(new CustomEvent("selectionMenu", {
-        detail: {
-
-            type: "Background",
-            defaultName: "test",
-            url: "/src/scripts/components/_backgrounds/emptyTest.js",
-            htmlTag: "empty-test",
-            time: 400
-        }
-    }))
+    /* mode test auto */
+    console.log(ifaceLogic.checkTestMode())
+    ifaceLogic.checkTestMode() === "true" ? ifaceLogic.testMode() : null
 }
 
 main()

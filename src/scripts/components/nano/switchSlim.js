@@ -11,9 +11,9 @@ export class switchSlim extends HTMLElement {
                 <span id="on" class="text"></span>
                 <span id="off" class="text"></span>
                 <div class="slice"></div> 
-                <input type="checkbox" class="hiddenInput">
             </div>
             <span class="title"></span>
+            <input type="checkbox" class="hiddenInput">
         `
 
         const style = element.add(this.dom, "style", null, null)
@@ -25,35 +25,38 @@ export class switchSlim extends HTMLElement {
             }
 
             :host {
+                width: fit-content;
+                height: 18px;
+
                 --transition: 200ms;
             }
 
             .container {
+                position: relative;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                width: 100%;
-                height: auto;
+                width: fit-content;
+                height: 18px;
                 margin-bottom: 20px;
+
+                &:has(.hiddenInput:checked) .radioBox {
+                    .on {color: var(--enphasisColor);}
+                    .slice {
+                        left: calc(100% - 20px);
+                        background-color: var(--trueColor);
+                        animation: var(--transition) test forwards ease-out;
+                    }
+                }  
 
                 .radioBox {
                     position: relative;
                     display: flex;
                     align-items: center;
-                    width: 60px;
-                    height: 18px;
+                    width: 50px;
+                    height: 100%;
                     border-radius: 11px;
                     outline: 2px solid var(--backColor);
-
-                    &:has(.hiddenInput:checked) {
-                        .on {color: var(--enphasisColor);}
-                        .slice {
-                            left: calc(100% - 20px);
-                            height: calc(100% - 6px);
-                            background-color: var(--trueColor);
-                            animation: var(--transition) test forwards ease-out;
-                        }
-                    }  
 
                     .text {
                         display: flex;
@@ -70,32 +73,33 @@ export class switchSlim extends HTMLElement {
                     .slice {
                         position: absolute;
                         left: 4px;
-                        height: calc(100% - 6px);
+                        height: 12px;
                         aspect-ratio: 1/1;
                         border-radius: 50%;
                         background-color: var(--falseColor);
                         transition: var(--transition);
                     }
-
-                    .hiddenInput {
-                        position: absolute;
-                        top: 0;
-                        appearance: none;
-                        width: 100%;
-                        height: 100%;
-                        border-radius: 8px;
-                        cursor: pointer;
-                    }
                 }
 
                 .title {
                     display: flex;
-                    width: calc(100% - 70px);
+                    width: fit-content;
                     height: 100%;
                     font-family: var(--fontFamily1);
                     font-size: var(--fontSize);
                     font-style: italic;
+                    margin-left: 10px;
                     color: var(--fontColor);
+                }
+
+                .hiddenInput {
+                    position: absolute;
+                    top: 0;
+                    appearance: none;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 8px;
+                    cursor: pointer;
                 }
             }
         `
