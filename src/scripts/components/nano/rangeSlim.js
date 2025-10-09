@@ -17,6 +17,12 @@ export class rangeSlim extends HTMLElement {
 
         const style = element.add(this.dom, "style", null, null)
         style.textContent = `
+            :host {
+                margin: 0;
+                padding: 0;
+                border-box: box-sizing;
+            }
+
             .container {
                 --transition: 200ms;
 
@@ -25,7 +31,7 @@ export class rangeSlim extends HTMLElement {
                 flex-direction: column;
                 justify-content: space-between;
                 width: 100%;
-                height: 50px;
+                height: 40px;
                 margin-bottom: 20px;
 
                 &:hover .title {
@@ -39,7 +45,7 @@ export class rangeSlim extends HTMLElement {
 
                 .title {
                     position: absolute;
-                    top: -2px;
+                    top: 0px;
                     display: flex;
                     width: 100%;
                     height: fit-content;
@@ -52,9 +58,9 @@ export class rangeSlim extends HTMLElement {
 
                 .fakeThumb {
                     position: absolute;
-                    bottom: 10px;
-                    width: 24px;
-                    height: 5px;
+                    bottom: 8px;
+                    width: 22px;
+                    height: 4px;
                     border-radius: 2px;
                     background-color: var(--trackColor);
                     transition: background-color var(--transition); 
@@ -115,19 +121,18 @@ export class rangeSlim extends HTMLElement {
     connectedCallback() {
 
         const getConfig = () => {
-            const fontFamily1 = this.getAttribute("fontFamily1") ? this.getAttribute("fontFamily1") : "initial"
-            const fontFamily2 = this.getAttribute("fontFamily2") ? this.getAttribute("fontFamily2") : "initial"
-            const fontSize = this.getAttribute("fontSize") ? this.getAttribute("fontSize") : "initial"
-            const fontColor = this.getAttribute("fontColor") ? this.getAttribute("fontColor") : "red"
-            const trackColor = this.getAttribute("trackColor") ? this.getAttribute("trackColor") : "red"
-            const progressColor = this.getAttribute("progressColor") ? this.getAttribute("progressColor") : "red"
-            const enphasisColor = this.getAttribute("enphasisColor") ? this.getAttribute("enphasisColor") : "red"
-
-            const title = this.getAttribute("title") ? this.getAttribute("title") : "empty title"
-            const min = this.getAttribute("min") ? this.getAttribute("min") : 0
-            const max = this.getAttribute("max") ? this.getAttribute("max") : 100
-            const value = this.getAttribute("value") ? this.getAttribute("value") : min
-            const event = this.getAttribute("event") ? this.getAttribute("event") : "noEventConfigured"
+            const fontFamily1 = this.getAttribute("fontFamily1") || "initial"
+            const fontFamily2 = this.getAttribute("fontFamily2") || "initial"
+            const fontSize = this.getAttribute("fontSize") || "initial"
+            const fontColor = this.getAttribute("fontColor") || "red"
+            const trackColor = this.getAttribute("trackColor") || "red"
+            const progressColor = this.getAttribute("progressColor") || "red"
+            const enphasisColor = this.getAttribute("enphasisColor") || "red"
+            const title = this.getAttribute("title") || "empty title"
+            const min = this.getAttribute("min") || 0
+            const max = this.getAttribute("max") || 100
+            const value = this.getAttribute("value") || min
+            const event = this.getAttribute("event") || "noEventConfigured"
 
             return {
                 css: {
@@ -156,9 +161,9 @@ export class rangeSlim extends HTMLElement {
             return config
         }
 
-        const applyRangeConf = (config, range) => {
+        const applyLogicConf = (config, input) => {
             Object.entries(config).forEach(([key, value]) => {
-                range.setAttribute(key, value)
+                input.setAttribute(key, value)
             })
         }
 
@@ -173,26 +178,27 @@ export class rangeSlim extends HTMLElement {
 
         const main = async () => {
             const title = this.dom.querySelector(".title")
-            const range = this.dom.querySelector(".range")
-            const rangeWidth = range.offsetWidth
+            const input = this.dom.querySelector(".range")
+            const rangeWidth = input.offsetWidth
             const valueBox = this.dom.querySelector(".valueBox")
             const fakeThumb = this.dom.querySelector(".fakeThumb")
             const config = getConfig()
             title.textContent = config.logic.title
 
             applyConfCss(config.css)
-            applyRangeConf(config.logic, range)
-            applyInfoValue(range, valueBox)
+            applyLogicConf(config.logic, input)
+            applyInfoValue(input, valueBox)
+            applyPosition(input, fakeThumb, rangeWidth)
 
-            range.addEventListener("input", (e) => {
-                applyInfoValue(range, valueBox)
+            input.addEventListener("input", (e) => {
+                applyInfoValue(input, valueBox)
                 applyPosition(e.target, fakeThumb, rangeWidth)
                 valueBox.style.color = "var(--progressColor)"
             })
 
-            range.addEventListener("mouseup", () => {
+            input.addEventListener("mouseup", () => {
                 valueBox.style.color = "var(--fontColor)"
-                document.dispatchEvent(new CustomEvent("componentChanged", { detail: { [config.logic.event]: range.value } }))
+                document.dispatchEvent(new CustomEvent("componentChanged", { detail: { [config.logic.event]: input.value } }))
             })
         }
 

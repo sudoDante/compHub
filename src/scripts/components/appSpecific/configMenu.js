@@ -144,21 +144,40 @@ export class configMenu extends HTMLElement {
                 const configObject = obj.items
                 for (const item of configObject) {
 
-                    if (item.tag === "input" && item.type === "range") {
-                        await import("./../nano/rangeSlim.js")
+                    if (item.type === "range") {
+                        await import("../nano/rangeSlim.js")
                         element.add(section, "range-slim", null, null, {
                             "title": item.label,
                             "min": item.min,
                             "max": item.max,
                             "value": item.value,
-                            "event": item.event,
                             "fontFamily1": "Nunito Sans",
                             "fontFamily2": "Anta",
                             "fontSize": "13px",
                             "fontColor": "rgba(129, 129, 129, 1)",
                             "enphasisColor": "rgba(174, 232, 240, 0.76)",
                             "trackColor": "rgba(80, 80, 80, 1)",
-                            "progressColor": "rgba(200, 200, 200, 1)"
+                            "progressColor": "rgba(200, 200, 200, 1)",
+                            "event": item.event
+                        })
+                    }
+
+                    if (item.type === "switch") {
+                        await import("../nano/switchSlim.js")
+                        element.add(section, "switch-slim", null, null, {
+                            "title": item.label,
+                            "fontColor": "rgba(129, 129, 129, 1)",
+                            "enphasisColor": "rgba(174, 232, 240, 0.76)",
+                            "fontFamily1": "Nunito Sans",
+                            "fontFamily2": "Anta",
+                            "fontSize": "13px",
+                            "backColor": "rgba(53, 53, 53, 1)",
+                            "trueText": "V",
+                            "falseText": "H",
+                            "trueColor": "whitesmoke",
+                            "falseColor": "whitesmoke",
+                            "value": item.value,
+                            "event": item.event
                         })
                     }
                 }

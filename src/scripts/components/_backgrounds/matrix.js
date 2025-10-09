@@ -4,6 +4,7 @@ direction       horizontal or vertical animation        default vertical
 back            background color                        default transparent
 interval        time between selections                 default/min 80ms
 steps           time between cells animation            default 50ms
+direction       direction of effect                     default vertical
 pause           pause effect                            bollean default false
 */
 

@@ -21,6 +21,18 @@ const main = async () => {
     /* events controls bar */
     ifaceLogic.applyBacksRestart()
     events.loadInterfaceEvents()
+
+    /* autoload test mode */
+    document.dispatchEvent(new CustomEvent("selectionMenu", {
+        detail: {
+
+            type: "Background",
+            defaultName: "test",
+            url: "/src/scripts/components/_backgrounds/emptyTest.js",
+            htmlTag: "empty-test",
+            time: 400
+        }
+    }))
 }
 
 main()
