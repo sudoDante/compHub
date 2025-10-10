@@ -6,7 +6,7 @@ export class rangeSlim extends HTMLElement {
 
         this.dom = this.attachShadow({ mode: "open" })
         this.container = element.add(this.dom, "div", null, "container")
-        this.container.innerHTML = `
+        this.container.innerHTML += `
             <span class="title"></span>
             <div class="fakeThumb"></div>
             <div class="rangeBox">
@@ -16,11 +16,11 @@ export class rangeSlim extends HTMLElement {
         `
 
         const style = element.add(this.dom, "style", null, null)
-        style.textContent = `
+        style.textContent += `
             :host {
                 margin: 0;
                 padding: 0;
-                border-box: box-sizing;
+                box-sizing: border-box;
             }
 
             .container {

@@ -82,11 +82,12 @@ export class matrix extends HTMLElement {
         return ["pause"]
     }
 
-    state = false
+    state = {"pause": false}
 
     attributeChangedCallback(name) {
         if (name === "pause") {
-            this.state = this.hasAttribute("pause")
+            this.state.pause = this.getAttribute("pause")
+            console.log(this.state)
         }
     }
 
@@ -152,7 +153,7 @@ export class matrix extends HTMLElement {
             availableNums = [...Array(length).keys()]
 
             while (true) {
-                while (this.state === true) await new Promise(resolve => setTimeout(resolve, 100)) // PAUSE
+                while (this.state.pause === "true") await new Promise(resolve => setTimeout(resolve, 100)) // PAUSE
 
                 let waiting = conf.interval
 
@@ -193,7 +194,7 @@ export class matrix extends HTMLElement {
             const animationTempo = conf.steps
 
             for (let i = 0; i < group.length * 3; i++) {
-                while (this.state === true) await new Promise(resolve => setTimeout(resolve, 100)) // PAUSE
+                while (this.state.pause === "true") await new Promise(resolve => setTimeout(resolve, 100)) // PAUSE
 
                 if (i < group.length) group[i].classList.add("matrixCellDrawing")
                 if (i < group.length && group[i - 1]) group[i - 1].classList.replace("matrixCellDrawing", "matrixCellVisible")

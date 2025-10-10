@@ -162,12 +162,18 @@ export class switchSlim extends HTMLElement {
             const off = this.dom.getElementById("off")
             const config = getConfig()
 
-            applyConfCss(config.css)
             if (config.logic.checked === "true") input.checked = true
+
+            applyConfCss(config.css)
             title.textContent = config.logic.title
             on.textContent = config.logic.trueText
             off.textContent = config.logic.falseText
             changeText(input, [on, off])
+
+            if (config.css.fontFamily2 === "material symbols outlined") {
+                on.style.fontSize = "16px"
+                off.style.fontSize = "16px"
+            }
 
             input.addEventListener("change", (e) => {
                 changeText(input, [on, off])

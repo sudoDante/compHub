@@ -47,7 +47,7 @@ body {
         }
 
         &:has(.controlBox .backBox .numberBox:nth-of-type(5) input[type="radio"]:checked) .componentBoxContainer .back {
-            background-image: url("https://wallpapers.com/images/hd/black-and-white-heart-words-1bz680sj1o9qd28o.jpg");
+            background-image: url("https://wallpapers.com/images/hd/oled-monitor-vur9ru4193d24oyh.jpg");
         }
 
         &:has(.leftControl:not(:checked)) {
@@ -242,7 +242,7 @@ body {
 
         .infoTitlesBox {
             display: flex;
-            width: calc(100% - 200px);
+            flex: 1;
             height: 100%;
             clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
             transition: var(--infoTransition);
@@ -250,8 +250,9 @@ body {
             .name,
             .family {
                 display: flex;
-                align-items: end;
+                align-items: flex-end;
                 width: fit-content;
+                height: 80%;
                 margin-bottom: 2px;
             }
 
@@ -269,8 +270,20 @@ body {
             }
         }
 
+        .pauseBox {
+            display: none;
+            align-items: center;
+            justify-content: right;
+            width: 120px;
+            height: 100%;
+        }
+
         .testModeBox {
-            width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: right;
+            padding-right: 20px;
+            width: 160px;
             height: 100%;
         }
     }

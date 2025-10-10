@@ -144,3 +144,8 @@ export const testMode = () => {
         }
     }))
 }
+
+export const pauseSetVisible = () => {
+    const pauseBox = document.getElementById("pauseBox")
+    pauseBox.style.display = "flex"
+}

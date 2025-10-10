@@ -57,11 +57,28 @@ export const loadInfoArea = async (container, testMode) => {
     const infoTitlesBox = element.add(info, "div", "infoTitlesBox", "infoTitlesBox")
     element.add(infoTitlesBox, "span", "infoName", "name")
     element.add(infoTitlesBox, "span", "infoFamily", "family")
-    
-    if (testMode) {
-        const testModeBox = element.add(info, "div", null, "testModeBox center")
-        import("./components/nano/switchSlim.js")
 
+    import("./components/nano/switchSlim.js")
+    const pauseBox = element.add(info, "div", "pauseBox", "pauseBox")
+        element.add(pauseBox, "switch-slim", null, null, {
+            "title": "Pause",
+            "fontColor": "rgba(129, 129, 129, 1)",
+            "enphasisColor": "rgba(174, 232, 240, 0.76)",
+            "fontFamily1": "Nunito Sans",
+            "fontFamily2": "material symbols outlined",
+            "fontSize": "13px",
+            "backColor": "rgba(53, 53, 53, 1)",
+            "trueText": "pause_circle",
+            "falseText": "play_circle",
+            "trueColor": "whitesmoke",
+            "falseColor": "rgb(60,60,60)",
+            "value": false,
+            "event": "pause"
+        })
+
+
+    if (testMode) {
+        const testModeBox = element.add(info, "div", null, "testModeBox")
         element.add(testModeBox, "switch-slim", null, null, {
             "title": "Test Mode",
             "fontColor": "rgba(129, 129, 129, 1)",

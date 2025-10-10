@@ -23,7 +23,6 @@ const main = async () => {
     ifaceLogic.applyBacksRestart()
     events.loadInterfaceEvents()
     /* mode test auto */
-    console.log(ifaceLogic.checkTestMode())
     ifaceLogic.checkTestMode() === "true" ? ifaceLogic.testMode() : null
 }
 

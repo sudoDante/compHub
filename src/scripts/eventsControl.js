@@ -30,11 +30,11 @@ export const loadInterfaceEvents = () => {
         document.addEventListener("selectionMenu", async (e) => {
             eventDetail = e.detail
             const importedConfig = await ifaceLogic.importConfig(eventDetail)
+
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
-
             ifaceLogic.drawInfo(eventDetail)
+            ifaceLogic.pauseSetVisible()
             const component = await fullLoad(true)
-
             configMenu.style.display = "flex"
             ifaceLogic.movePanel(false, "right")
             rightPanelCloseButton.checked = true
@@ -95,10 +95,17 @@ export const loadInterfaceEvents = () => {
             const event = Object.entries(e.detail)[0][0]
             const value = Object.entries(e.detail)[0][1]
 
+/*             console.log(e.detail)
+ */
             if (event === "testMode") {
                 localStorage.setItem("testMode", value)
                 await new Promise(resolve => setTimeout(resolve, 300))
                 window.location.replace(window.location.href)
+            }
+
+            if (event === "pause") {
+                const actualComponent = ifaceLogic.identifyBoxes("inactive").children[0] /* inactive???? strangers things */
+                actualComponent ? actualComponent.setAttribute("pause", value) : null
             }
         })
     }
