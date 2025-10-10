@@ -145,15 +145,28 @@ export const testMode = () => {
     }))
 }
 
-export const pauseSetVisible = async () => {
+export const loadPauseBox = async (boolean) => {
     const pauseBox = document.getElementById("pauseBox")
-    pauseBox.style.display = "flex"
-    pauseBox.style.opacity = 0
-    await new Promise(resolve => setTimeout(resolve, 100))
-    pauseBox.style.opacity = 1
+
+    if (boolean) {
+        pauseBox.style.display = "flex"
+        pauseBox.style.opacity = 0
+        await new Promise(resolve => setTimeout(resolve, 100))
+        pauseBox.style.opacity = 1
+    } else {
+        pauseBox.style.opacity = 0
+        const time = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--flashLoad"))
+        await new Promise(resolve => setTimeout(resolve, time))
+        pauseBox.style.display = "none"
+    }
 }
 
-export const loadPausedLayer = async (container, boolean) => {
+export const unLoadPauseBox = async () => {
+    const pauseBox = document.getElementById("pauseBox")
+
+}
+
+export const loadPausedLayer = async (boolean, container = null) => {
     if (boolean) {
         const layer = element.add(container, "div", "pausedLayer", "pausedLayer absolute center")
         layer.textContent = "PAUSED"
@@ -163,10 +176,18 @@ export const loadPausedLayer = async (container, boolean) => {
         layer.style.width = "34%"
     } else {
         const layer = document.getElementById("pausedLayer")
-        const time = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--flashLoad"))
-        layer.style.opacity = 0
-        await new Promise(resolve => setTimeout(resolve, time))
-        layer.remove()
+        if (layer) {
+            const time = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--flashLoad"))
+            layer.style.opacity = 0
+            await new Promise(resolve => setTimeout(resolve, time))
+            layer.remove()
+        }
     }
 }
 
+export const resetPauseInput = () => {
+    const pauseInput = document.getElementById("pause").shadowRoot.querySelector("input")
+    console.log(pauseInput)
+    pauseInput.checked = false
+    pauseInput.dispatchEvent(new Event("change"))
+}

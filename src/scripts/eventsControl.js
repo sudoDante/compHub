@@ -2,6 +2,7 @@ import { componentsConfig } from "../config/componentsConfig.js"
 import * as ifaceLogic from "./interfaceLogic.js"
 import * as extra from "./modules/extra.js"
 import * as events from "./modules/customEvents.js"
+import { appConfig } from "./../config/config.js"
 
 export const loadInterfaceEvents = () => {
     let eventDetail
@@ -30,7 +31,11 @@ export const loadInterfaceEvents = () => {
         document.addEventListener("selectionMenu", async (e) => {
             eventDetail = e.detail
             const importedConfig = await ifaceLogic.importConfig(eventDetail)
-            ifaceLogic.loadPausedLayer(main, false)
+
+            if (appConfig.testMode) {
+                ifaceLogic.loadPausedLayer(false)
+                ifaceLogic.resetPauseInput()
+            }
 
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
             ifaceLogic.drawInfo(eventDetail)
@@ -40,7 +45,6 @@ export const loadInterfaceEvents = () => {
             rightPanelCloseButton.checked = true
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
             await new Promise(resolve => setTimeout(resolve, 1000))
-            ifaceLogic.pauseSetVisible()
         })
 
         document.addEventListener("menuVisibility", (e) => {
@@ -98,6 +102,7 @@ export const loadInterfaceEvents = () => {
 
             if (event === "testMode") {
                 localStorage.setItem("testMode", value)
+                await ifaceLogic.loadPauseBox(false)
                 await new Promise(resolve => setTimeout(resolve, 300))
                 window.location.replace(window.location.href)
             }
@@ -106,7 +111,7 @@ export const loadInterfaceEvents = () => {
                 const main = document.getElementById("main")
                 const actualComponent = ifaceLogic.identifyBoxes("inactive").children[0] /* inactive???? strangers things */
                 actualComponent ? actualComponent.setAttribute("pause", value) : null
-                ifaceLogic.loadPausedLayer(main, value)
+                ifaceLogic.loadPausedLayer(value, main)
             }
         })
     }

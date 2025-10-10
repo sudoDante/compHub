@@ -60,7 +60,7 @@ export const loadInfoArea = async (container, testMode) => {
 
     import("./components/nano/switchSlim.js")
     const pauseBox = element.add(info, "div", "pauseBox", "pauseBox")
-        element.add(pauseBox, "switch-slim", null, null, {
+        await element.add(pauseBox, "switch-slim", "pause", null, {
             "title": "Pause",
             "fontColor": "rgba(129, 129, 129, 1)",
             "enphasisColor": "rgba(174, 232, 240, 0.76)",

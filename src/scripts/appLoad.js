@@ -23,7 +23,11 @@ const main = async () => {
     ifaceLogic.applyBacksRestart()
     events.loadInterfaceEvents()
     /* mode test auto */
-    ifaceLogic.checkTestMode() === "true" ? ifaceLogic.testMode() : null
+    if (ifaceLogic.checkTestMode() === "true") {
+        await ifaceLogic.loadPauseBox(true)
+        await ifaceLogic.testMode()
+
+    }
 }
 
 main()
