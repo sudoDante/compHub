@@ -9,7 +9,7 @@ export class configMenu extends HTMLElement {
         this.container.innerHTML = `
             <div id="configBox" class="configBox"></div>
             <div class="closeBox radius4">
-                <span class="icon material-symbols-outlined">arrow_menu_open</span>
+                <span class="icon material-symbols-outlined">page_info</span>
                 <input id="closeInput" class="hiddenInput" type="checkbox">
             </div>
         `
@@ -78,6 +78,8 @@ export class configMenu extends HTMLElement {
                         color: whitesmoke;
                         font-size: 22px;
                         transition: var(--transition);
+                        color: grey;
+                        font-size: 20px;
                     }
 
                     .hiddenInput { 

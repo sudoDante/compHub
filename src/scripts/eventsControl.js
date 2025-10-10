@@ -30,16 +30,17 @@ export const loadInterfaceEvents = () => {
         document.addEventListener("selectionMenu", async (e) => {
             eventDetail = e.detail
             const importedConfig = await ifaceLogic.importConfig(eventDetail)
+            ifaceLogic.loadPausedLayer(main, false)
 
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
             ifaceLogic.drawInfo(eventDetail)
-            ifaceLogic.pauseSetVisible()
             const component = await fullLoad(true)
             configMenu.style.display = "flex"
             ifaceLogic.movePanel(false, "right")
             rightPanelCloseButton.checked = true
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
             await new Promise(resolve => setTimeout(resolve, 1000))
+            ifaceLogic.pauseSetVisible()
         })
 
         document.addEventListener("menuVisibility", (e) => {
@@ -95,8 +96,6 @@ export const loadInterfaceEvents = () => {
             const event = Object.entries(e.detail)[0][0]
             const value = Object.entries(e.detail)[0][1]
 
-/*             console.log(e.detail)
- */
             if (event === "testMode") {
                 localStorage.setItem("testMode", value)
                 await new Promise(resolve => setTimeout(resolve, 300))
@@ -104,8 +103,10 @@ export const loadInterfaceEvents = () => {
             }
 
             if (event === "pause") {
+                const main = document.getElementById("main")
                 const actualComponent = ifaceLogic.identifyBoxes("inactive").children[0] /* inactive???? strangers things */
                 actualComponent ? actualComponent.setAttribute("pause", value) : null
+                ifaceLogic.loadPausedLayer(main, value)
             }
         })
     }

@@ -78,18 +78,9 @@ export class matrix extends HTMLElement {
         `
     }
 
-    static get observedAttributes() {
-        return ["pause"]
-    }
-
-    state = {"pause": false}
-
-    attributeChangedCallback(name) {
-        if (name === "pause") {
-            this.state.pause = this.getAttribute("pause")
-            console.log(this.state)
-        }
-    }
+    static get observedAttributes() { return ["pause"] }
+    state = { "pause": false }
+    attributeChangedCallback(name) { if (name === "pause") this.state.pause = this.getAttribute("pause") }
 
     connectedCallback() {
 

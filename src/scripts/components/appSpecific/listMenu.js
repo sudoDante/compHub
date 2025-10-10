@@ -35,6 +35,11 @@ export class listMenu extends HTMLElement {
             </div>
         `
 
+        element.add(this.dom, "link", null, null, {
+            rel: "stylesheet",
+            href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
+        })
+
         const style = element.add(this.dom, "style", null, null)
         style.textContent = `
             :host {
@@ -213,24 +218,17 @@ export class listMenu extends HTMLElement {
                 
                     position: relative;
                     display:flex;
-                    flex-direction: column;
                     top: calc(-100% + 20px);
                     left: calc(100% + 20px);
                     width: var(--titleHeight);
                     aspect-ratio: 1/1;
+                    color: grey;
+                    font-size: 20px;
                     transition: 600ms ease-in-out;
 
                     &:has(input:not(:checked)) {
                         top: var(--dinamicTop);
                         transform: var(--dinamicRotate);
-                    }
-
-                    .line {
-                        width: 40%;
-                        height: 1px;
-                        border-radius 50%;
-                        background-color: var(--color1);
-                        margin: 2px;
                     }
                 }
             } 
@@ -243,18 +241,18 @@ export class listMenu extends HTMLElement {
 
         const getConfig = () => {
             const list = this["list"]
-            const title = this.getAttribute("title") ? this.getAttribute("title") : "Default Title"
-            const titleBack = this.getAttribute("titleBack") ? this.getAttribute("titleBack") : "rgba(230, 230, 230, 1)"
-            const color1 = this.getAttribute("color1") ? this.getAttribute("color1") : "rgba(221, 221, 221, 1)"
-            const color2 = this.getAttribute("color2") ? this.getAttribute("color2") : "rgba(106, 161, 165, 1)"
-            const color3 = this.getAttribute("color3") ? this.getAttribute("color3") : "rgba(38, 157, 165, 1)"
-            const colorText1 = this.getAttribute("colorText1") ? this.getAttribute("colorText1") : "rgb(80, 80, 80)"
-            const colorText2 = this.getAttribute("colorText2") ? this.getAttribute("colorText2") : "rgba(240, 240, 240, 1)"
-            const colorText3 = this.getAttribute("colorText3") ? this.getAttribute("colorText3") : "rgba(160, 160, 160, 1)"
-            const back = this.getAttribute("back") ? this.getAttribute("back") : "rgba(0, 0, 0, 1)"
+            const title = this.getAttribute("title") || "Default Title"
+            const titleBack = this.getAttribute("titleBack") || "rgba(230, 230, 230, 1)"
+            const color1 = this.getAttribute("color1") || "rgba(221, 221, 221, 1)"
+            const color2 = this.getAttribute("color2") || "rgba(106, 161, 165, 1)"
+            const color3 = this.getAttribute("color3") || "rgba(38, 157, 165, 1)"
+            const colorText1 = this.getAttribute("colorText1") || "rgb(80, 80, 80)"
+            const colorText2 = this.getAttribute("colorText2") || "rgba(240, 240, 240, 1)"
+            const colorText3 = this.getAttribute("colorText3") || "rgba(160, 160, 160, 1)"
             const close = this.getAttribute("close") && this.getAttribute("close") === "true" ? true : false
-            const hostTransition = this.getAttribute("hostTransition") ? this.getAttribute("hostTransition") : "2s"
-            const button = this.getAttribute("button") ? this.getAttribute("button") : null
+            const hostTransition = this.getAttribute("hostTransition") || "2s"
+            const button = this.getAttribute("button") || null
+            const back = this.getAttribute("back") || "rgba(0, 0, 0, 1)"
 
             return {
                 "list": list,
@@ -287,11 +285,12 @@ export class listMenu extends HTMLElement {
 
         const drawClose = async (conf) => {
             const container = this.dom.querySelector("#container")
-            const closeBox = element.add(container, "div", null, ("closeBox center radius4 crystal"))
+            const closeBox = element.add(container, "div", null, ("closeBox center radius4 crystal material-symbols-outlined"))
+            closeBox.textContent = "menu"
             const button = conf.button
 
-            for (let i = 0; i < 3; i++) { element.add(closeBox, "div", null, "line") }
-            const checkboxClose = element.add(closeBox, "input", "closeInput", "inputHidden maxW maxH", { type: "checkbox", checked: true })
+/*             for (let i = 0; i < 3; i++) { element.add(closeBox, "div", null, "line") }
+ */            const checkboxClose = element.add(closeBox, "input", "closeInput", "inputHidden maxW maxH", { type: "checkbox", checked: true })
 
             if (button === "rotate") closeBox.style.setProperty("--dinamicRotate", "rotate(-180deg)")
             if (button === "fall") closeBox.style.setProperty("--dinamicTop", "calc(-1 * var(--titleHeight))")

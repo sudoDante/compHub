@@ -13,6 +13,7 @@
     --viewTransition: 800ms ease-out;
     --barsTransition: 600ms ease-in-out;
     --componentLoad: 800ms ease-in-out;
+    --flashLoad: 300ms;
     --barHeight: 34px;
     --lineWidth: 40px;
     --enphasisColor1: rgba(106, 161, 165, 1);
@@ -276,6 +277,8 @@ body {
             justify-content: right;
             width: 120px;
             height: 100%;
+            opacity: 0;
+            transition: var(--flashLoad);
         }
 
         .testModeBox {
@@ -294,5 +297,21 @@ body {
         width: var(--rightPanelBox);
         height: 100%;
         transition: var(--barsTransition);
+    }
+
+    .pausedLayer {
+        z-index: 2;
+/*         bottom: 100px;
+ */        width: 20%;
+        height: 80px;
+        background-color: rgba(255, 255, 255, 0.5);
+        font-family: orbitron;
+        font-size: 40px;
+        text-indent: 24px;
+        color: rgb(48, 48, 48);
+        opacity: 0;
+        backdrop-filter: blur(4px);
+        border-radius: 6px;
+        transition: var(--flashLoad);
     }
 }

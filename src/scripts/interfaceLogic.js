@@ -134,7 +134,7 @@ export const checkTestMode = () => {
 }
 
 export const testMode = () => {
-        document.dispatchEvent(new CustomEvent("selectionMenu", {
+    document.dispatchEvent(new CustomEvent("selectionMenu", {
         detail: {
             type: "Background",
             defaultName: "test",
@@ -145,7 +145,28 @@ export const testMode = () => {
     }))
 }
 
-export const pauseSetVisible = () => {
+export const pauseSetVisible = async () => {
     const pauseBox = document.getElementById("pauseBox")
     pauseBox.style.display = "flex"
+    pauseBox.style.opacity = 0
+    await new Promise(resolve => setTimeout(resolve, 100))
+    pauseBox.style.opacity = 1
 }
+
+export const loadPausedLayer = async (container, boolean) => {
+    if (boolean) {
+        const layer = element.add(container, "div", "pausedLayer", "pausedLayer absolute center")
+        layer.textContent = "PAUSED"
+        await new Promise(resolve => setTimeout(resolve, 10))
+        layer.style.opacity = 1
+        layer.style.letterSpacing = "24px"
+        layer.style.width = "34%"
+    } else {
+        const layer = document.getElementById("pausedLayer")
+        const time = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--flashLoad"))
+        layer.style.opacity = 0
+        await new Promise(resolve => setTimeout(resolve, time))
+        layer.remove()
+    }
+}
+
