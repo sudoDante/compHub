@@ -5,8 +5,8 @@ cellColor1          border color in RGBA                default red
 cellColor2          backgrounColor in RGBA              default red
 */
 
-import * as element from "../modules/elements.js"
-import * as extra from "../modules/extra.js"
+import * as element from "./../../modules/elements.js"
+import * as extra from "./../../modules/extra.js"
 
 export class colorizedGrid extends HTMLElement {
     constructor() {

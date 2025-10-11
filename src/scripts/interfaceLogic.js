@@ -138,7 +138,7 @@ export const testMode = () => {
         detail: {
             type: "Background",
             defaultName: "test",
-            url: "/src/scripts/components/backgrounds/emptyTest.js",
+            url: "./components/backgrounds/emptyTest.js",
             htmlTag: "empty-test",
             time: 400
         }

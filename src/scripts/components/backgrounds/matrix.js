@@ -9,8 +9,8 @@ pause           pause effect                            bollean default false
 */
 
 
-import * as element from "/src/scripts/modules/elements.js"
-import { randomize } from "/src/scripts/modules/extra.js"
+import * as element from "./../../modules/elements.js"
+import { randomize } from "./../../modules/extra.js"
 
 export class matrix extends HTMLElement {
     constructor() {
