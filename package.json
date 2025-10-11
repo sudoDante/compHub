@@ -1,0 +1,24 @@
+{
+  "name": "comphub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "live-server --port=8080 --open=index.html --watch=src,index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudodante/compHub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudodante/compHub/issues"
+  },
+  "homepage": "https://github.com/sudodante/compHub#readme",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
