@@ -2,55 +2,34 @@ import { componentsConfig } from "../config/componentsConfig.js"
 import * as ifaceLogic from "./interfaceLogic.js"
 import * as extra from "./modules/extra.js"
 import * as events from "./modules/customEvents.js"
-import { appConfig } from "./../config/config.js"
 
 export const loadInterfaceEvents = () => {
     let eventDetail
     const configMenu = document.getElementById("configMenu")
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
     const rightPanelCloseButton = document.getElementById("configMenu").shadowRoot.getElementById("closeInput")
+    const testModeBox = document.getElementById("testModeBox")
+    const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
 
-    const fullLoad = async (par) => {
-        ifaceLogic.movePanel(par, "right")
-        await new Promise(resolve => setTimeout(resolve, parseFloat(componentLoadTransition)))
-
-        let component
-        if (eventDetail) {
-            component = await ifaceLogic.loadComponent(eventDetail)
-            ifaceLogic.moveHalo(parseFloat(componentLoadTransition))
-            await ifaceLogic.moveMask(parseFloat(componentLoadTransition))
-        }
-        return component
-    }
 
     const loadMenuEvents = async () => {
-        console.log("custom events control READY: waiting")
-        const configMenu = document.getElementById("configMenu")
-        const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
+        console.log("menu custom events READY: waiting")
 
         document.addEventListener("selectionMenu", async (e) => {
-            eventDetail = e.detail
-            const importedConfig = await ifaceLogic.importConfig(eventDetail)
+            const importedConfig = await ifaceLogic.importConfig(e.detail)
+            ifaceLogic.movePanel(true, "right")
 
-            if (appConfig.testMode) {
-                ifaceLogic.loadPausedLayer(false)
-                ifaceLogic.resetPauseInput()
-            }
-
+            if (testModeBox.children.length === 0) await ifaceLogic.activeTestMode(testModeBox)
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
-            ifaceLogic.drawInfo(eventDetail)
-            const component = await fullLoad(true)
-            configMenu.style.display = "flex"
-            ifaceLogic.movePanel(false, "right")
-            rightPanelCloseButton.checked = true
-            events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
-            await new Promise(resolve => setTimeout(resolve, 1000))
-        })
 
-        document.addEventListener("menuVisibility", (e) => {
-            ifaceLogic.controlBarsPanels(e.detail)
+            ifaceLogic.drawInfo(e.detail)
+            await ifaceLogic.fullLoad(e.detail, true, componentLoadTransition)
+
+            events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
         })
+        document.addEventListener("configLoaded", (e) => ifaceLogic.movePanel(false, "right"))
     }
+
 
     const loadViewsEvents = () => {
         console.log("views events control READY: waiting")
@@ -101,17 +80,9 @@ export const loadInterfaceEvents = () => {
             const value = Object.entries(e.detail)[0][1]
 
             if (event === "testMode") {
-                localStorage.setItem("testMode", value)
-                await ifaceLogic.loadPauseBox(false)
-                await new Promise(resolve => setTimeout(resolve, 300))
-                window.location.replace(window.location.href)
             }
 
             if (event === "pause") {
-                const main = document.getElementById("main")
-                const actualComponent = ifaceLogic.identifyBoxes("inactive").children[0] /* inactive???? strangers things */
-                actualComponent ? actualComponent.setAttribute("pause", value) : null
-                ifaceLogic.loadPausedLayer(value, main)
             }
         })
     }

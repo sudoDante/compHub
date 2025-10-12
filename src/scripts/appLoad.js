@@ -1,9 +1,11 @@
 import * as iface from "./interface.js"
 import * as ifaceLogic from "./interfaceLogic.js"
 import * as events from "./eventsControl.js"
-import { appConfig } from "./../config/config.js"
 
 const main = async () => {
+
+    /* reset test */
+    ifaceLogic.testMode()
 
     const leftPanelBox = document.getElementById("leftPanelBox")
     const rightPanelBox = document.getElementById("rightPanelBox")
@@ -13,21 +15,18 @@ const main = async () => {
     /* main menu */
     await import("./components/appSpecific/listMenu.js")
     iface.loadMenu(leftPanelBox)
+
     /* config menu */
     const configMenu = await iface.loadPanelConfig(rightPanelBox)
-    configMenu.style.display = "none"
+
     /* main bars */
     await iface.loadControls(main)
-    await iface.loadInfoArea(main, appConfig.testMode)
+    await iface.loadInfoArea(main)
+
     /* events controls bar */
     ifaceLogic.applyBacksRestart()
     events.loadInterfaceEvents()
-    /* mode test auto */
-    if (ifaceLogic.checkTestMode() === "true") {
-        await ifaceLogic.loadPauseBox(true)
-        await ifaceLogic.testMode()
 
-    }
-}
+ }
 
 main()

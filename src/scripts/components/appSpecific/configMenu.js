@@ -8,7 +8,7 @@ export class configMenu extends HTMLElement {
         this.container = element.add(this.dom, "div", null, "container")
         this.container.innerHTML = `
             <div id="configBox" class="configBox"></div>
-            <div class="closeBox radius4">
+            <div class="closeBox">
                 <span class="icon material-symbols-outlined">page_info</span>
                 <input id="closeInput" class="hiddenInput" type="checkbox">
             </div>
@@ -64,6 +64,8 @@ export class configMenu extends HTMLElement {
                 .closeBox {
                     position: absolute;
                     left: calc(-1 * var(--buttonSize) - 10px);
+                    display: none;
+                    opacity: 0;
                     top: 10px;
                     display: flex;
                     align-items: center;
@@ -187,14 +189,20 @@ export class configMenu extends HTMLElement {
         }
 
         const main = async () => {
+            const closeButton = this.dom.querySelector("#closeInput")
+            closeButton.checked = true
+            const closeBox = this.dom.querySelector(".closeBox")
+
             const conf = await getConfig()
             applyConfCss(conf.css)
 
-            const closeButton = this.dom.querySelector("#closeInput")
-            closeButton.checked = true
-
             closeButton.addEventListener("change", (e) => controlMenuDisplay(e.target))
-            this.dom.addEventListener("loadConfig", (e) => drawConfig(e.detail))
+            this.dom.addEventListener("loadConfig", async (e) => {
+                await drawConfig(e.detail)
+                document.dispatchEvent(new Event("configLoaded"))
+                closeBox.style.display = "flex"
+                closeBox.style.opacity = 1
+            })
         }
 
         this.dom.addEventListener("DOMContentLoaded", main())

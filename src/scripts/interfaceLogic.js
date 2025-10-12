@@ -12,6 +12,19 @@ export const loadComponent = async (par) => {
     return component
 }
 
+export const fullLoad = async (par, boolean, time) => {
+/*     movePanel(par, "right")
+ */    await new Promise(resolve => setTimeout(resolve, parseFloat(time)))
+
+    let component
+    if (boolean) {
+        component = await loadComponent(par)
+        moveHalo(parseFloat(time))
+        await moveMask(parseFloat(time))
+    }
+    return component
+}
+
 export const applyBacksRestart = () => {
     const restartBackImage = document.getElementById("restartBackImage")
 
@@ -106,9 +119,6 @@ export const movePanel = async (par, side) => {
     const rightPanelBox = document.getElementById("rightPanelBox")
     const leftPanelBox = document.getElementById("leftPanelBox")
     const panelBox = side === "left" ? leftPanelBox : rightPanelBox
-    const configClose = document.getElementById("configMenu").shadowRoot.querySelector("#closeButton")
-    const menuClose = document.getElementById("configMenu").shadowRoot.querySelector("#closeInput")
-    const closeButton = side === "right" ? configClose : menuClose
 
     if (side === "right") {
         panelBox.style.right = par === true ? `-${panelBox.offsetWidth}px` : 0
@@ -125,27 +135,36 @@ export const importConfig = async (par) => {
     return componentConf.config
 }
 
-export const componentPause = async (component) => {
-    component.setAttribute("pause", "")
-}
-
-export const checkTestMode = () => {
-    return localStorage.getItem("testMode")
+export const activeTestMode = async (box) => {
+    await import("./components/nano/switchSlim.js")
+    element.add(box, "switch-slim", "testMode", null, {
+        "title": "Test Mode",
+        "fontColor": "rgba(129, 129, 129, 1)",
+        "enphasisColor": "rgba(174, 232, 240, 0.76)",
+        "fontFamily1": "Nunito Sans",
+        "fontFamily2": "Anta",
+        "fontSize": "13px",
+        "backColor": "rgba(53, 53, 53, 1)",
+        "trueText": "I",
+        "falseText": "0",
+        "trueColor": "whitesmoke",
+        "falseColor": "rgb(60,60,60)",
+        "value": false,
+        "event": "testMode"
+    })
 }
 
 export const testMode = () => {
-    document.dispatchEvent(new CustomEvent("selectionMenu", {
-        detail: {
-            type: "Background",
-            defaultName: "test",
-            url: "./components/backgrounds/emptyTest.js",
-            htmlTag: "empty-test",
-            time: 400
-        }
-    }))
+
+
 }
 
-export const loadPauseBox = async (boolean) => {
+/* export const componentPause = async (component) => {
+    component.setAttribute("pause", "")
+}
+ */
+
+/* export const loadPauseBox = async (boolean) => {
     const pauseBox = document.getElementById("pauseBox")
 
     if (boolean) {
@@ -160,13 +179,8 @@ export const loadPauseBox = async (boolean) => {
         pauseBox.style.display = "none"
     }
 }
-
-export const unLoadPauseBox = async () => {
-    const pauseBox = document.getElementById("pauseBox")
-
-}
-
-export const loadPausedLayer = async (boolean, container = null) => {
+ */
+/* export const loadPausedLayer = async (boolean, container = null) => {
     if (boolean) {
         const layer = element.add(container, "div", "pausedLayer", "pausedLayer absolute center")
         layer.textContent = "PAUSED"
@@ -184,10 +198,11 @@ export const loadPausedLayer = async (boolean, container = null) => {
         }
     }
 }
+ */
 
-export const resetPauseInput = () => {
+/* export const resetPauseInput = () => {
     const pauseInput = document.getElementById("pause").shadowRoot.querySelector("input")
-    console.log(pauseInput)
     pauseInput.checked = false
     pauseInput.dispatchEvent(new Event("change"))
 }
+ */

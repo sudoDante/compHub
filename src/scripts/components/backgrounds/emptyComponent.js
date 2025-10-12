@@ -1,4 +1,4 @@
-export class emptyTest extends HTMLElement {
+export class emptyComponent extends HTMLElement {
     constructor() {
         super()
 
@@ -39,4 +39,4 @@ export class emptyTest extends HTMLElement {
         `
     }
 }
-customElements.define("empty-test", emptyTest)
+customElements.define("empty-component", emptyComponent)

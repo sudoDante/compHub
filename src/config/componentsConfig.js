@@ -1,6 +1,6 @@
 export const componentsConfig = [
     {
-        tag: "empty-test",
+        tag: "empty-component",
         config: [
             {
                 title: "section 1",

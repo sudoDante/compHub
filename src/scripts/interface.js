@@ -1,6 +1,7 @@
 import * as element from "./modules/elements.js"
 import { components } from "../config/components.js"
 
+
 export const loadMenu = async (container) => {
     document.addEventListener("listMenu_primary", async (e) => {
         const pos = Number(e.detail.pos)
@@ -52,49 +53,12 @@ export const loadControls = async (container) => {
     }
 }
 
-export const loadInfoArea = async (container, testMode) => {
+export const loadInfoArea = async (container) => {
     const info = element.add(container, "div", "info", "info absolute anta")
     const infoTitlesBox = element.add(info, "div", "infoTitlesBox", "infoTitlesBox")
     element.add(infoTitlesBox, "span", "infoName", "name")
     element.add(infoTitlesBox, "span", "infoFamily", "family")
-
-    import("./components/nano/switchSlim.js")
-    const pauseBox = element.add(info, "div", "pauseBox", "pauseBox")
-        await element.add(pauseBox, "switch-slim", "pause", null, {
-            "title": "Pause",
-            "fontColor": "rgba(129, 129, 129, 1)",
-            "enphasisColor": "rgba(174, 232, 240, 0.76)",
-            "fontFamily1": "Nunito Sans",
-            "fontFamily2": "material symbols outlined",
-            "fontSize": "13px",
-            "backColor": "rgba(53, 53, 53, 1)",
-            "trueText": "pause_circle",
-            "falseText": "play_circle",
-            "trueColor": "whitesmoke",
-            "falseColor": "rgb(60,60,60)",
-            "value": false,
-            "event": "pause"
-        })
-
-
-    if (testMode) {
-        const testModeBox = element.add(info, "div", null, "testModeBox")
-        element.add(testModeBox, "switch-slim", null, null, {
-            "title": "Test Mode",
-            "fontColor": "rgba(129, 129, 129, 1)",
-            "enphasisColor": "rgba(174, 232, 240, 0.76)",
-            "fontFamily1": "Nunito Sans",
-            "fontFamily2": "Anta",
-            "fontSize": "13px",
-            "backColor": "rgba(53, 53, 53, 1)",
-            "trueText": "I",
-            "falseText": "0",
-            "trueColor": "whitesmoke",
-            "falseColor": "rgb(60,60,60)",
-            "value": localStorage.getItem("testMode"),
-            "event": "testMode"
-        })
-    }
+    const testModeBox = element.add(info, "div", "testModeBox", "testModeBox")
 }
 
 export const loadPanelConfig = async (container) => {

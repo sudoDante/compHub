@@ -298,20 +298,4 @@ body {
         height: 100%;
         transition: var(--barsTransition);
     }
-
-    .pausedLayer {
-        z-index: 2;
-/*         bottom: 100px;
- */        width: 20%;
-        height: 80px;
-        background-color: rgba(255, 255, 255, 0.5);
-        font-family: orbitron;
-        font-size: 40px;
-        text-indent: 24px;
-        color: rgb(48, 48, 48);
-        opacity: 0;
-        backdrop-filter: blur(4px);
-        border-radius: 6px;
-        transition: var(--flashLoad);
-    }
 }
