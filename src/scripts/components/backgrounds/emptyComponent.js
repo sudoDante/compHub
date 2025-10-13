@@ -24,7 +24,6 @@ export class emptyComponent extends HTMLElement {
                 align-items: center;
                 width: 100%;
                 height: 100%;
-                background-color: rgba(28, 28, 28, 0.78);
 
                 span {
                     padding: 16px 40px;

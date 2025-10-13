@@ -16,18 +16,21 @@ export const loadInterfaceEvents = () => {
         console.log("menu custom events READY: waiting")
 
         document.addEventListener("selectionMenu", async (e) => {
-            const importedConfig = await ifaceLogic.importConfig(e.detail)
+            eventDetail = e.detail
+            const importedConfig = await ifaceLogic.importConfig(eventDetail)
             ifaceLogic.movePanel(true, "right")
 
-            if (testModeBox.children.length === 0) await ifaceLogic.activeTestMode(testModeBox)
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
 
-            ifaceLogic.drawInfo(e.detail)
-            await ifaceLogic.fullLoad(e.detail, true, componentLoadTransition)
+            ifaceLogic.drawInfo(eventDetail)
+            await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
 
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
         })
-        document.addEventListener("configLoaded", (e) => ifaceLogic.movePanel(false, "right"))
+        document.addEventListener("configLoaded", (e) => {
+            ifaceLogic.movePanel(false, "right")
+            if (testModeBox.children.length === 0) ifaceLogic.activeTestMode(testModeBox)
+        })
     }
 
 
@@ -44,19 +47,19 @@ export const loadInterfaceEvents = () => {
         computer.addEventListener("change", async () => {
             view = "computerView"
             await ifaceLogic.changeView("computerView", fullState)
-            eventDetail ? await fullLoad(false) : await fullLoad(true)
+            eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
 
         tablet.addEventListener("change", async () => {
             view = "tabletView"
             await ifaceLogic.changeView("tabletView", fullState)
-            eventDetail ? await fullLoad(false) : await fullLoad(true)
+            eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
 
         mobile.addEventListener("change", async () => {
             view = "mobileView"
             await ifaceLogic.changeView("mobileView", fullState)
-            eventDetail ? await fullLoad(false) : await fullLoad(true)
+            eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
 
         fullscreen.addEventListener("change", async (e) => {
@@ -68,18 +71,22 @@ export const loadInterfaceEvents = () => {
                 fullState = false
             }
             await ifaceLogic.changeView(view, fullState)
-            eventDetail ? await fullLoad(false) : await fullLoad(true)
+            eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
     }
 
     const loadComponentEvents = () => {
         console.log("custom events config READY: waiting")
+        localStorage.setItem("testMode", false)
 
         document.addEventListener("componentChanged", async (e) => {
             const event = Object.entries(e.detail)[0][0]
             const value = Object.entries(e.detail)[0][1]
 
             if (event === "testMode") {
+                const configComponent = document.getElementById("configMenu").shadowRoot
+                configComponent.dispatchEvent(new CustomEvent("testMode", { detail: value }))
+                localStorage.setItem("testMode", value)
             }
 
             if (event === "pause") {

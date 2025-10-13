@@ -137,7 +137,7 @@ export const importConfig = async (par) => {
 
 export const activeTestMode = async (box) => {
     await import("./components/nano/switchSlim.js")
-    element.add(box, "switch-slim", "testMode", null, {
+    await element.add(box, "switch-slim", "testMode", null, {
         "title": "Test Mode",
         "fontColor": "rgba(129, 129, 129, 1)",
         "enphasisColor": "rgba(174, 232, 240, 0.76)",
@@ -152,11 +152,7 @@ export const activeTestMode = async (box) => {
         "value": false,
         "event": "testMode"
     })
-}
-
-export const testMode = () => {
-
-
+    box.style.opacity = 1
 }
 
 /* export const componentPause = async (component) => {

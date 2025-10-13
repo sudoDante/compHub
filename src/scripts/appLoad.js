@@ -3,14 +3,9 @@ import * as ifaceLogic from "./interfaceLogic.js"
 import * as events from "./eventsControl.js"
 
 const main = async () => {
-
-    /* reset test */
-    ifaceLogic.testMode()
-
     const leftPanelBox = document.getElementById("leftPanelBox")
     const rightPanelBox = document.getElementById("rightPanelBox")
-/*     const componentBox = document.getElementById("componentBox")
- */    const main = document.getElementsByTagName("main")[0]
+    const main = document.getElementsByTagName("main")[0]
 
     /* main menu */
     await import("./components/appSpecific/listMenu.js")

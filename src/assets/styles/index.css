@@ -18,6 +18,7 @@
     --lineWidth: 40px;
     --enphasisColor1: rgba(106, 161, 165, 1);
     --enphasisColor2: rgba(38, 157, 165, 1);
+    --mainBackColor: rgb(220, 220, 220);
 }
 
 body {
@@ -25,6 +26,7 @@ body {
     display: flex;
     width: 100vw;
     height: 100vh;
+    background-color: var(--mainBackColor);
     overFlow: hidden;
 
     main {
@@ -48,7 +50,7 @@ body {
         }
 
         &:has(.controlBox .backBox .numberBox:nth-of-type(5) input[type="radio"]:checked) .componentBoxContainer .back {
-            background-image: url("https://wallpapers.com/images/hd/oled-monitor-vur9ru4193d24oyh.jpg");
+            background-image: url("https://wallpapers.com/images/hd/blue-high-resolution-clouds-gclw6s3o5nrjo7em.jpg");
         }
 
         &:has(.leftControl:not(:checked)) {
@@ -288,6 +290,8 @@ body {
             padding-right: 20px;
             width: 160px;
             height: 100%;
+            opacity: 0;
+            transition: 200ms;
         }
     }
 

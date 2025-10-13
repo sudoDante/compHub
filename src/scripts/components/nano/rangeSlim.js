@@ -45,7 +45,7 @@ export class rangeSlim extends HTMLElement {
 
                 .title {
                     position: absolute;
-                    top: 0px;
+                    top: -4px;
                     display: flex;
                     width: 100%;
                     height: fit-content;
@@ -58,10 +58,10 @@ export class rangeSlim extends HTMLElement {
 
                 .fakeThumb {
                     position: absolute;
-                    bottom: 8px;
-                    width: 22px;
+                    bottom: 4px;
+                    width: 40px;
                     height: 4px;
-                    border-radius: 2px;
+                    border-radius: 10px;
                     background-color: var(--trackColor);
                     transition: background-color var(--transition); 
                 }
@@ -93,8 +93,8 @@ export class rangeSlim extends HTMLElement {
                         &::-moz-range-progress {
                             background-color: var(--progressColor);
                             height: 3px;
+                            border-radius: 4px;
                             transition: var(--transition);
-                            box-shadow: 0 0 2px var(--enphasisColor);
                         }
 
                         &::-moz-range-thumb {
@@ -193,7 +193,7 @@ export class rangeSlim extends HTMLElement {
             input.addEventListener("input", (e) => {
                 applyInfoValue(input, valueBox)
                 applyPosition(e.target, fakeThumb, rangeWidth)
-                valueBox.style.color = "var(--progressColor)"
+                valueBox.style.color = "var(--enphasisColor)"
             })
 
             input.addEventListener("mouseup", () => {
