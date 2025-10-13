@@ -196,7 +196,7 @@ export class rangeSlim extends HTMLElement {
                 valueBox.style.color = "var(--enphasisColor)"
             })
 
-            input.addEventListener("mouseup", () => {
+            input.addEventListener("input", () => {
                 valueBox.style.color = "var(--fontColor)"
                 document.dispatchEvent(new CustomEvent("componentChanged", { detail: { [config.logic.event]: input.value } }))
             })

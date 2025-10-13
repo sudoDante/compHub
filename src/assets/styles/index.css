@@ -38,11 +38,11 @@ body {
         }
 
         &:has(.controlBox .backBox .numberBox:nth-of-type(2) input[type="radio"]:checked) .componentBoxContainer .back {
-            background-image: url("https://wallpapers.com/images/hd/brisk-wall-in-dark-colors-x4kg76xvn08t3jxg.jpg");
+            background-image: url("https://wallpapers.com/images/hd/1920-x-1080-hd-7cn9zyswbyfx1djt.jpg");
         }
 
         &:has(.controlBox .backBox .numberBox:nth-of-type(3) input[type="radio"]:checked) .componentBoxContainer .back {
-            background-image: url("https://wallpapers.com/images/hd/palm-leaves-plants-digital-artwork-0zxjle8qpguq73cn.jpg");
+            background-image: url("https://wallpapers.com/images/hd/beautiful-snow-pictures-drfuvv8ylfo1755z.jpg");
         }
 
         &:has(.controlBox .backBox .numberBox:nth-of-type(4) input[type="radio"]:checked) .componentBoxContainer .back {
@@ -108,6 +108,38 @@ body {
                 background-color: rgba(255, 255, 255, 0.777);
                 box-shadow: 0 0 0px rgb(0, 255, 208), 0 0 0px rgb(0, 255, 208), 0 0 0px rgb(0, 255, 208);
                 transition: top var(--componentLoad);
+            }
+
+            .pauseBox {
+                position: absolute;
+                z-index: 10;
+                top: calc(var(--barHeight) + 10px * 2);
+                left: calc(var(--leftPanelBox) + 10px);
+                display: flex;
+                align-items: center;
+                bottom: 55px;
+                width: fit-content;
+                height: var(--barHeight);
+                transition: var(--viewTransition);
+
+                .pauseIcon {
+                    width: auto;
+                    height: 100%;
+                    font-family: Material Symbols Outlined;
+                    color: rgb(60, 60, 60);
+                    font-size: 44px;
+                    font-style: italic;
+                }
+
+                .time {
+                    width: auto;
+                    height: 100%;
+                    margin: 0 10px;
+                    font-family: Anta;
+                    color: rgb(60, 60, 60);
+                    font-size: 18px;
+                    font-style: italic;
+                }
             }
         }
 

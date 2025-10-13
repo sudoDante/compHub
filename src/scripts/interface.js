@@ -77,3 +77,11 @@ export const loadPanelConfig = async (container) => {
     })
     return configMenu
 }
+
+export const loadVisualPause = async (box) => {
+    const pauseBox = element.add(box, "div", "pauseBox", "pauseBox absolute")
+    const pauseIcon = element.add(pauseBox, "spam", null, "pauseIcon center")
+    const time = element.add(pauseBox, "spam", "time", "time center" )
+    pauseIcon. textContent = "play_pause"
+    return time
+}

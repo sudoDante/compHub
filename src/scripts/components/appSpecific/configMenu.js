@@ -292,7 +292,6 @@ export class configMenu extends HTMLElement {
                 closeBox.style.opacity = 1
             })
 
-            console.log(localStorage.getItem("testMode"))
             if (JSON.parse(localStorage.getItem("testMode"))) moveTestBox()
             this.dom.addEventListener("testMode", (e) => { moveTestBox(e.detail) })
 

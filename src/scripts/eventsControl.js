@@ -1,14 +1,15 @@
 import { componentsConfig } from "../config/componentsConfig.js"
-import * as ifaceLogic from "./interfaceLogic.js"
 import * as extra from "./modules/extra.js"
 import * as events from "./modules/customEvents.js"
+import * as ifaceLogic from "./interfaceLogic.js"
+import * as iface from "./interface.js"
 
 export const loadInterfaceEvents = () => {
     let eventDetail
     const configMenu = document.getElementById("configMenu")
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
-    const rightPanelCloseButton = document.getElementById("configMenu").shadowRoot.getElementById("closeInput")
-    const testModeBox = document.getElementById("testModeBox")
+/*     const rightPanelCloseButton = document.getElementById("configMenu").shadowRoot.getElementById("closeInput")
+ */    const testModeBox = document.getElementById("testModeBox")
     const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
 
 
@@ -19,14 +20,12 @@ export const loadInterfaceEvents = () => {
             eventDetail = e.detail
             const importedConfig = await ifaceLogic.importConfig(eventDetail)
             ifaceLogic.movePanel(true, "right")
-
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
-
             ifaceLogic.drawInfo(eventDetail)
             await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
-
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
         })
+
         document.addEventListener("configLoaded", (e) => {
             ifaceLogic.movePanel(false, "right")
             if (testModeBox.children.length === 0) ifaceLogic.activeTestMode(testModeBox)
@@ -78,18 +77,26 @@ export const loadInterfaceEvents = () => {
     const loadComponentEvents = () => {
         console.log("custom events config READY: waiting")
         localStorage.setItem("testMode", false)
+        let pauseTime
+        const componentBoxContainer = document.getElementById("componentBoxContainer")
 
         document.addEventListener("componentChanged", async (e) => {
             const event = Object.entries(e.detail)[0][0]
             const value = Object.entries(e.detail)[0][1]
 
+            console.log("event: ", event, value)
             if (event === "testMode") {
                 const configComponent = document.getElementById("configMenu").shadowRoot
                 configComponent.dispatchEvent(new CustomEvent("testMode", { detail: value }))
                 localStorage.setItem("testMode", value)
+                value === false ? pauseTime.parentElement.style.display = "none" : null
             }
 
-            if (event === "pause") {
+            if (event === "autoPause") {
+                if (!document.getElementById("pauseBox")) pauseTime = await iface.loadVisualPause(componentBoxContainer)
+                pauseTime.parentElement.style.display = "flex"
+                
+                pauseTime.textContent = Number(value) === 0 ? "PAUSED" : value
             }
         })
     }

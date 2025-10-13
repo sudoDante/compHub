@@ -12,6 +12,14 @@
       "group": {
         "kind": "build",
         "isDefault": true
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "never",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
       }
     }
   ]
