@@ -366,10 +366,9 @@ export class listMenu extends HTMLElement {
             })
         }
 
-        const controlMenuDisplay = (input, par) => {
+        const controlMenuDisplay = (input) => {
             const hostContainer = this.parentElement
             const hostWidth = hostContainer.offsetWidth
-            hostContainer.style.transition = par
             hostContainer.style.left = input.checked ? `0px` : `calc(${hostWidth}px * -1)`
         }
 
@@ -386,7 +385,7 @@ export class listMenu extends HTMLElement {
 
             if (conf.close) {
                 closeMenuInput = await drawClose(conf)
-                closeMenuInput.addEventListener("change", (e) => controlMenuDisplay(e.target, conf.hostTransition))
+                closeMenuInput.addEventListener("change", () => controlMenuDisplay(closeMenuInput))
             }
         }
 

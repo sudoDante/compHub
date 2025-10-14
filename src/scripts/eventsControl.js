@@ -12,6 +12,7 @@ export const loadInterfaceEvents = () => {
  */    const testModeBox = document.getElementById("testModeBox")
     const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
     let view = "computerView"
+    let fullMode = false
 
     const loadMenuEvents = async () => {
         console.log("menu custom events READY: waiting")
@@ -43,39 +44,48 @@ export const loadInterfaceEvents = () => {
 
         computer.addEventListener("change", async () => {
             view = "computerView"
-/*             localStorage.setItem("view", "computerView")
- */            await ifaceLogic.changeView("computerView")
+            await ifaceLogic.changeView("computerView")
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.placePauseAlert(view)
+            ifaceLogic.placePauseAlert(view, fullMode)
+            ifaceLogic.placeTabletView(false)
         })
 
         tablet.addEventListener("change", async () => {
             view = "tabletView"
-/*             localStorage.setItem("view", "tabletView")
- */            await ifaceLogic.changeView("tabletView")
+            await ifaceLogic.changeView("tabletView")
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.placePauseAlert(view)
+            ifaceLogic.placePauseAlert(view, fullMode)
+            if (fullMode === true) ifaceLogic.placeTabletView(fullMode)
         })
 
         mobile.addEventListener("change", async () => {
             view = "mobileView"
-/*             localStorage.setItem("view", "mobileView")
- */            await ifaceLogic.changeView("mobileView")
+            await ifaceLogic.changeView("mobileView")
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.placePauseAlert(view)
+            ifaceLogic.placePauseAlert(view, fullMode)
+            ifaceLogic.placeTabletView(false)
         })
 
         fullscreen.addEventListener("change", async (e) => {
             if (e.target.checked) {
+                fullMode = true
                 await document.documentElement.requestFullscreen()
+                ifaceLogic.placePauseAlert(view, true)
+                ifaceLogic.changePanelsWidth(true)
+                if (view === "tabletView") ifaceLogic.placeTabletView(true)
             } else {
+                fullMode = false
                 await document.exitFullscreen()
+                ifaceLogic.placePauseAlert(view, fullMode)
+                ifaceLogic.changePanelsWidth(false)
+                if (view === "tabletView") ifaceLogic.placeTabletView(false)
             }
 
             await ifaceLogic.changeView(view)
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.placePauseAlert(view)
         })
+
+        /* redibujar con esc */
     }
 
     const loadComponentEvents = () => {
@@ -93,7 +103,7 @@ export const loadInterfaceEvents = () => {
 
                 if (!document.getElementById("pauseBox")) {
                     pauseTime = await iface.loadVisualPause(componentBoxContainer)
-                    ifaceLogic.placePauseAlert(view)
+                    ifaceLogic.placePauseAlert(view, fullMode)
                     pauseTime.textContent = "PAUSED"
                 }
 

@@ -161,18 +161,40 @@ export const clearPause = () => {
     pauseInput.dispatchEvent(new Event("change"))
 }
 
-export const placePauseAlert = async (view) => {
+export const placePauseAlert = async (view, fullMode) => {
     const pauseBox = document.getElementById("pauseBox")
 
     if (pauseBox && view) {
-        if (view === "computerView") {
+        if (view === "computerView" && fullMode === false) {
             pauseBox.style.top = "calc(var(--barHeight) + 10px * 2)"
             pauseBox.style.left = "calc(var(--leftPanelBox) + 10px)"
+        }
+
+        if (view === "computerView" && fullMode === true) {
+            pauseBox.style.top = "10px"
+            pauseBox.style.left = "10px"
         }
 
         if (view === "tabletView" || view === "mobileView") {
             pauseBox.style.top = "10px"
             pauseBox.style.left = "10px"
         }
+    }
+}
+
+export const placeTabletView = (boolean) => {
+    const componentBoxContainer = document.getElementById("componentBoxContainer")
+    componentBoxContainer.style.left = boolean ? "-100px" : 0
+}
+
+export const changePanelsWidth = (boolean) => {
+    const inputCloseLeft = document.getElementById("listMenu").shadowRoot.getElementById("closeMenuInput")
+
+    if (boolean) {
+        inputCloseLeft.checked = false
+        inputCloseLeft.dispatchEvent(new Event("change"))
+    } else {
+        inputCloseLeft.checked = true
+        inputCloseLeft.dispatchEvent(new Event("change"))
     }
 }
