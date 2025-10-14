@@ -10,7 +10,7 @@
     --controlsMargin: 55px;
     --controlsAutoWidth: calc(100% - var(--leftPanelBox) - var(--rightPanelBox) - var(--controlsMargin) * 2);
     --infoTransition: 1200ms ease-in-out;
-    --viewTransition: 800ms ease-out;
+    --viewTransition: 800ms ease-in-out;
     --barsTransition: 600ms ease-in-out;
     --componentLoad: 800ms ease-in-out;
     --flashLoad: 300ms;
@@ -113,13 +113,13 @@ body {
             .pauseBox {
                 position: absolute;
                 z-index: 10;
-                top: calc(var(--barHeight) + 10px * 2);
-                left: calc(var(--leftPanelBox) + 10px);
                 display: flex;
                 align-items: center;
                 bottom: 55px;
                 width: fit-content;
                 height: var(--barHeight);
+                background-color: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(4px);
                 transition: var(--viewTransition);
 
                 .pauseIcon {
@@ -148,6 +148,7 @@ body {
             left: 0;
             width: var(--leftPanelBox);
             height: 100%;
+            transition: var(--barsTransition);
         }
 
         .controlsBoxColor,

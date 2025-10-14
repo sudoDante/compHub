@@ -11,7 +11,7 @@ export const loadInterfaceEvents = () => {
 /*     const rightPanelCloseButton = document.getElementById("configMenu").shadowRoot.getElementById("closeInput")
  */    const testModeBox = document.getElementById("testModeBox")
     const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
-
+    let view = "computerView"
 
     const loadMenuEvents = async () => {
         console.log("menu custom events READY: waiting")
@@ -35,8 +35,6 @@ export const loadInterfaceEvents = () => {
 
     const loadViewsEvents = () => {
         console.log("views events control READY: waiting")
-        let view = "computerView"
-        let fullState = false
 
         const computer = document.getElementById("computer")
         const tablet = document.getElementById("tablet")
@@ -45,38 +43,43 @@ export const loadInterfaceEvents = () => {
 
         computer.addEventListener("change", async () => {
             view = "computerView"
-            await ifaceLogic.changeView("computerView", fullState)
+/*             localStorage.setItem("view", "computerView")
+ */            await ifaceLogic.changeView("computerView")
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            ifaceLogic.placePauseAlert(view)
         })
 
         tablet.addEventListener("change", async () => {
             view = "tabletView"
-            await ifaceLogic.changeView("tabletView", fullState)
+/*             localStorage.setItem("view", "tabletView")
+ */            await ifaceLogic.changeView("tabletView")
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            ifaceLogic.placePauseAlert(view)
         })
 
         mobile.addEventListener("change", async () => {
             view = "mobileView"
-            await ifaceLogic.changeView("mobileView", fullState)
+/*             localStorage.setItem("view", "mobileView")
+ */            await ifaceLogic.changeView("mobileView")
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            ifaceLogic.placePauseAlert(view)
         })
 
         fullscreen.addEventListener("change", async (e) => {
             if (e.target.checked) {
                 await document.documentElement.requestFullscreen()
-                fullState = true
             } else {
                 await document.exitFullscreen()
-                fullState = false
             }
-            await ifaceLogic.changeView(view, fullState)
+
+            await ifaceLogic.changeView(view)
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            ifaceLogic.placePauseAlert(view)
         })
     }
 
     const loadComponentEvents = () => {
         console.log("custom events config READY: waiting")
-        localStorage.setItem("testMode", false)
         let pauseTime
         const componentBoxContainer = document.getElementById("componentBoxContainer")
 
@@ -84,20 +87,21 @@ export const loadInterfaceEvents = () => {
             const event = Object.entries(e.detail)[0][0]
             const value = Object.entries(e.detail)[0][1]
 
-            console.log("event: ", event, value)
             if (event === "testMode") {
                 const configComponent = document.getElementById("configMenu").shadowRoot
                 configComponent.dispatchEvent(new CustomEvent("testMode", { detail: value }))
-                localStorage.setItem("testMode", value)
-                value === false ? pauseTime.parentElement.style.display = "none" : null
+
+                if (!document.getElementById("pauseBox")) {
+                    pauseTime = await iface.loadVisualPause(componentBoxContainer)
+                    ifaceLogic.placePauseAlert(view)
+                    pauseTime.textContent = "PAUSED"
+                }
+
+                if (value === false) ifaceLogic.clearPause()
             }
 
-            if (event === "autoPause") {
-                if (!document.getElementById("pauseBox")) pauseTime = await iface.loadVisualPause(componentBoxContainer)
-                pauseTime.parentElement.style.display = "flex"
-                
-                pauseTime.textContent = Number(value) === 0 ? "PAUSED" : value
-            }
+            if (event === "autoPause") pauseTime.textContent = Number(value) === 0 ? "PAUSED" : value
+
         })
     }
 

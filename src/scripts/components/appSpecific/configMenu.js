@@ -65,7 +65,7 @@ export class configMenu extends HTMLElement {
                         height: 100%;
                         font-family: material symbols outlined;
                         font-size: 200px;
-                        opacity: 0.1;
+                        color: rgba(0, 0, 0, 0.11);
                         filter: blur(4px);
                     }
 
@@ -194,7 +194,7 @@ export class configMenu extends HTMLElement {
             const iconBack = element.add(testModeBox, "div", null, "iconBack")
             iconBack.textContent = "timer_pause"
             testModeBox.querySelector(".titleTest").textContent = "Test Mode"
-            const range = await element.add(testModeBox, "range-slim", null, "pauseInput", {
+            const range = await element.add(testModeBox, "range-slim", "pauseInput", "pauseInput", {
                 "title": "Auto-pause",
                 "min": 0,
                 "max": 10,

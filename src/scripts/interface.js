@@ -1,7 +1,6 @@
 import * as element from "./modules/elements.js"
 import { components } from "../config/components.js"
 
-
 export const loadMenu = async (container) => {
     document.addEventListener("listMenu_primary", async (e) => {
         const pos = Number(e.detail.pos)
@@ -81,7 +80,7 @@ export const loadPanelConfig = async (container) => {
 export const loadVisualPause = async (box) => {
     const pauseBox = element.add(box, "div", "pauseBox", "pauseBox absolute")
     const pauseIcon = element.add(pauseBox, "spam", null, "pauseIcon center")
-    const time = element.add(pauseBox, "spam", "time", "time center" )
-    pauseIcon. textContent = "play_pause"
+    const time = element.add(pauseBox, "spam", "time", "time center")
+    pauseIcon.textContent = "play_pause"
     return time
 }

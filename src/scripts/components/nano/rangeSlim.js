@@ -194,9 +194,6 @@ export class rangeSlim extends HTMLElement {
                 applyInfoValue(input, valueBox)
                 applyPosition(e.target, fakeThumb, rangeWidth)
                 valueBox.style.color = "var(--enphasisColor)"
-            })
-
-            input.addEventListener("input", () => {
                 valueBox.style.color = "var(--fontColor)"
                 document.dispatchEvent(new CustomEvent("componentChanged", { detail: { [config.logic.event]: input.value } }))
             })

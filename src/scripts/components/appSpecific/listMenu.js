@@ -288,24 +288,18 @@ export class listMenu extends HTMLElement {
             const closeBox = element.add(container, "div", null, ("closeBox center radius4 crystal material-symbols-outlined"))
             closeBox.textContent = "menu"
             const button = conf.button
-
-/*             for (let i = 0; i < 3; i++) { element.add(closeBox, "div", null, "line") }
- */            const checkboxClose = element.add(closeBox, "input", "closeInput", "inputHidden maxW maxH", { type: "checkbox", checked: true })
-
+            const checkboxClose = element.add(closeBox, "input", "closeMenuInput", "inputHidden maxW maxH", { type: "checkbox", checked: true })
             if (button === "rotate") closeBox.style.setProperty("--dinamicRotate", "rotate(-180deg)")
             if (button === "fall") closeBox.style.setProperty("--dinamicTop", "calc(-1 * var(--titleHeight))")
-
             return checkboxClose
         }
 
         const drawMenu = async (conf) => {
             this.dom.querySelector("#title").textContent = conf.title
-
             let list = []
             Object.values(conf.list).forEach(item => list.push(item))
 
             const menu = this.dom.querySelector("#menu")
-
             list.forEach((item, num) => {
                 const itemName = item.type
                 const componentObj = item.components
@@ -375,17 +369,14 @@ export class listMenu extends HTMLElement {
         const controlMenuDisplay = (input, par) => {
             const hostContainer = this.parentElement
             const hostWidth = hostContainer.offsetWidth
-            const closeBox = input.parentElement
-
             hostContainer.style.transition = par
             hostContainer.style.left = input.checked ? `0px` : `calc(${hostWidth}px * -1)`
         }
 
         const main = async () => {
-
+            let closeMenuInput
             const conf = getConfig()
-/*             console.log(conf)
- */            applyConfCss(conf)
+            applyConfCss(conf)
             await drawMenu(conf)
 
             const mainRadios = Array.from(this.dom.querySelectorAll("input[name='mainOpt']"))
@@ -394,8 +385,8 @@ export class listMenu extends HTMLElement {
             setCustomEvents(subRadios, conf.list)
 
             if (conf.close) {
-                const closeInput = await drawClose(conf)
-                closeInput.addEventListener("change", (e) => controlMenuDisplay(e.target, conf.hostTransition))
+                closeMenuInput = await drawClose(conf)
+                closeMenuInput.addEventListener("change", (e) => controlMenuDisplay(e.target, conf.hostTransition))
             }
         }
 

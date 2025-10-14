@@ -34,8 +34,7 @@ export const applyBacksRestart = () => {
     })
 }
 
-export const changeView = async (view, fullscreen) => {
-    console.log(fullscreen)
+export const changeView = async (view) => {
 
     const inactiveBox = identifyBoxes("inactive")
     inactiveBox.innerHTML = ""
@@ -155,50 +154,25 @@ export const activeTestMode = async (box) => {
     box.style.opacity = 1
 }
 
-/* export const componentPause = async (component) => {
-    component.setAttribute("pause", "")
+export const clearPause = () => {
+    document.getElementById("pauseBox").remove()
+    const pauseInput = document.getElementById("configMenu").shadowRoot.getElementById("pauseInput").shadowRoot.querySelector("input")
+    pauseInput.value = 0
+    pauseInput.dispatchEvent(new Event("change"))
 }
- */
 
-/* export const loadPauseBox = async (boolean) => {
+export const placePauseAlert = async (view) => {
     const pauseBox = document.getElementById("pauseBox")
 
-    if (boolean) {
-        pauseBox.style.display = "flex"
-        pauseBox.style.opacity = 0
-        await new Promise(resolve => setTimeout(resolve, 100))
-        pauseBox.style.opacity = 1
-    } else {
-        pauseBox.style.opacity = 0
-        const time = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--flashLoad"))
-        await new Promise(resolve => setTimeout(resolve, time))
-        pauseBox.style.display = "none"
-    }
-}
- */
-/* export const loadPausedLayer = async (boolean, container = null) => {
-    if (boolean) {
-        const layer = element.add(container, "div", "pausedLayer", "pausedLayer absolute center")
-        layer.textContent = "PAUSED"
-        await new Promise(resolve => setTimeout(resolve, 10))
-        layer.style.opacity = 1
-        layer.style.letterSpacing = "24px"
-        layer.style.width = "34%"
-    } else {
-        const layer = document.getElementById("pausedLayer")
-        if (layer) {
-            const time = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--flashLoad"))
-            layer.style.opacity = 0
-            await new Promise(resolve => setTimeout(resolve, time))
-            layer.remove()
+    if (pauseBox && view) {
+        if (view === "computerView") {
+            pauseBox.style.top = "calc(var(--barHeight) + 10px * 2)"
+            pauseBox.style.left = "calc(var(--leftPanelBox) + 10px)"
+        }
+
+        if (view === "tabletView" || view === "mobileView") {
+            pauseBox.style.top = "10px"
+            pauseBox.style.left = "10px"
         }
     }
 }
- */
-
-/* export const resetPauseInput = () => {
-    const pauseInput = document.getElementById("pause").shadowRoot.querySelector("input")
-    pauseInput.checked = false
-    pauseInput.dispatchEvent(new Event("change"))
-}
- */
