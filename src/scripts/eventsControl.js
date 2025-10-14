@@ -1,5 +1,4 @@
 import { componentsConfig } from "../config/componentsConfig.js"
-import * as extra from "./modules/extra.js"
 import * as events from "./modules/customEvents.js"
 import * as ifaceLogic from "./interfaceLogic.js"
 import * as iface from "./interface.js"
@@ -8,8 +7,7 @@ export const loadInterfaceEvents = () => {
     let eventDetail
     const configMenu = document.getElementById("configMenu")
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
-/*     const rightPanelCloseButton = document.getElementById("configMenu").shadowRoot.getElementById("closeInput")
- */    const testModeBox = document.getElementById("testModeBox")
+    const testModeBox = document.getElementById("testModeBox")
     const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
     let view = "computerView"
     let fullMode = false
@@ -48,6 +46,7 @@ export const loadInterfaceEvents = () => {
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
             ifaceLogic.placePauseAlert(view, fullMode)
             ifaceLogic.placeTabletView(false)
+            ifaceLogic.changePanelsWidth(false)
         })
 
         tablet.addEventListener("change", async () => {
@@ -55,7 +54,10 @@ export const loadInterfaceEvents = () => {
             await ifaceLogic.changeView("tabletView")
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
             ifaceLogic.placePauseAlert(view, fullMode)
-            if (fullMode === true) ifaceLogic.placeTabletView(fullMode)
+            if (fullMode === true) {
+                ifaceLogic.changePanelsWidth(true)
+                ifaceLogic.placeTabletView(fullMode)
+            }
         })
 
         mobile.addEventListener("change", async () => {
@@ -64,18 +66,27 @@ export const loadInterfaceEvents = () => {
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
             ifaceLogic.placePauseAlert(view, fullMode)
             ifaceLogic.placeTabletView(false)
+            ifaceLogic.changePanelsWidth(false)
         })
 
         fullscreen.addEventListener("change", async (e) => {
-            if (e.target.checked) {
-                fullMode = true
-                await document.documentElement.requestFullscreen()
+            e.target.checked
+                ? await document.documentElement.requestFullscreen()
+                : await document.exitFullscreen()
+        })
+
+        document.addEventListener("fullscreenchange", async () => {
+            fullMode = document.fullscreenElement ? true : false
+            fullscreen.checked = fullMode
+
+            if (fullMode) {
+
                 ifaceLogic.placePauseAlert(view, true)
-                ifaceLogic.changePanelsWidth(true)
-                if (view === "tabletView") ifaceLogic.placeTabletView(true)
+                if (view === "tabletView") {
+                    ifaceLogic.changePanelsWidth(true)
+                    ifaceLogic.placeTabletView(true)
+                }
             } else {
-                fullMode = false
-                await document.exitFullscreen()
                 ifaceLogic.placePauseAlert(view, fullMode)
                 ifaceLogic.changePanelsWidth(false)
                 if (view === "tabletView") ifaceLogic.placeTabletView(false)
@@ -84,8 +95,6 @@ export const loadInterfaceEvents = () => {
             await ifaceLogic.changeView(view)
             eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
-
-        /* redibujar con esc */
     }
 
     const loadComponentEvents = () => {
@@ -111,7 +120,6 @@ export const loadInterfaceEvents = () => {
             }
 
             if (event === "autoPause") pauseTime.textContent = Number(value) === 0 ? "PAUSED" : value
-
         })
     }
 
