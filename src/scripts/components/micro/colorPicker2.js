@@ -1,4 +1,4 @@
-import * as element from "./../../modules/elements.js"
+import * as element from "../../modules/elements.js"
 
 export class colorPicker extends HTMLElement {
     constructor() {
@@ -113,19 +113,19 @@ export class colorPicker extends HTMLElement {
     connectedCallback() {
         const getConfig = () => {
             const backColor = this.getAttribute("backColor") || "red"
-            const boxShadow = this.getAttribute("boxShadow") || "inset 2px 2px 6px rgb(58, 58, 58)"
+            const rotate = this.getAttribute("rotate") || "inset 2px 2px 6px rgb(58, 58, 58)"
 
             return {
                 css: {
                     "backColor": backColor,
-                    "boxShadow": boxShadow,
+                    "rotate": rotate,
                 }
             }
         }
 
         const applyConfCss = (css) => {
             this.style.setProperty("--backColor", css.backColor)
-            this.style.setProperty("--boxShadow", css.boxShadow)
+            this.style.setProperty("--rotate", css.rotate)
         }
 
         const verticalRangeStyle = async () => {
