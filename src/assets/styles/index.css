@@ -336,4 +336,13 @@ body {
         height: 100%;
         transition: var(--barsTransition);
     }
+
+    .colorPickerBox {
+        top: 10px;
+        left: calc(var(--leftPanelBox) + var(--controlsMargin));
+        width: 300px;
+        height: 180px;
+        opacity: 0;
+        transition: 180ms ease-in-out;
+    }
 }
