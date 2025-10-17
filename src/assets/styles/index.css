@@ -170,7 +170,7 @@ body {
         }
 
         .controlBox {
-            z-index: 10;
+            z-index: 100;
             display: flex;
             justify-content: space-between;
             padding: 0 16px;
@@ -339,6 +339,7 @@ body {
 
     .colorPickerBox {
         top: 10px;
+        z-index: 10;
         left: calc(var(--leftPanelBox) + var(--controlsMargin));
         width: 300px;
         height: 180px;

@@ -16,7 +16,7 @@ const main = async () => {
 
     /* main bars */
     await iface.loadControls(main)
-    iface.loadColorSelector(main)
+    await iface.loadColorSelector(main)
     await iface.loadInfoArea(main)
 
     /* events controls bar */

@@ -27,21 +27,21 @@ export class colorPicker extends HTMLElement {
                 box-sizing: border-box;
             }
 
-            :host {
+/*             :host {
                 width: 100%;
-                height: 100%;
+                height: 180px;
             }
-
+ */
             .container {
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
-                height: 100%;
+                height: 180px;
                 background-color: var(--backColor);
                 border-radius: 4px;
                 padding: 10px;
                 box-shadow: var(--boxShadow);
-                border: 1px solid grey;
+                border: 10px solid red;
 
                 .inputBox {
                     position: relative;

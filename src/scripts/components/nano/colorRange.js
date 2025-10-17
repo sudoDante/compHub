@@ -8,7 +8,7 @@ export class colorRange extends HTMLElement {
         this.container = element.add(this.dom, "div", null, "container")
         this.container.innerHTML = `
             <div class="pointer"></div>
-            <input id="pickerSelector" type="range" min=0 max=255 value=128>
+            <input type="range">
         `
 
         const style = element.add(this.dom, "style", null, null)
@@ -32,26 +32,26 @@ export class colorRange extends HTMLElement {
                 align-items: center;
                 width: 100%;
                 height: 100%;
-                border: 1px solid grey;
                 border-radius: 4px;
+                box-shadow: inset 2px 2px 4px rgba(65, 65, 65, 1);
+                filter: grayscale(30%);
+                overflow: hidden;
 
                 .pointer {
                     position: absolute;
                     display: flex;
                     align-items: center;
-                    width: 100%;
-                    height: 20px;
-                    border: 1px solid rgba(255, 255, 255, 0.5);
-                    border-radius: 4px;
-                    box-shadow: 0 0 8px rgb(28, 28, 28);
+                    height: 100%;                    
+                    aspect-ratio: 1.4/1;
+                    border-radius: 2px;
+                    box-shadow: 0 0 12px rgb(28, 28, 28), inset 0 0 6px white;
                 }
 
                 input {
                     appearance: none;
                     position: absolute;
-                    width: var(--fakeInputHeight);
-                    height: 60px;
-                    transform: rotate(var(--rotate));
+                    width: 100%;
+                    height: 100%;
                     background-color: transparent;
 
                     &::-moz-range-thumb {
@@ -63,17 +63,25 @@ export class colorRange extends HTMLElement {
         `
     }
 
-    static get observedAttributes() { return ["backColor"] }
+    static get observedAttributes() { return ["backcolor"] }
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "backColor") this.style.setProperty("--backColor", newValue)
+
+        if (name === "backcolor") {
+            this.style.setProperty("--backColor", newValue)
+            console.log(newValue)
+        }
     }
 
     connectedCallback() {
         const getConfig = () => {
             const backColor = this.getAttribute("backColor") || "red"
             const rotate = this.getAttribute("rotate") || 0
+            const min = this.getAttribute("min") || 0
+            const max = this.getAttribute("max") || 100
+            const value = this.getAttribute("value") || 0
             const mode = this.getAttribute("mode") || "normal"
-            const id = this.getAttribute("id") || document
+            const dom = this.getAttribute("dom") || document
+            const orientation = this.getAttribute("orientation") || "normal"
             const event = this.getAttribute("event") || "normal"
 
             return {
@@ -83,7 +91,11 @@ export class colorRange extends HTMLElement {
                 },
                 logic: {
                     "mode": mode,
-                    "id": id,
+                    "min": min,
+                    "max": max,
+                    "value": value,
+                    "dom": dom,
+                    "orientation": orientation,
                     "event": event
                 }
             }
@@ -93,35 +105,90 @@ export class colorRange extends HTMLElement {
             Object.entries(css).forEach(([key, value]) => { this.style.setProperty(`--${key}`, value) })
         }
 
-        const movePointer = (value, pointer, pointerHeight, fakeHeight) => {
-            const relativeTop = Math.round((1 - value / 255) * (fakeHeight - pointerHeight))
-            pointer.style.top = `${relativeTop}px`
+        const movePointer = (logic, value, pointer) => {
+            const containerWidth = this.container.offsetWidth
+            const pointerWidth = pointer.offsetWidth
+            const containerHeight = this.container.offsetHeight
+            const pointerHeight = pointer.offsetHeight
+
+
+            const relativeLeft = Math.round((value / logic.max) * (containerWidth - pointerWidth))
+            pointer.style.left = relativeLeft + "px"
+
+/*             if (logic.orientation === "normal") {
+                const relativeLeft = Math.round((value / logic.max) * (containerWidth - pointerWidth))
+                pointer.style.left = relativeLeft + "px"
+            }
+
+            if (logic.orientation === "inverted") {
+                const relativeTop = Math.round((value / logic.max) * (containerHeight - pointerHeight))
+                pointer.style.top = relativeTop + "px"
+            }
+ */        }
+
+        const applyRangeValues = (input, logic) => {
+            input.min = logic.min
+            input.max = logic.max
+            input.value = logic.value
         }
 
+        /*         const applyOrientation = (input, pointer, logic) => {
+                    if (logic.orientation === "normal") {
+                        pointer.style.width = "14px"
+                        pointer.style.height = "100%"
+                    }
+        
+                    if (logic.orientation === "inverted") {
+                        pointer.style.width = "100%"
+                        pointer.style.height = "14px"
+                        input.style.transform = "rotate(90deg)"
+                        input.style.width = this.container.offsetHeight + "px" // inverted rotate 
+                        input.style.height = "100%" // inverted rotate
+                    }
+                }
+         */
         const applyConfLogic = (logic) => {
-            if (logic.mode === "normal") this.container.style.background = "var(--backColor)"
+/*             const deg = logic.orientation === "inverted" ? "90deg" : "180deg"
+ */
+            if (logic.mode === "color") this.container.style.background = "var(--backColor)"
 
-            if (logic.mode === "tone") this.container.style.background = `
+            if (logic.mode === "tone") {
+                this.container.style.background = `
                     linear-gradient(
-                    180deg,
-                    rgba(255, 255, 255, 1) 0%,
+                    to right,
+                    rgb(20, 0, 0) 0%,
                     var(--backColor) 50%,
-                    rgba(20, 0, 0, 1) 100%)
+                    rgb(255, 255, 255) 100%
                 `
+            }                    
+
+
+            if (logic.mode === "alpha") {
+                this.container.style.background = `
+                    linear-gradient(
+                    to right,
+                    var(--backColor),
+                    var(--backColor)
+                `
+
+            }
         }
 
         const main = async () => {
-            const containerHeight = this.container.offsetHeight
             const pointer = this.dom.querySelector(".pointer")
+            const input = this.dom.querySelector("input")
             const config = getConfig()
 
             applyConfCss(config.css)
             applyConfLogic(config.logic)
+/*             applyOrientation(input, pointer, config.logic)
+ */            applyRangeValues(input, config.logic)
+            movePointer(config.logic, config.logic.value, pointer)
 
-            const input = this.dom.querySelector("input")
             input.addEventListener("input", (e) => {
-                movePointer(e.target.value, pointer, pointer.offsetHeight, containerHeight)
-                document.getElementById(config.logic.id).dispatchEvent(new CustomEvent(config.logic.event, {
+                movePointer(config.logic, e.target.value, pointer)
+
+                document.getElementById(config.logic.dom).dispatchEvent(new CustomEvent(config.logic.event, {
                     detail: {
                         item: config.logic.mode,
                         value: e.target.value
