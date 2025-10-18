@@ -344,6 +344,6 @@ body {
         width: 300px;
         height: 180px;
         opacity: 0;
-        transition: 180ms ease-in-out;
+        transition: 220ms ease-in-out;
     }
 }

@@ -89,15 +89,14 @@ export const loadColorSelector = async (box) => {
     await import("./components/micro/colorPicker.js")
     const colorInput = document.getElementById("colorInput")
     const barHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--barHeight"))
-    const backColor = getComputedStyle(document.documentElement).getPropertyValue("--backColor")
 
-    const colorPickerBox = element.add(box, "div", "colorPicker", "colorPickerBox absolute")
+    const colorPickerBox = await element.add(box, "div", "colorPicker", "colorPickerBox absolute")
     element.add(colorPickerBox, "color-picker", "controlPicker", null, {
-        "backColor": backColor,
+        "backColor": "rgba(255, 255, 255, 0.5)",
         "fontFamily": "Anta",
         "fontSize": "13px",
-        "fontColor1": "rgb(28, 28, 28)",
-        "fontColor2": "rgba(223, 223, 223, 1)",
+        "fontColor": "rgba(43, 43, 43, 1)",
+        "event": "controlPicker"
     })
 
     colorInput.addEventListener("change", async (e) => {
@@ -105,8 +104,11 @@ export const loadColorSelector = async (box) => {
             colorPickerBox.style.top = `calc(${barHeight}px + 20px)`
             colorPickerBox.style.opacity = 1
         } else {
+            colorInput.disabled = true
             colorPickerBox.style.top = "10px"
             colorPickerBox.style.opacity = 0
+            await new Promise(resolve => setTimeout(resolve, 220)) /* time colorPickerBox class transition */
+            colorInput.disabled = false
         }
     })
 }

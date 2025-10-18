@@ -5,13 +5,17 @@ export class colorPicker extends HTMLElement {
         super()
 
         this.dom = this.attachShadow({ mode: "open" })
-        this.container = element.add(this.dom, "div", null, "container")
+        this.container = element.add(this.dom, "div", null, "container relative")
         this.container.innerHTML = `
+            <section class="expand absolute">
+                <div class="marginBox"></div>
+            </section>
+
             <section class="colors">
                 <div class="colorBox">
-                    <div class="finalColorBox">
-                        <div class="backGrid"></div>
-                        <div class="color"></div>
+                    <div class="finalColorBox relative">
+                        <div class="backGrid absolute"></div>
+                        <div class="color shadowBox absolute"></div>
                     </div>
                     <ul class="vertical">
                         <li class="char">H</li>
@@ -21,35 +25,45 @@ export class colorPicker extends HTMLElement {
                     </ul>
                 </div>
                 <div class="listRangesBox">
-                    <div class="rangeBox">
-                        <div class="pointer"></div>
-                        <input type="range" id="rangeHue" min=0 max=360>
+                    <div class="rangeBox shadowBox relative">
+                        <div class="pointer absolute"></div>
+                        <input type="range" id="rangeHue" class="hiddenInput shadowInset absolute" min=0 max=360>
                     </div>
-                    <div class="rangeBox">
-                        <div class="pointer"></div>
-                        <input type="range" id="rangeSat" min=0 max=100>
+                    <div class="rangeBox shadowBox relative">
+                        <div class="pointer absolute"></div>
+                        <input type="range" id="rangeSat" class="hiddenInput shadowInset absolute" min=0 max=100>
                     </div>
-                    <div class="rangeBox">
-                        <div class="pointer"></div>
-                        <input type="range" id="rangeLight" min=0 max=100>
+                    <div class="rangeBox shadowBox relative">
+                        <div class="pointer absolute"></div>
+                        <input type="range" id="rangeLight" class="hiddenInput shadowInset absolute" min=0 max=100>
                     </div>
-                    <div class="rangeBox" id="alphaBox">
-                        <div class="backGrid"></div>
-                        <div class="color"></div>
-                        <div class="pointer"></div>
-                        <input type="range" id="rangeAlpha" min=0 max=1 step=0.01>
+                    <div class="rangeBox shadowBox relative" id="alphaBox">
+                        <div class="backGrid absolute"></div>
+                        <div class="color absolute"></div>
+                        <div class="pointer absolute"></div>
+                        <input type="range" id="rangeAlpha" class="hiddenInput shadowInset absolute" min=0 max=1 step=0.01>
                     </div>
                 </div>
             </section>
-            <div class="infoBox">
-                <span class="info">Hsla</span>
-                <span class="info"></span>
-                <span class="info"></span>
-                <span class="info"></span>
-                <span class="info"></span>
-                <div class="open"></div>
-            </div>
+
+            <section class="infoSection">
+                <div class="infoBox">
+                    <span class="info">Hsla</span>
+                    <span class="info"></span>
+                    <span class="info"></span>
+                    <span class="info"></span>
+                    <span class="info"></span>
+                </div>
+                <div class="open relative">expand_more
+                    <input class="hiddenInput absolute expandInput" type="checkbox">
+                </div>
+            </section> 
         `
+
+        element.add(this.dom, "link", null, null, {
+            rel: "stylesheet",
+            href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
+        })
 
         const style = element.add(this.dom, "style", null, null)
         style.textContent = `
@@ -65,9 +79,10 @@ export class colorPicker extends HTMLElement {
                 height: 100%;
             }
 
+            .relative { position: relative; }
+            .absolute { position: absolute; }
+
             .backGrid {
-                position: absolute;
-                z-index: 10;
                 width: 100%;
                 height: 100%;
 
@@ -78,13 +93,24 @@ export class colorPicker extends HTMLElement {
             }
 
             .color {
-                position: absolute;
-                z-index: 11;
                 width: 100%;
                 height: 100%;
-                border-radius: 4px;
-                box-shadow: inset 3px 3px 8px rgb(28,28,28);
             }
+
+            .hiddenInput {
+                appearance: none;
+                width: 100%;
+                height: 100%;
+                background-color: transparent;
+                cursor: pointer;
+
+                &::-moz-range-thumb {
+                    background: none;
+                    border: none;
+                }
+            }
+
+            .shadowBox { box-shadow: inset 1px 1px 4px rgb(28,28,28); }    
 
             .container {
                 display: flex;
@@ -96,6 +122,45 @@ export class colorPicker extends HTMLElement {
                 border-radius: 4px;
                 padding: 10px;
                 backdrop-filter: blur(4px);
+
+                .expand {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    left: 0;
+                    top: 100%;
+                    width: 100%;
+                    height: 130px;
+                    border-radius: 4px;
+                    background-color: var(--backColor);
+                    overFlow: hidden;
+                    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                    opacity: 0;
+                    transition: 200ms;
+
+                    .marginBox {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        width: calc(100% - 20px);
+                        height: calc(100% - 20px);
+                    
+                        .paletteRow {
+                            display: flex;
+                            justify-content: space-between;
+                            width: 100%;
+                            height: 30px;
+
+                            .colorPalette {
+                                width: 30px;
+                                aspect-ratio: 1/1;
+                                border-radius: 4px;
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
 
                 .colors {
                     display: flex;
@@ -110,12 +175,10 @@ export class colorPicker extends HTMLElement {
                         height: 100%;
 
                         .finalColorBox {
-                            position: relative;
                             display: flex;
                             width: 60px;
                             height: 100%;
                             border-radius: 4px;
-                            border: 1px solid grey; 
                             overflow: hidden;
                         }
 
@@ -133,9 +196,11 @@ export class colorPicker extends HTMLElement {
                                 width: 20px;
                                 height: 20px;
                                 text-align: right;
-                                color: var(--fontColor2);
+                                color: var(--fontColor);
                                 font-family: var(--fontFamily);
                                 font-size: 14px;
+                                border: 1px solid grey;
+                                border-radius: 4px;
                             }
                         }
                     }
@@ -148,38 +213,19 @@ export class colorPicker extends HTMLElement {
                         height: 100%;
 
                         .rangeBox {
-                            position: relative;
                             display: flex;
                             width: 100%;
                             height: 20px;
                             border-radius: 4px;
                             overflow: hidden;
-                            box-shadow: inset 3px 3px 8px rgb(28,28,28);    
 
                             .pointer {
-                                position: absolute;
-                                z-index: 12;
                                 display: flex;
                                 align-items: center;
                                 width: 10px;
                                 height: 100%;                    
                                 border-radius: 2px;
                                 box-shadow: 0 0 10px rgb(28, 28, 28), inset 0 0 10px white;
-                            }
-
-                            input {
-                                position: absolute;
-                                appearance: none;
-                                z-index: 13;
-                                width: 100%;
-                                height: 100%;
-                                background-color: transparent;
-                                cursor: pointer;
-
-                                &::-moz-range-thumb {
-                                    background: none;
-                                    border: none;
-                                }
                             }
 
                             &:first-of-type {
@@ -194,48 +240,59 @@ export class colorPicker extends HTMLElement {
                                     rgb(255, 0, 0));
                             }
 
-                            &:nth-of-type(2) {
-                                background: linear-gradient(to right, rgb(128, 128, 128) 0%, hsl(var(--hueColor), 100%, 50%, 1) 100%);
-                            }
-                                
-                            &:nth-of-type(3) {
-                                background: linear-gradient(to right, rgb(0, 0, 0) 0%, hsl(var(--hueColor), 100%, 50%, 1) 50%, rgb(255, 255, 255) 100%);
-                            }
-
-                            &:nth-of-type(4) .color {
-                                background: linear-gradient(to right, hsl(var(--hueColor), 100%, 50%, 0) 0%, hsl(var(--hueColor), 100%, 50%, 1) 100%);
-                            }
+                            &:nth-of-type(2) { background: linear-gradient(to right, rgb(128, 128, 128) 0%, hsl(var(--hueColor), 100%, 50%, 1) 100%); }
+                            &:nth-of-type(3) { background: linear-gradient(to right, rgb(0, 0, 0) 0%, hsl(var(--hueColor), 100%, 50%, 1) 50%, rgb(255, 255, 255) 100%); }
+                            &:nth-of-type(4) .color { background: linear-gradient(to right, hsl(var(--hueColor), 100%, 50%, 0) 0%, hsl(var(--hueColor), 100%, 50%, 1) 100%); }
                         }
                     }
                 }
 
-                .infoBox {
+                .infoSection {
                     display: flex;
-                    justify-content: space-around;
-                    align-items: center;
+                    justify-content: space-between;
                     width: 100%;
                     height: 30px;
-                    padding: 4px;
-                    border-radius: 4px;
-                    background-color: rgba(221, 221, 221, 1);
-                    box-shadow: inset 3px 3px 8px rgb(28,28,28);
 
-                    .info,
+                    .infoBox {
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: center;
+                        width: calc(100% - 50px);
+                        height: 100%;
+                        border-radius: 4px;
+                        border: 1px solid grey;
+
+                        .info {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: calc(100% / 5);
+                            height: 100%;
+                            color: var(--fontColor);
+                            font-family: var(--fontFamily);
+                            font-size: var(--fontSize);
+                            font-style: italic;
+                        }
+                    }
+
                     .open {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        width: calc(100% / 7);
+                        width: 40px;
                         height: 100%;
+                        font-family: material symbols outlined;
+                        font-size: 26px;
+                        color: var(--fontColor);
+                        border: 1px solid grey;
+                        border-radius: 4px;
                     }
-                    
-                    .info {
-                        color: var(--fontColor1);
-                        font-family: var(--fontFamily);
-                        font-size: var(--fontSize);
-                        font-style: italic;
-                    }
+                }
 
+                &:has(.infoSection .open .expandInput:checked) .expand {
+                    top: calc(100% + 10px);
+                    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+                    opacity: 1;
                 }
             }
         `
@@ -246,17 +303,17 @@ export class colorPicker extends HTMLElement {
             const backColor = this.getAttribute("backColor") || "red"
             const fontFamily = this.getAttribute("fontFamily") || "inset 2px 2px 6px rgb(58, 58, 58)"
             const fontSize = this.getAttribute("fontSize") || "inset 2px 2px 6px rgb(58, 58, 58)"
-            const fontColor1 = this.getAttribute("fontColor1") || "initial"
-            const fontColor2 = this.getAttribute("fontColor2") || "initial"
+            const fontColor = this.getAttribute("fontColor") || "initial"
+            const event = this.getAttribute("event") || this.id
 
             return {
                 css: {
                     "backColor": backColor,
                     "fontFamily": fontFamily,
                     "fontSize": fontSize,
-                    "fontColor1": fontColor1,
-                    "fontColor2": fontColor2
-                }
+                    "fontColor": fontColor
+                },
+                logic: { "event": event}
             }
         }
 
@@ -264,12 +321,10 @@ export class colorPicker extends HTMLElement {
             this.style.setProperty("--backColor", css.backColor)
             this.style.setProperty("--fontFamily", css.fontFamily)
             this.style.setProperty("--fontSize", css.fontSize)
-            this.style.setProperty("--fontColor1", css.fontColor1)
-            this.style.setProperty("--fontColor2", css.fontColor2)
+            this.style.setProperty("--fontColor", css.fontColor)
         }
 
         const drawGridBack = async (box) => {
-            console.log(box)
             const size = box.id === "alphaBox" ? 1 : 7
             const boxWidth = box.offsetWidth
             const boxHeight = box.offsetHeight
@@ -289,9 +344,8 @@ export class colorPicker extends HTMLElement {
             for (let i = 0; i <= itemsCol * itemsRow; i++) await element.add(backLayer, "div", null, "cell")
             const cells = box.querySelectorAll(".cell")
             box.id === "alphaBox"
-                ? cells.forEach((item, index) => { if (index % 4 === 0) item.style.backgroundColor = "rgba(200,200,200, 0.5)" })
-                : cells.forEach((item, index) => { if (index % 2 === 0) item.style.backgroundColor = "rgba(200,200,200, 0.2)" })
-            console.log(backLayer)
+                ? cells.forEach((item, index) => { if (index % 4 === 0) item.style.backgroundColor = "rgba(128, 128, 128, 0.7)" })
+                : cells.forEach((item, index) => { if (index % 2 === 0) item.style.backgroundColor = "rgba(128, 128, 128, 0.7)" })
         }
 
         const movePointer = (target, hsla) => {
@@ -319,15 +373,29 @@ export class colorPicker extends HTMLElement {
             infos[4].textContent = hsla.alpha
         }
 
-        const resetDefaultValues = async (ranges) => {
-            ranges[0].value = 180
-            ranges[1].value = 100
-            ranges[2].value = 50
-            ranges[3].value = 1
+        const addPalette = async () => {
+            const expand = this.dom.querySelector(".marginBox")
+
+            for (let rowCont = 1; rowCont <= 3; rowCont++) {
+                const row = element.add(expand, "ul", null, "paletteRow")
+
+                for (let box = 1; box <= 7; box++) { const colorPalette = element.add(row, "li", null, "colorPalette shadowBox") }
+            }
+            return Array.from(this.dom.querySelectorAll(".colorPalette"))
+        }
+
+        const colorizedPalette = (hue) => {
+            const paletteItems = Array.from(this.dom.querySelectorAll(".colorPalette"))
+            const light = (94 - 6) / (paletteItems.length - 1)
+
+            paletteItems.forEach((item, num) => { 
+                item.style.backgroundColor = `hsl(${hue}, 100%, ${Math.round(light * num + 6)}%)`  /* ojo!!! +6 para compensar el min y no empezar en 0*/
+                item.setAttribute("hsla", `hsl(${hue}, 100%, ${Math.round(light * num + 6)}%)` )
+            })
         }
 
         const main = async () => {
-            const ranges = this.dom.querySelectorAll("input")
+            const ranges = this.dom.querySelectorAll("input[type='range']")
             const config = getConfig()
             const hsla = {
                 hue: 180,
@@ -338,7 +406,6 @@ export class colorPicker extends HTMLElement {
 
             applyConfCss(config.css)
             colorizedColorBox(hsla)
-            await resetDefaultValues(ranges)
             movePointer(ranges[0], hsla)
             movePointer(ranges[1], hsla)
             movePointer(ranges[2], hsla)
@@ -348,6 +415,8 @@ export class colorPicker extends HTMLElement {
             await drawGridBack(this.dom.querySelector(".colorBox"))
             await drawGridBack(this.dom.getElementById("alphaBox"))
             this.style.setProperty("--hueColor", hsla.hue)
+            const boxesPalette = await addPalette()
+            colorizedPalette(hsla.hue)
 
             ranges.forEach((range) => {
                 range.addEventListener("input", (e) => {
@@ -355,7 +424,21 @@ export class colorPicker extends HTMLElement {
                     colorizedColorBox(hsla)
                     updateInfo(hsla)
                     this.style.setProperty("--hueColor", hsla.hue)
+                    colorizedPalette(hsla.hue)
+                })
+            })
 
+            boxesPalette.forEach(box => {
+                box.addEventListener("click", (e) => {
+                    const newHsla = e.target.getAttribute("hsla")
+                    document.dispatchEvent(new CustomEvent(config.logic.event, {detail: newHsla}))
+                })
+            })
+
+            ranges.forEach(range => {
+                range.addEventListener("input", () => {
+                    const newHsla = `hsla(${hsla.hue}, ${hsla.sat}%, ${hsla.light}%, ${hsla.alpha})`
+                    document.dispatchEvent(new CustomEvent(config.logic.event, {detail: newHsla}))
                 })
             })
         }

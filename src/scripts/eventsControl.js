@@ -29,6 +29,10 @@ export const loadInterfaceEvents = () => {
             ifaceLogic.movePanel(false, "right")
             if (testModeBox.children.length === 0) ifaceLogic.activeTestMode(testModeBox)
         })
+
+        document.addEventListener("controlPicker", (e) => {
+            console.log(e.detail)
+        })
     }
 
 
