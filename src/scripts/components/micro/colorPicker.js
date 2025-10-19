@@ -15,7 +15,7 @@ export class colorPicker extends HTMLElement {
                 <div class="colorBox">
                     <div class="finalColorBox relative">
                         <div class="backGrid absolute"></div>
-                        <div class="color shadowBox absolute"></div>
+                        <div id="colorLayer" class="color shadowBox absolute"></div>
                     </div>
                     <ul class="vertical">
                         <li class="char">H</li>
@@ -27,28 +27,28 @@ export class colorPicker extends HTMLElement {
                 <div class="listRangesBox">
                     <div class="rangeBox shadowBox relative">
                         <div class="pointer absolute"></div>
-                        <input type="range" id="rangeHue" class="hiddenInput shadowInset absolute" min=0 max=360>
+                        <input type="range" id="rangeHue" class="hiddenInput shadowInset absolute" min=0 value=180 max=360>
                     </div>
                     <div class="rangeBox shadowBox relative">
                         <div class="pointer absolute"></div>
-                        <input type="range" id="rangeSat" class="hiddenInput shadowInset absolute" min=0 max=100>
+                        <input type="range" id="rangeSat" class="hiddenInput shadowInset absolute" min=0 value=100 max=100>
                     </div>
                     <div class="rangeBox shadowBox relative">
                         <div class="pointer absolute"></div>
-                        <input type="range" id="rangeLight" class="hiddenInput shadowInset absolute" min=0 max=100>
+                        <input type="range" id="rangeLight" class="hiddenInput shadowInset absolute" min=0 value=50  max=100>
                     </div>
                     <div class="rangeBox shadowBox relative" id="alphaBox">
                         <div class="backGrid absolute"></div>
                         <div class="color absolute"></div>
                         <div class="pointer absolute"></div>
-                        <input type="range" id="rangeAlpha" class="hiddenInput shadowInset absolute" min=0 max=1 step=0.01>
+                        <input type="range" id="rangeAlpha" class="hiddenInput shadowInset absolute" min=0 max=1 value= 100 step=0.01>
                     </div>
                 </div>
             </section>
 
             <section class="infoSection">
-                <div class="infoBox">
-                    <span class="info">Hsla</span>
+                <div class="infoBox shadowBox">
+                    <span class="info">HSLA</span>
                     <span class="info"></span>
                     <span class="info"></span>
                     <span class="info"></span>
@@ -83,12 +83,25 @@ export class colorPicker extends HTMLElement {
             .absolute { position: absolute; }
 
             .backGrid {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
                 width: 100%;
                 height: 100%;
 
-                .cell {
+                .line {
+                    display: flex;
                     width: 100%;
-                    height: 100%;
+                    height: 50%;
+
+                    .cell {
+                        height: 100%;
+                        aspect-ratio: 1/1;
+                    }
+
+                    .colorCell {
+                        background-color: rgba(128, 128, 128, 0.77);
+                    }
                 }
             }
 
@@ -137,7 +150,7 @@ export class colorPicker extends HTMLElement {
                     overFlow: hidden;
                     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
                     opacity: 0;
-                    transition: 200ms;
+                    transition: 250ms;
 
                     .marginBox {
                         display: flex;
@@ -260,8 +273,8 @@ export class colorPicker extends HTMLElement {
                         width: calc(100% - 50px);
                         height: 100%;
                         border-radius: 4px;
-                        border: 1px solid grey;
-
+                        background-color: whitesmoke;
+                        
                         .info {
                             display: flex;
                             align-items: center;
@@ -313,7 +326,7 @@ export class colorPicker extends HTMLElement {
                     "fontSize": fontSize,
                     "fontColor": fontColor
                 },
-                logic: { "event": event}
+                logic: { "event": event }
             }
         }
 
@@ -325,27 +338,24 @@ export class colorPicker extends HTMLElement {
         }
 
         const drawGridBack = async (box) => {
-            const size = box.id === "alphaBox" ? 1 : 7
             const boxWidth = box.offsetWidth
-            const boxHeight = box.offsetHeight
-            const itemsRow = Math.floor(boxHeight / size) + 1
-            const itemsCol = Math.floor(boxWidth / size) + 1
+            const size = 5
+            const rowsNum = Math.floor(box.offsetHeight / size)
+            const itemsRow = Math.floor(boxWidth / size)
             const backLayer = box.querySelector(".backGrid")
 
-            backLayer.style.display = "grid"
-            if (box.id === "alphaBox") {
-                backLayer.style.gridTemplateRows = `repeat(1, 1fr)`
-                backLayer.style.gridTemplateColumns = `repeat(${itemsCol}, 1fr)`
-            } else {
-                backLayer.style.gridTemplateRows = `repeat(${itemsRow}, 1fr)`
-                backLayer.style.gridTemplateColumns = `repeat(${itemsCol}, 1fr)`
+            for (let i = 1; i <= rowsNum; i++) {
+                const line = await element.add(backLayer, "div", i, "line")
+                for (let x = 1; x <= itemsRow; x++) element.add(line, "div", null, "cell")
+                const cells = Array.from(line.querySelectorAll(".cell"))
+
+                cells.forEach((item, num) => {
+                    Number(item.parentElement.id % 2) === 0
+                        ? num % 2 === 0 ? item.classList.add("colorCell") : null
+                        : (num + 1) % 2 === 0 ? item.classList.add("colorCell") : null
+                })
             }
 
-            for (let i = 0; i <= itemsCol * itemsRow; i++) await element.add(backLayer, "div", null, "cell")
-            const cells = box.querySelectorAll(".cell")
-            box.id === "alphaBox"
-                ? cells.forEach((item, index) => { if (index % 4 === 0) item.style.backgroundColor = "rgba(128, 128, 128, 0.7)" })
-                : cells.forEach((item, index) => { if (index % 2 === 0) item.style.backgroundColor = "rgba(128, 128, 128, 0.7)" })
         }
 
         const movePointer = (target, hsla) => {
@@ -388,9 +398,9 @@ export class colorPicker extends HTMLElement {
             const paletteItems = Array.from(this.dom.querySelectorAll(".colorPalette"))
             const light = (94 - 6) / (paletteItems.length - 1)
 
-            paletteItems.forEach((item, num) => { 
+            paletteItems.forEach((item, num) => {
                 item.style.backgroundColor = `hsl(${hue}, 100%, ${Math.round(light * num + 6)}%)`  /* ojo!!! +6 para compensar el min y no empezar en 0*/
-                item.setAttribute("hsla", `hsl(${hue}, 100%, ${Math.round(light * num + 6)}%)` )
+                item.setAttribute("hsla", `hsl(${hue}, 100%, ${Math.round(light * num + 6)}%)`)
             })
         }
 
@@ -431,14 +441,14 @@ export class colorPicker extends HTMLElement {
             boxesPalette.forEach(box => {
                 box.addEventListener("click", (e) => {
                     const newHsla = e.target.getAttribute("hsla")
-                    document.dispatchEvent(new CustomEvent(config.logic.event, {detail: newHsla}))
+                    document.dispatchEvent(new CustomEvent(config.logic.event, { detail: newHsla }))
                 })
             })
 
             ranges.forEach(range => {
                 range.addEventListener("input", () => {
                     const newHsla = `hsla(${hsla.hue}, ${hsla.sat}%, ${hsla.light}%, ${hsla.alpha})`
-                    document.dispatchEvent(new CustomEvent(config.logic.event, {detail: newHsla}))
+                    document.dispatchEvent(new CustomEvent(config.logic.event, { detail: newHsla }))
                 })
             })
         }
