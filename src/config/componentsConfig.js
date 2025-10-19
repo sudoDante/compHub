@@ -13,7 +13,7 @@ export const componentsConfig = [
                 title: "section 2",
                 items: [
                     { event: "test3", type: "switch", value: true, label: "test3" },
-                    { event: "test4", type: "switch",value: false, label: "test4" },
+                    { event: "test4", type: "colorPickerRGB",value: false, label: "test4" },
                 ]
             }]
     },

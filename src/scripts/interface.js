@@ -86,17 +86,17 @@ export const loadVisualPause = async (box) => {
 }
 
 export const loadColorSelector = async (box) => {
-    await import("./components/micro/colorPicker.js")
+    await import("./components/micro/colorPickerHSL.js")
     const colorInput = document.getElementById("colorInput")
     const barHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--barHeight"))
 
     const colorPickerBox = await element.add(box, "div", "colorPicker", "colorPickerBox absolute")
-    element.add(colorPickerBox, "color-picker", "controlPicker", null, {
+    element.add(colorPickerBox, "color-picker-hsl", "controlPicker", null, {
         "backColor": "rgba(255, 255, 255, 0.5)",
         "fontFamily": "Anta",
         "fontSize": "13px",
         "fontColor": "rgba(43, 43, 43, 1)",
-        "event": "controlPicker"
+        "event": "controlColorPicker"
     })
 
     colorInput.addEventListener("change", async (e) => {

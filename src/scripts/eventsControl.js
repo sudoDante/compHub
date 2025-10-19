@@ -5,6 +5,7 @@ import * as iface from "./interface.js"
 
 export const loadInterfaceEvents = () => {
     let eventDetail
+    const main = document.querySelector("main")
     const configMenu = document.getElementById("configMenu")
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
     const testModeBox = document.getElementById("testModeBox")
@@ -30,8 +31,8 @@ export const loadInterfaceEvents = () => {
             if (testModeBox.children.length === 0) ifaceLogic.activeTestMode(testModeBox)
         })
 
-        document.addEventListener("controlPicker", (e) => {
-            console.log(e.detail)
+        document.addEventListener("controlColorPicker", (e) => {
+            main.style.background = `linear-gradient(180deg, rgba(220, 220, 220, 1) 0%, ${e.detail} 100%)`
         })
     }
 

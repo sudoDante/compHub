@@ -1,6 +1,6 @@
 import * as element from "../../modules/elements.js"
 
-export class colorPicker extends HTMLElement {
+export class colorPickerHSL extends HTMLElement {
     constructor() {
         super()
 
@@ -47,13 +47,13 @@ export class colorPicker extends HTMLElement {
             </section>
 
             <section class="infoSection">
-                <div class="infoBox shadowBox">
-                    <span class="info">HSLA</span>
-                    <span class="info"></span>
-                    <span class="info"></span>
-                    <span class="info"></span>
-                    <span class="info"></span>
-                </div>
+                <ul class="infoBox shadowBox">
+                    <li class="info">HSLA</li>
+                    <li class="info"></li>
+                    <li class="info"></li>
+                    <li class="info"></li>
+                    <li class="info"></li>
+                </ul>
                 <div class="open relative">expand_more
                     <input class="hiddenInput absolute expandInput" type="checkbox">
                 </div>
@@ -367,7 +367,6 @@ export class colorPicker extends HTMLElement {
             if (target.id === "rangeSat") hsla.sat = target.value
             if (target.id === "rangeLight") hsla.light = target.value
             if (target.id === "rangeAlpha") hsla.alpha = target.value
-
         }
 
         const colorizedColorBox = (hsla) => {
@@ -456,4 +455,4 @@ export class colorPicker extends HTMLElement {
         main()
     }
 }
-customElements.define("color-picker", colorPicker)
+customElements.define("color-picker-hsl", colorPickerHSL)

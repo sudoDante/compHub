@@ -1,6 +1,7 @@
 import * as element from "../../modules/elements.js"
 import { switchSlim } from "../nano/switchSlim.js"
 import { rangeSlim } from "../nano/rangeSlim.js"
+import { colorPickerRGB } from "../micro/colorPickerRGB.js"
 
 export class configMenu extends HTMLElement {
     constructor() {
@@ -267,6 +268,16 @@ export class configMenu extends HTMLElement {
                             "trueColor": "whitesmoke",
                             "falseColor": "whitesmoke",
                             "value": item.value,
+                            "event": item.event
+                        })
+                    }
+
+                    if (item.type === "colorPickerRGB") {
+                        const color = await element.add(section, "color-picker-rgb", null, null, {
+                            "title": item.label,
+                            "fontColor": "rgba(129, 129, 129, 1)",
+                            "fontFamily": "Anta",
+                            "fontSize": "13px",
                             "event": item.event
                         })
                     }
