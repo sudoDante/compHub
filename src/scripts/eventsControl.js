@@ -36,7 +36,6 @@ export const loadInterfaceEvents = () => {
         })
     }
 
-
     const loadViewsEvents = () => {
         console.log("views events control READY: waiting")
 
@@ -102,8 +101,8 @@ export const loadInterfaceEvents = () => {
         })
     }
 
-    const loadComponentEvents = () => {
-        console.log("custom events config READY: waiting")
+    const loadPauseEvents = () => {
+        console.log("config pause custom events READY: waiting")
         let pauseTime
         const componentBoxContainer = document.getElementById("componentBoxContainer")
 
@@ -128,7 +127,19 @@ export const loadInterfaceEvents = () => {
         })
     }
 
+    const loadConfigEvents = () => {
+        console.log("config items custom events READY: waiting")
+
+        document.addEventListener("config", (e) => {
+            const item = e.detail.item
+            const value = e.detail.value
+
+/*             console.log(e.detail)
+ */        })
+    }
+
     loadViewsEvents()
     loadMenuEvents()
-    loadComponentEvents()
+    loadPauseEvents()
+    loadConfigEvents()
 }

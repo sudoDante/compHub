@@ -250,7 +250,8 @@ export class configMenu extends HTMLElement {
                             "enphasisColor": "rgba(174, 232, 240, 0.76)",
                             "trackColor": "rgba(80, 80, 80, 1)",
                             "progressColor": "rgba(200, 200, 200, 1)",
-                            "event": item.event
+                            "eventName": "config",
+                            "eventItem": item.event
                         })
                     }
 
@@ -268,7 +269,8 @@ export class configMenu extends HTMLElement {
                             "trueColor": "whitesmoke",
                             "falseColor": "whitesmoke",
                             "value": item.value,
-                            "event": item.event
+                            "eventName": "config",
+                            "eventItem": item.event
                         })
                     }
 
@@ -279,7 +281,10 @@ export class configMenu extends HTMLElement {
                             "fontFamily": "Anta",
                             "fontSize": "13px",
                             "color": "rgba(126, 240, 132, 1)",
-                            "event": item.event
+                            "eventName": "config",
+                            "eventItem": item.event
+                        }, {
+                            "eventDom": document
                         })
                     }
                 }
