@@ -278,6 +278,7 @@ export class configMenu extends HTMLElement {
                             "fontColor": "rgba(129, 129, 129, 1)",
                             "fontFamily": "Anta",
                             "fontSize": "13px",
+                            "color": "rgba(126, 240, 132, 1)",
                             "event": item.event
                         })
                     }
