@@ -103,6 +103,9 @@ export class switchSlim extends HTMLElement {
                 }
             }
         `
+        this.eventDom = document
+        this.eventItem = this
+        this.eventName = this
     }
 
     connectedCallback() {
@@ -120,7 +123,6 @@ export class switchSlim extends HTMLElement {
             const trueColor = this.getAttribute("trueColor") || "red"
             const falseColor = this.getAttribute("falseColor") || "red"
             const value = this.getAttribute("value") || true
-            const event = this.getAttribute("event") || "noEventConfigured"
 
             return {
                 css: {
@@ -138,7 +140,6 @@ export class switchSlim extends HTMLElement {
                     "trueText": trueText,
                     "falseText": falseText,
                     "checked": value,
-                    "event": event
                 }
             }
         }
@@ -175,9 +176,9 @@ export class switchSlim extends HTMLElement {
                 off.style.fontSize = "16px"
             }
 
-            input.addEventListener("change", (e) => {
+            input.addEventListener("change", () => {
                 changeText(input, [on, off])
-                document.dispatchEvent(new CustomEvent("componentChanged", { detail: { [config.logic.event]: input.checked } }))
+                this.eventDom.dispatchEvent(new CustomEvent(this.eventName, { detail: { [this.eventItem]: input.checked } }))
             })
         }
         main()

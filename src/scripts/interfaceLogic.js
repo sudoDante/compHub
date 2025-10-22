@@ -134,26 +134,6 @@ export const importConfig = async (par) => {
     return componentConf.config
 }
 
-export const activeTestMode = async (box) => {
-    await import("./components/nano/switchSlim.js")
-    await element.add(box, "switch-slim", "testMode", null, {
-        "title": "Test Mode",
-        "fontColor": "rgba(129, 129, 129, 1)",
-        "enphasisColor": "rgba(174, 232, 240, 0.76)",
-        "fontFamily1": "Nunito Sans",
-        "fontFamily2": "Anta",
-        "fontSize": "13px",
-        "backColor": "rgba(53, 53, 53, 1)",
-        "trueText": "I",
-        "falseText": "0",
-        "trueColor": "whitesmoke",
-        "falseColor": "rgb(60,60,60)",
-        "value": false,
-        "event": "testMode"
-    })
-    box.style.opacity = 1
-}
-
 export const clearPause = () => {
     document.getElementById("pauseBox").remove()
     const pauseInput = document.getElementById("configMenu").shadowRoot.getElementById("pauseInput").shadowRoot.querySelector("input")

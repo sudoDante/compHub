@@ -132,7 +132,8 @@ export class rangeSlim extends HTMLElement {
             const min = this.getAttribute("min") || 0
             const max = this.getAttribute("max") || 100
             const value = this.getAttribute("value") || min
-            const event = this.getAttribute("event") || "noEventConfigured"
+            const eventItem = this.getAttribute("eventItem") || this
+            const eventName = this.getAttribute("eventName") || this
 
             return {
                 css: {
@@ -149,7 +150,8 @@ export class rangeSlim extends HTMLElement {
                     "min": Number(min),
                     "max": Number(max),
                     "value": Number(value),
-                    "event": event
+                    "eventItem": eventItem,
+                    "eventName": eventName
                 }
             }
         }
@@ -195,7 +197,8 @@ export class rangeSlim extends HTMLElement {
                 applyPosition(e.target, fakeThumb, rangeWidth)
                 valueBox.style.color = "var(--enphasisColor)"
                 valueBox.style.color = "var(--fontColor)"
-                document.dispatchEvent(new CustomEvent("componentChanged", { detail: { [config.logic.event]: input.value } }))
+
+                this.eventDom.dispatchEvent(new CustomEvent(this.eventName, { detail: { [this.eventItem]: Number(input.value) } }))
             })
         }
 

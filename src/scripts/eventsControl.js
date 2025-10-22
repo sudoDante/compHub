@@ -4,14 +4,14 @@ import * as ifaceLogic from "./interfaceLogic.js"
 import * as iface from "./interface.js"
 
 export const loadInterfaceEvents = () => {
-    let eventDetail
     const main = document.querySelector("main")
     const configMenu = document.getElementById("configMenu")
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
-    const testModeBox = document.getElementById("testModeBox")
+    const testModeBox = document.getElementById("testModeActivatorBox")
     const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
     let view = "computerView"
     let fullMode = false
+    let eventDetail
 
     const loadMenuEvents = async () => {
         console.log("menu custom events READY: waiting")
@@ -28,7 +28,7 @@ export const loadInterfaceEvents = () => {
 
         document.addEventListener("configLoaded", (e) => {
             ifaceLogic.movePanel(false, "right")
-            if (testModeBox.children.length === 0) ifaceLogic.activeTestMode(testModeBox)
+            if (testModeBox.children.length === 0) iface.loadTestModeBox(testModeBox)
         })
 
         document.addEventListener("controlColorPicker", (e) => {
@@ -101,45 +101,65 @@ export const loadInterfaceEvents = () => {
         })
     }
 
-    const loadPauseEvents = () => {
-        console.log("config pause custom events READY: waiting")
-        let pauseTime
+    const loadPauseEvents = async () => {
+        console.log("pause custom events READY: waiting")
         const componentBoxContainer = document.getElementById("componentBoxContainer")
+        const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fastLoad"))
+        let time
+        let pauseBox = null
 
-        document.addEventListener("componentChanged", async (e) => {
+        document.addEventListener("testMode", async (e) => {
             const event = Object.entries(e.detail)[0][0]
             const value = Object.entries(e.detail)[0][1]
+            console.log(event, value)
 
-            if (event === "testMode") {
+            if (event === "activeTestMode") {
                 const configComponent = document.getElementById("configMenu").shadowRoot
                 configComponent.dispatchEvent(new CustomEvent("testMode", { detail: value }))
 
-                if (!document.getElementById("pauseBox")) {
-                    pauseTime = await iface.loadVisualPause(componentBoxContainer)
+                if (value) {
+                    if (!pauseBox) pauseBox = await iface.loadVisualPause(componentBoxContainer)
                     ifaceLogic.placePauseAlert(view, fullMode)
-                    pauseTime.textContent = "PAUSED"
+                    time = document.getElementById("pauseBoxTime")
+                    time.textContent = "PAUSED"
+                } else {
+                    await iface.unloadVisualPause(pauseBox)
+                    pauseBox = null
                 }
-
-                if (value === false) ifaceLogic.clearPause()
             }
 
-            if (event === "autoPause") pauseTime.textContent = Number(value) === 0 ? "PAUSED" : value
+            if (event === "autoPause") {
+
+                 if (value >= 1) {
+                    time.textContent = Number(value) === 0 ? "PAUSED" : value
+                    pauseBox.style.width = "90px"
+                    time.style.width = "30px"
+                } else {
+                    pauseBox.style.width = "140px"
+                    time.style.width = "80px"
+                    await new Promise(resolve => setTimeout(resolve, transition))
+                    time.textContent = Number(value) === 0 ? "PAUSED" : value
+                } 
+
+                const component = document.getElementsByTagName(eventDetail.htmlTag)[0]
+
+            }
         })
     }
 
-    const loadConfigEvents = () => {
-        console.log("config items custom events READY: waiting")
-
-        document.addEventListener("config", (e) => {
-            const item = e.detail.item
-            const value = e.detail.value
-
-/*             console.log(e.detail)
- */        })
-    }
-
+    /*     const loadConfigEvents = () => {
+            console.log("config items custom events READY: waiting")
+    
+            document.addEventListener("config", (e) => {
+                const item = e.detail.item
+                const value = e.detail.value
+    
+                console.log("pause" + e.detail)
+            })
+        }
+     */
     loadViewsEvents()
     loadMenuEvents()
     loadPauseEvents()
-    loadConfigEvents()
-}
+/*     loadConfigEvents()
+ */}

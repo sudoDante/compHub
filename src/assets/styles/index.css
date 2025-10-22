@@ -13,7 +13,7 @@
     --viewTransition: 800ms ease-in-out;
     --barsTransition: 800ms ease-in-out;
     --componentLoad: 800ms ease-in-out;
-    --flashLoad: 300ms;
+    --fastLoad: 300ms ease-in-out;
     --barHeight: 34px;
     --lineWidth: 40px;
     --enphasisColor1: rgba(106, 161, 165, 1);
@@ -116,31 +116,33 @@ body {
                 position: absolute;
                 z-index: 10;
                 display: flex;
-                align-items: center;
                 bottom: 55px;
-                width: fit-content;
+                width: 140px;
                 height: var(--barHeight);
+                border-radius: 4px;
                 background-color: rgba(255, 255, 255, 0.2);
                 backdrop-filter: blur(4px);
-                transition: var(--viewTransition);
+                opacity: 0;
+                transition: var(--fastLoad);
 
                 .pauseIcon {
-                    width: auto;
+                    width: 50px;
                     height: 100%;
                     font-family: Material Symbols Outlined;
                     color: rgb(60, 60, 60);
-                    font-size: 44px;
+                    font-size: 36px;
                     font-style: italic;
                 }
 
                 .time {
-                    width: auto;
+                    width: 80px;
                     height: 100%;
-                    margin: 0 10px;
+                    margin-right: 10px;
                     font-family: Anta;
                     color: rgb(60, 60, 60);
-                    font-size: 18px;
+                    font-size: 16px;
                     font-style: italic;
+                    transition: var(--fastLoad);
                 }
             }
         }
@@ -308,17 +310,7 @@ body {
             }
         }
 
-        .pauseBox {
-            display: none;
-            align-items: center;
-            justify-content: right;
-            width: 120px;
-            height: 100%;
-            opacity: 0;
-            transition: var(--flashLoad);
-        }
-
-        .testModeBox {
+        .testModeActivatorBox {
             display: flex;
             align-items: center;
             justify-content: right;

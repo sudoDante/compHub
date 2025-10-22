@@ -57,7 +57,30 @@ export const loadInfoArea = async (container) => {
     const infoTitlesBox = element.add(info, "div", "infoTitlesBox", "infoTitlesBox")
     element.add(infoTitlesBox, "span", "infoName", "name")
     element.add(infoTitlesBox, "span", "infoFamily", "family")
-    const testModeBox = element.add(info, "div", "testModeBox", "testModeBox")
+    const testModeActivatorBox = element.add(info, "div", "testModeActivatorBox", "testModeActivatorBox")
+}
+
+export const loadTestModeBox = async (box) => {
+    await import("./components/nano/switchSlim.js")
+    await element.add(box, "switch-slim", "testMode", null, {
+        "title": "Test Mode",
+        "fontColor": "rgba(129, 129, 129, 1)",
+        "enphasisColor": "rgba(174, 232, 240, 0.76)",
+        "fontFamily1": "Nunito Sans",
+        "fontFamily2": "Anta",
+        "fontSize": "13px",
+        "backColor": "rgba(53, 53, 53, 1)",
+        "trueText": "I",
+        "falseText": "0",
+        "trueColor": "whitesmoke",
+        "falseColor": "rgb(60,60,60)",
+        "value": false
+    }, {
+        eventDom: document,
+        eventName: "testMode",
+        eventItem: "activeTestMode"
+    })
+    box.style.opacity = 1
 }
 
 export const loadPanelConfig = async (container) => {
@@ -80,9 +103,18 @@ export const loadPanelConfig = async (container) => {
 export const loadVisualPause = async (box) => {
     const pauseBox = element.add(box, "div", "pauseBox", "pauseBox absolute")
     const pauseIcon = element.add(pauseBox, "spam", null, "pauseIcon center")
-    const time = element.add(pauseBox, "spam", "time", "time center")
+    const time = await element.add(pauseBox, "spam", "pauseBoxTime", "time center")
     pauseIcon.textContent = "play_pause"
-    return time
+    await new Promise(resolve => setTimeout(resolve, 10))
+    pauseBox.style.opacity = 1
+    return pauseBox
+}
+
+export const unloadVisualPause = async (box) => {
+    const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fastLoad"))
+    box.style.opacity = 0
+    await new Promise(resolve => setTimeout(resolve, transition))
+    box.remove()
 }
 
 export const loadColorSelector = async (box) => {

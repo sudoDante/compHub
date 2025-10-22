@@ -198,7 +198,7 @@ export class configMenu extends HTMLElement {
             const range = await element.add(testModeBox, "range-slim", "pauseInput", "pauseInput", {
                 "title": "Auto-pause",
                 "min": 0,
-                "max": 10,
+                "max": 30,
                 "value": 0,
                 "fontFamily1": "Nunito Sans",
                 "fontFamily2": "Anta",
@@ -207,7 +207,12 @@ export class configMenu extends HTMLElement {
                 "enphasisColor": "rgba(40, 40, 40, 1)",
                 "trackColor": "rgba(85, 85, 85, 1)",
                 "progressColor": "rgba(40, 40, 40, 1)",
-                "event": "autoPause"
+                "eventItem": "autoPause",
+                "eventName": "pause"
+            }, {
+                eventDom: document,
+                eventName: "testMode",
+                eventItem: "autoPause"
             })
         }
 
@@ -284,7 +289,7 @@ export class configMenu extends HTMLElement {
                             "eventName": "config",
                             "eventItem": item.event
                         }, {
-                            "eventDom": document
+                            eventDom: document
                         })
                     }
                 }
@@ -296,6 +301,7 @@ export class configMenu extends HTMLElement {
             closeButton.checked = true
             const closeBox = this.dom.querySelector(".closeBox")
             const configBox = this.dom.getElementById("configBox")
+
 
             const conf = await getConfig()
             applyConfCss(conf.css)
