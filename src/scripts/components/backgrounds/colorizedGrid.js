@@ -68,6 +68,8 @@ export class colorizedGrid extends HTMLElement {
                 }
             }
         `
+
+        this.pause = { state: false }
     }
 
     connectedCallback() {

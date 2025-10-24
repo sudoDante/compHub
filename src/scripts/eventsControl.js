@@ -9,12 +9,15 @@ export const loadInterfaceEvents = () => {
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
     const testModeBox = document.getElementById("testModeActivatorBox")
     const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
+
     let view = "computerView"
     let fullMode = false
     let eventDetail
     let component
     let pauseState = false
-
+    let lastAutoPauseEvent = { value: 0 }
+    /*     let autoPauseState = { value: false }
+     */
     const loadMenuEvents = async () => {
         console.log("menu custom events READY: waiting")
 
@@ -25,6 +28,7 @@ export const loadInterfaceEvents = () => {
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
             ifaceLogic.drawInfo(eventDetail)
             component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
         })
 
@@ -52,6 +56,7 @@ export const loadInterfaceEvents = () => {
             ifaceLogic.placeTabletView(false)
             ifaceLogic.changePanelsWidth(false)
             eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
         })
 
         tablet.addEventListener("change", async () => {
@@ -62,6 +67,7 @@ export const loadInterfaceEvents = () => {
                 ifaceLogic.placeTabletView(fullMode)
             }
             eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
         })
 
         mobile.addEventListener("change", async () => {
@@ -70,6 +76,7 @@ export const loadInterfaceEvents = () => {
             ifaceLogic.placeTabletView(false)
             ifaceLogic.changePanelsWidth(false)
             eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
         })
 
         fullscreen.addEventListener("change", async (e) => {
@@ -95,6 +102,7 @@ export const loadInterfaceEvents = () => {
 
             await ifaceLogic.changeView(view)
             eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
         })
     }
 
@@ -102,7 +110,6 @@ export const loadInterfaceEvents = () => {
         console.log("pause custom events READY: waiting")
 /*         const componentBoxContainer = document.getElementById("componentBoxContainer")
  */        const testModeComponentTransition = parseFloat(getComputedStyle(document.getElementById("configMenu").shadowRoot.host).getPropertyValue("--fastTransition"))
-        let lastEvent = { value: 0 }
 
         document.addEventListener("testMode", async (e) => {
             const event = Object.entries(e.detail)[0][0]
@@ -119,13 +126,11 @@ export const loadInterfaceEvents = () => {
                 await new Promise(resolve => setTimeout(resolve, testModeComponentTransition))
                 configComponent.dispatchEvent(new CustomEvent("testMode", { detail: { rangeValue: 0 } }))
                 await ifaceLogic.expandInfoPauseBox(value)
-                await ifaceLogic.pauseTimer(lastEvent, 0)
+                ifaceLogic.pauseTimer(lastAutoPauseEvent, 0)
             }
 
             if (event === "autoPause") {
-                component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
-                const timer = await ifaceLogic.pauseTimer(lastEvent, value)
-                if (timer === true) component.pause.state = true
+                ifaceLogic.applyAutoPause(lastAutoPauseEvent, value, component)
             }
         })
     }

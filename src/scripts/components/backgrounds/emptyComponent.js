@@ -2,7 +2,7 @@ export class emptyComponent extends HTMLElement {
     constructor() {
         super()
 
-        this.dom = this.attachShadow({mode: "open"})
+        this.dom = this.attachShadow({ mode: "open" })
         this.container = document.createElement("div")
         this.container.classList.add("container")
         this.container.innerHTML = `
@@ -36,6 +36,8 @@ export class emptyComponent extends HTMLElement {
                 }
             }
         `
+
+        this.pause = { state: false }
     }
 }
 customElements.define("empty-component", emptyComponent)

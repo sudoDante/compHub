@@ -30,4 +30,18 @@ export const componentsConfig = [
                 ]
             }]
     },
+    {
+        tag: "colorized-grid",
+        config: [
+            {
+                title: "Visual Parameters",
+                items: [
+                    { event: "size", type: "range", min: 20, max: 100, value: 20, label: "Cell size" },
+                    { event: "interval", type: "range", min: 80, max: 1000, value: 80, label: "Column interval" },
+                    { event: "steps", type: "range", min: 0, max: 200, value: 50, label: "Cell interval" },
+                    { event: "direction", type: "switch", value: true, label: "Direction effect" },
+
+                ]
+            }]
+    }
 ]

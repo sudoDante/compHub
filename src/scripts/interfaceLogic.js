@@ -191,17 +191,28 @@ export const pauseTimer = async (lastEvent, value) => {
         icon.textContent = "play_pause"
         timer.classList.replace("toIcon", "toNumber")
         countDown -= 1
+
         if (countDown > 0) {
             timer.textContent = countDown
         } else {
             timer.classList.replace("toNumber", "toIcon")
             timer.textContent = "pause"
             icon.style.color = "grey"
+            return true
         }
-        await new Promise(resolve => { setTimeout(resolve, 1000) })
 
+        await new Promise(resolve => { setTimeout(resolve, 1000) })
         if (value !== lastEvent.value) return
     }
-    return true
 }
 
+export const applyAutoPause = async (lastEvent, value, component) => {
+    component.pause.state = false
+    const timer = await pauseTimer(lastEvent, value)
+    if (timer === true) component.pause.state = true
+}
+
+export const cancelAutoPause = (lastEvent, pauseState, component) => {
+    pauseTimer(lastEvent, 0)
+    if (pauseState) component.pause.state = true
+}
