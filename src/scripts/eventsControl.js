@@ -12,6 +12,8 @@ export const loadInterfaceEvents = () => {
     let view = "computerView"
     let fullMode = false
     let eventDetail
+    let component
+    let pauseState = false
 
     const loadMenuEvents = async () => {
         console.log("menu custom events READY: waiting")
@@ -22,7 +24,7 @@ export const loadInterfaceEvents = () => {
             ifaceLogic.movePanel(true, "right")
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
             ifaceLogic.drawInfo(eventDetail)
-            await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
+            component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
         })
 
@@ -47,30 +49,27 @@ export const loadInterfaceEvents = () => {
         computer.addEventListener("change", async () => {
             view = "computerView"
             await ifaceLogic.changeView("computerView")
-            eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.placePauseAlert(view, fullMode)
             ifaceLogic.placeTabletView(false)
             ifaceLogic.changePanelsWidth(false)
+            eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
 
         tablet.addEventListener("change", async () => {
             view = "tabletView"
             await ifaceLogic.changeView("tabletView")
-            eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.placePauseAlert(view, fullMode)
             if (fullMode === true) {
                 ifaceLogic.changePanelsWidth(true)
                 ifaceLogic.placeTabletView(fullMode)
             }
+            eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
 
         mobile.addEventListener("change", async () => {
             view = "mobileView"
             await ifaceLogic.changeView("mobileView")
-            eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.placePauseAlert(view, fullMode)
             ifaceLogic.placeTabletView(false)
             ifaceLogic.changePanelsWidth(false)
+            eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
 
         fullscreen.addEventListener("change", async (e) => {
@@ -85,81 +84,53 @@ export const loadInterfaceEvents = () => {
 
             if (fullMode) {
 
-                ifaceLogic.placePauseAlert(view, true)
                 if (view === "tabletView") {
                     ifaceLogic.changePanelsWidth(true)
                     ifaceLogic.placeTabletView(true)
                 }
             } else {
-                ifaceLogic.placePauseAlert(view, fullMode)
                 ifaceLogic.changePanelsWidth(false)
                 if (view === "tabletView") ifaceLogic.placeTabletView(false)
             }
 
             await ifaceLogic.changeView(view)
-            eventDetail ? ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
+            eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
         })
     }
 
     const loadPauseEvents = async () => {
         console.log("pause custom events READY: waiting")
-        const componentBoxContainer = document.getElementById("componentBoxContainer")
-        const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fastLoad"))
-        let time
-        let pauseBox = null
+/*         const componentBoxContainer = document.getElementById("componentBoxContainer")
+ */        const testModeComponentTransition = parseFloat(getComputedStyle(document.getElementById("configMenu").shadowRoot.host).getPropertyValue("--fastTransition"))
+        let lastEvent = { value: 0 }
 
         document.addEventListener("testMode", async (e) => {
             const event = Object.entries(e.detail)[0][0]
             const value = Object.entries(e.detail)[0][1]
+
             console.log(event, value)
 
             if (event === "activeTestMode") {
-                const configComponent = document.getElementById("configMenu").shadowRoot
-                configComponent.dispatchEvent(new CustomEvent("testMode", { detail: value }))
+                pauseState = value
+                component.pause.state = pauseState
 
-                if (value) {
-                    if (!pauseBox) pauseBox = await iface.loadVisualPause(componentBoxContainer)
-                    ifaceLogic.placePauseAlert(view, fullMode)
-                    time = document.getElementById("pauseBoxTime")
-                    time.textContent = "PAUSED"
-                } else {
-                    await iface.unloadVisualPause(pauseBox)
-                    pauseBox = null
-                }
+                const configComponent = document.getElementById("configMenu").shadowRoot
+                configComponent.dispatchEvent(new CustomEvent("testMode", { detail: { state: value } }))
+                await new Promise(resolve => setTimeout(resolve, testModeComponentTransition))
+                configComponent.dispatchEvent(new CustomEvent("testMode", { detail: { rangeValue: 0 } }))
+                await ifaceLogic.expandInfoPauseBox(value)
+                await ifaceLogic.pauseTimer(lastEvent, 0)
             }
 
             if (event === "autoPause") {
-
-                 if (value >= 1) {
-                    time.textContent = Number(value) === 0 ? "PAUSED" : value
-                    pauseBox.style.width = "90px"
-                    time.style.width = "30px"
-                } else {
-                    pauseBox.style.width = "140px"
-                    time.style.width = "80px"
-                    await new Promise(resolve => setTimeout(resolve, transition))
-                    time.textContent = Number(value) === 0 ? "PAUSED" : value
-                } 
-
-                const component = document.getElementsByTagName(eventDetail.htmlTag)[0]
-
+                component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
+                const timer = await ifaceLogic.pauseTimer(lastEvent, value)
+                if (timer === true) component.pause.state = true
             }
         })
     }
 
-    /*     const loadConfigEvents = () => {
-            console.log("config items custom events READY: waiting")
-    
-            document.addEventListener("config", (e) => {
-                const item = e.detail.item
-                const value = e.detail.value
-    
-                console.log("pause" + e.detail)
-            })
-        }
-     */
     loadViewsEvents()
     loadMenuEvents()
     loadPauseEvents()
-/*     loadConfigEvents()
- */}
+}

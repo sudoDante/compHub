@@ -5,6 +5,7 @@
     --backColor: rgba(0, 0, 0, 0.8);
     --textInactive: rgb(153, 153, 153);
     --textActive: whitesmoke;
+    --textDark: rgb(60, 60, 60);
     --enphasisColor: rgb(152, 201, 204);
     --optTime: 100ms;
     --controlsMargin: 55px;
@@ -13,12 +14,17 @@
     --viewTransition: 800ms ease-in-out;
     --barsTransition: 800ms ease-in-out;
     --componentLoad: 800ms ease-in-out;
-    --fastLoad: 300ms ease-in-out;
+    --fastTransition: 300ms ease-in-out;
     --barHeight: 34px;
     --lineWidth: 40px;
     --enphasisColor1: rgba(106, 161, 165, 1);
     --enphasisColor2: rgba(38, 157, 165, 1);
     --mainBackColor: rgb(220, 220, 220);
+    /*     --timerBoxInactive: rgba(220, 220, 220, 1);
+    --timerBoxActive: rgba(106, 161, 165, 1);
+    --activeText: rgba(240, 240, 240, 1);
+    --inactiveText: rgb(80, 80, 80);
+ */
 }
 
 body {
@@ -112,39 +118,17 @@ body {
                 transition: top var(--componentLoad);
             }
 
-            .pauseBox {
-                position: absolute;
-                z-index: 10;
-                display: flex;
-                bottom: 55px;
-                width: 140px;
-                height: var(--barHeight);
-                border-radius: 4px;
-                background-color: rgba(255, 255, 255, 0.2);
-                backdrop-filter: blur(4px);
-                opacity: 0;
-                transition: var(--fastLoad);
-
-                .pauseIcon {
-                    width: 50px;
-                    height: 100%;
-                    font-family: Material Symbols Outlined;
-                    color: rgb(60, 60, 60);
-                    font-size: 36px;
-                    font-style: italic;
-                }
-
-                .time {
-                    width: 80px;
-                    height: 100%;
-                    margin-right: 10px;
-                    font-family: Anta;
-                    color: rgb(60, 60, 60);
-                    font-size: 16px;
-                    font-style: italic;
-                    transition: var(--fastLoad);
-                }
+            .computerView {
+                width: var(--controlsAutoWidth);
+                bottom: calc(var(--barHeight) + 10px * 2);
             }
+
+            .tabletView,
+            .mobileView {
+                width: calc(100% - 40px);
+                bottom: 20px;
+            }
+
         }
 
         .leftPanelBox {
@@ -271,14 +255,14 @@ body {
 
     .info {
         z-index: 10;
+        left: calc(var(--leftPanelBox) + var(--controlsMargin));
         bottom: 10px;
         display: flex;
-
-        left: calc(var(--leftPanelBox) + var(--controlsMargin));
-        display: flex;
+        align-items: center;
         width: var(--controlsAutoWidth);
         height: var(--barHeight);
-        overflow: hidden;
+        padding-right: 10px;
+
 
         .infoTitlesBox {
             display: flex;
@@ -292,21 +276,53 @@ body {
                 display: flex;
                 align-items: flex-end;
                 width: fit-content;
-                height: 80%;
+                height: 26px;
                 margin-bottom: 2px;
             }
 
             .name {
-                font-size: 18px;
-                color: whitesmoke;
-                font-style: italic;
+                font-size: 14px;
+                color: var(--textInactive);
                 padding: 0 14px;
             }
 
             .family {
-                color: rgb(160, 160, 160);
+                color: var(--textActive);
                 font-size: 14px;
-                padding: 2px 0 2px 10px;
+                margin-left: 4px;
+            }
+        }
+
+        .infoPauseBox {
+            display: flex;
+            align-items: center;
+            width: 0;
+            height: 100%;
+            transition: var(--fastTransition);
+            overflow: hidden;
+
+            .infoPauseIcon {
+                width: 30px;
+                height: auto;
+                color: var(--textActive);
+                font-size: 30px;
+            }
+
+            .infoPauseTimer {
+                width: 20px;
+                height: 100%;
+                color: cyan;
+                margin-left: 4px;
+            }
+
+            .toText {
+                font-family: "Anta";
+                font-size: 14px;
+            }
+
+            .toIcon {
+                font-family: "Material Symbols Outlined";
+                font-size: 24px;
             }
         }
 
@@ -314,11 +330,11 @@ body {
             display: flex;
             align-items: center;
             justify-content: right;
-            padding-right: 20px;
-            width: 160px;
+            width: 130px;
             height: 100%;
             opacity: 0;
             transition: 200ms;
+
         }
     }
 

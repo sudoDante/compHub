@@ -243,7 +243,7 @@ export class listMenu extends HTMLElement {
             const list = this["list"]
             const title = this.getAttribute("title") || "Default Title"
             const titleBack = this.getAttribute("titleBack") || "rgba(230, 230, 230, 1)"
-            const color1 = this.getAttribute("color1") || "rgba(221, 221, 221, 1)"
+            const color1 = this.getAttribute("color1") || "rgba(220, 220, 220, 1)"
             const color2 = this.getAttribute("color2") || "rgba(106, 161, 165, 1)"
             const color3 = this.getAttribute("color3") || "rgba(38, 157, 165, 1)"
             const colorText1 = this.getAttribute("colorText1") || "rgb(80, 80, 80)"

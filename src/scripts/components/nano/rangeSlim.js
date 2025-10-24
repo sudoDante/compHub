@@ -116,8 +116,30 @@ export class rangeSlim extends HTMLElement {
                     }
                 }
             }
+
         `
     }
+
+    applyRangeValue(value) {
+        const input = this.dom.querySelector(".range")
+        input.value = value
+    }
+
+    applyInfoValue() {
+        const input = this.dom.querySelector(".range")
+        const valueBox = this.dom.querySelector(".valueBox")
+        valueBox.textContent = input.value
+    }
+
+    applyPosition() {
+        const input = this.dom.querySelector(".range")
+        const fakeThumb = this.dom.querySelector(".fakeThumb")
+
+        const left = ((input.value - input.min) / (input.max - input.min)) * (input.offsetWidth - fakeThumb.offsetWidth)
+        fakeThumb.style.left = `${left}px `
+    }
+
+
     connectedCallback() {
 
         const getConfig = () => {
@@ -169,35 +191,26 @@ export class rangeSlim extends HTMLElement {
             })
         }
 
-        const applyInfoValue = (range, valueBox) => {
-            valueBox.textContent = range.value
-        }
-
-        const applyPosition = (item, fake, copyWidth) => {
-            const left = ((item.value - item.min) / (item.max - item.min)) * (copyWidth - fake.offsetWidth)
-            fake.style.left = `${left}px `
-        }
-
         const main = async () => {
             const title = this.dom.querySelector(".title")
             const input = this.dom.querySelector(".range")
-            const rangeWidth = input.offsetWidth
             const valueBox = this.dom.querySelector(".valueBox")
-            const fakeThumb = this.dom.querySelector(".fakeThumb")
             const config = getConfig()
             title.textContent = config.logic.title
 
             applyConfCss(config.css)
             applyLogicConf(config.logic, input)
-            applyInfoValue(input, valueBox)
-            applyPosition(input, fakeThumb, rangeWidth)
+            this.applyInfoValue()
+            this.applyPosition()
 
-            input.addEventListener("input", (e) => {
-                applyInfoValue(input, valueBox)
-                applyPosition(e.target, fakeThumb, rangeWidth)
+            input.addEventListener("input", () => {
+                this.applyInfoValue()
+                this.applyPosition()
                 valueBox.style.color = "var(--enphasisColor)"
                 valueBox.style.color = "var(--fontColor)"
+            })
 
+            input.addEventListener("mouseup", () => {
                 this.eventDom.dispatchEvent(new CustomEvent(this.eventName, { detail: { [this.eventItem]: Number(input.value) } }))
             })
         }

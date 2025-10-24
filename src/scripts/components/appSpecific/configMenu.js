@@ -315,9 +315,17 @@ export class configMenu extends HTMLElement {
                 closeBox.style.opacity = 1
             })
 
-            if (JSON.parse(localStorage.getItem("testMode"))) moveTestBox()
-            this.dom.addEventListener("testMode", (e) => { moveTestBox(e.detail) })
-
+            this.dom.addEventListener("testMode", (e) => {
+                Object.entries(e.detail).forEach(([key, value]) => {
+                    if (key === "state") moveTestBox(value)
+                    if (key === "rangeValue") {
+                        const rangeInput = this.dom.getElementById("pauseInput")
+                        rangeInput.applyRangeValue(value)
+                        rangeInput.applyInfoValue()
+                        rangeInput.applyPosition()
+                    }
+                })
+            })
         }
 
         this.dom.addEventListener("DOMContentLoaded", main())

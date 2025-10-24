@@ -77,13 +77,10 @@ export class matrix extends HTMLElement {
             }
         `
 
-        this.pause = false
+        this.pause = {state: false}
     }
 
-/*     static get observedAttributes() { return ["pause"] }
-    state = { "pause": false }
-    attributeChangedCallback(name) { if (name === "pause") this.state.pause = this.getAttribute("pause") }
- */
+
     connectedCallback() {
 
         const getConfig = () => {
@@ -141,13 +138,12 @@ export class matrix extends HTMLElement {
         }
 
         /* pause config */
-        const randomIndex = async (activeGroup, availableNums, conf, calculated, cells, pause) => {
+        const randomIndex = async (activeGroup, availableNums, conf, calculated, cells) => {
             const length = conf.direction === "vertical" ? calculated.cols : calculated.rows
             availableNums = [...Array(length).keys()]
 
             while (true) {
-                while (pauseState === true) await new Promise(resolve => setTimeout(resolve, 100)) // PAUSE
-
+                while (this.pause.state === true) await new Promise(resolve => setTimeout(resolve, 10)) // PAUSE
                 let waiting = conf.interval
 
                 const index = randomize(0, availableNums.length - 1)
@@ -187,7 +183,7 @@ export class matrix extends HTMLElement {
             const animationTempo = conf.steps
 
             for (let i = 0; i < group.length * 3; i++) {
-                while (pauseState === true) await new Promise(resolve => setTimeout(resolve, 100)) // PAUSE
+                while (this.pause.state === true) await new Promise(resolve => setTimeout(resolve, 10)) // PAUSE
 
                 if (i < group.length) group[i].classList.add("matrixCellDrawing")
                 if (i < group.length && group[i - 1]) group[i - 1].classList.replace("matrixCellDrawing", "matrixCellVisible")

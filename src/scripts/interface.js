@@ -54,9 +54,17 @@ export const loadControls = async (container) => {
 
 export const loadInfoArea = async (container) => {
     const info = element.add(container, "div", "info", "info absolute anta")
+
     const infoTitlesBox = element.add(info, "div", "infoTitlesBox", "infoTitlesBox")
     element.add(infoTitlesBox, "span", "infoName", "name")
     element.add(infoTitlesBox, "span", "infoFamily", "family")
+
+    const infoPauseBox = element.add(info, "div", "infoPauseBox", "infoPauseBox")
+    const infoPauseIcon = element.add(infoPauseBox, "span", "infoPauseIcon", "infoPauseIcon toIcon center")
+   
+    const infoPauseTimer = element.add(infoPauseBox, "span", "infoPauseTimer", "infoPauseTimer toIcon center")
+    infoPauseTimer.textContent = "pause_circle"
+
     const testModeActivatorBox = element.add(info, "div", "testModeActivatorBox", "testModeActivatorBox")
 }
 
@@ -100,23 +108,37 @@ export const loadPanelConfig = async (container) => {
     return configMenu
 }
 
-export const loadVisualPause = async (box) => {
-    const pauseBox = element.add(box, "div", "pauseBox", "pauseBox absolute")
-    const pauseIcon = element.add(pauseBox, "spam", null, "pauseIcon center")
+/* export const loadVisualPause = async (box, view) => {
+    const pauseBox = await element.add(box, "div", "pauseBox", "pauseBoxInactive absolute")
+    console.log(view)
+    if (view === "computerView") {
+        pauseBox.className = ""
+        pauseBox.className = "pauseBoxInactive absolute computerView"
+    }
+    if (view === "tabletView") {
+        pauseBox.className = ""
+        pauseBox.className = "pauseBoxInactive absolute tabletView"
+    }
+    if (view === "mobileView") {
+        pauseBox.className = ""
+        pauseBox.className = "pauseBoxInactive absolute mobileView"
+    }
+
+    const pauseIcon = element.add(pauseBox, "spam", "pauseIcon", "pauseIcon center")
     const time = await element.add(pauseBox, "spam", "pauseBoxTime", "time center")
     pauseIcon.textContent = "play_pause"
     await new Promise(resolve => setTimeout(resolve, 10))
     pauseBox.style.opacity = 1
     return pauseBox
 }
-
-export const unloadVisualPause = async (box) => {
-    const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fastLoad"))
+ */
+/* export const unloadVisualPause = async (box) => {
+    const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--barsTransition"))
     box.style.opacity = 0
     await new Promise(resolve => setTimeout(resolve, transition))
     box.remove()
 }
-
+ */
 export const loadColorSelector = async (box) => {
     await import("./components/micro/colorPickerHSL.js")
     const colorInput = document.getElementById("colorInput")

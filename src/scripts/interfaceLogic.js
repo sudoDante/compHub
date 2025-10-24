@@ -41,21 +41,35 @@ export const changeView = async (view) => {
     const widthBox = window.innerWidth
     const heightBox = window.innerHeight
     const componentBoxContainer = document.getElementById("componentBoxContainer")
+    const pauseBox = document.getElementById("pauseBox")
+    if (pauseBox) console.log(pauseBox)
 
     if (view === "computerView") {
         componentBoxContainer.style.height = `${heightBox}px`
         componentBoxContainer.style.width = `${widthBox}px`
         componentBoxContainer.style.borderRadius = "0px"
+        if (pauseBox) {
+            pauseBox.className = ""
+            pauseBox.className = "pauseBoxInactive absolute computerView"
+        }
     }
     if (view === "tabletView") {
         componentBoxContainer.style.height = `${heightBox * 0.8}px`
         componentBoxContainer.style.width = `${16 / 9 * (0.8 * heightBox)}px`
         componentBoxContainer.style.borderRadius = "16px"
+        if (pauseBox) {
+            pauseBox.className = ""
+            pauseBox.className = "pauseBoxInactive absolute tabletView"
+        }
     }
     if (view === "mobileView") {
         componentBoxContainer.style.height = `${heightBox * 0.8}px`
         componentBoxContainer.style.width = `${9 / 16 * (0.8 * heightBox)}px`
         componentBoxContainer.style.borderRadius = "16px"
+        if (pauseBox) {
+            pauseBox.className = ""
+            pauseBox.className = "pauseBoxInactive absolute mobileView"
+        }
     }
 }
 
@@ -134,32 +148,11 @@ export const importConfig = async (par) => {
     return componentConf.config
 }
 
-export const clearPause = () => {
-    document.getElementById("pauseBox").remove()
-    const pauseInput = document.getElementById("configMenu").shadowRoot.getElementById("pauseInput").shadowRoot.querySelector("input")
-    pauseInput.value = 0
-    pauseInput.dispatchEvent(new Event("change"))
-}
-
-export const placePauseAlert = async (view, fullMode) => {
-    const pauseBox = document.getElementById("pauseBox")
-
-    if (pauseBox && view) {
-        if (view === "computerView" && fullMode === false) {
-            pauseBox.style.top = "calc(var(--barHeight) + 10px * 2)"
-            pauseBox.style.left = "calc(var(--leftPanelBox) + 10px)"
-        }
-
-        if (view === "computerView" && fullMode === true) {
-            pauseBox.style.top = "10px"
-            pauseBox.style.left = "10px"
-        }
-
-        if (view === "tabletView" || view === "mobileView") {
-            pauseBox.style.top = "10px"
-            pauseBox.style.left = "10px"
-        }
-    }
+export const expandInfoPauseBox = async (boolean) => {
+    const infoPauseBox = document.getElementById("infoPauseBox")
+    const transition = parseFloat(getComputedStyle(document.getElementById("infoPauseBox")).transition) * 1000
+    infoPauseBox.style.width = boolean ? "54px" : 0
+    await new Promise(resolve => setTimeout(resolve, transition))
 }
 
 export const placeTabletView = (boolean) => {
@@ -178,3 +171,37 @@ export const changePanelsWidth = (boolean) => {
         inputCloseLeft.dispatchEvent(new Event("change"))
     }
 }
+
+export const pauseTimer = async (lastEvent, value) => {
+    const icon = document.getElementById("infoPauseIcon")
+    const timer = document.getElementById("infoPauseTimer")
+    const defaultColor = getComputedStyle(document.documentElement).getPropertyValue("--textActive")
+    let countDown = value
+    lastEvent.value = value
+
+    if (value === 0) {
+        timer.classList.replace("toNumber", "toIcon")
+        timer.textContent = "pause_circle"
+        icon.textContent = ""
+    } else {
+        icon.style.color = `${defaultColor}`
+    }
+
+    while (countDown > 0) {
+        icon.textContent = "play_pause"
+        timer.classList.replace("toIcon", "toNumber")
+        countDown -= 1
+        if (countDown > 0) {
+            timer.textContent = countDown
+        } else {
+            timer.classList.replace("toNumber", "toIcon")
+            timer.textContent = "pause"
+            icon.style.color = "grey"
+        }
+        await new Promise(resolve => { setTimeout(resolve, 1000) })
+
+        if (value !== lastEvent.value) return
+    }
+    return true
+}
+
