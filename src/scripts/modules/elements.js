@@ -16,7 +16,7 @@ export const add = (container, tag, idName = null, classNames = null, objAttr = 
     return createdElement
 }
 
-export const css = (item, style) => {
+export const css = async (item, style) => {
     Object.entries(style).forEach(([key, value]) => {
         item.style[key] = value
     })

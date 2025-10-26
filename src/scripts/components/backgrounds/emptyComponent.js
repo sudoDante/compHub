@@ -1,3 +1,5 @@
+import * as element from "../../modules/elements.js"
+
 export class emptyComponent extends HTMLElement {
     constructor() {
         super()
@@ -6,7 +8,17 @@ export class emptyComponent extends HTMLElement {
         this.container = document.createElement("div")
         this.container.classList.add("container")
         this.container.innerHTML = `
-            <span>Test Mode</span>
+            <div class="box">
+                <div class="centerBox">
+                    <div class="equalizer">
+                        <div class="barsBox"></div>
+                        <div class="text">TEST MODE</div>
+                    </div>
+                    <div class="icon">
+                        <div class="heart">favorite</div>
+                    </div>
+                </div>
+            </div>            
         `
         this.dom.appendChild(this.container)
 
@@ -16,6 +28,16 @@ export class emptyComponent extends HTMLElement {
             :host {
                 width: 100%;
                 height: 100%;
+
+                --boxWidth: 720px;
+                --boxHeight: 48px;
+                --boxPadding: 8px;
+            }
+
+            * {
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
             }
 
             .container {
@@ -24,20 +46,169 @@ export class emptyComponent extends HTMLElement {
                 align-items: center;
                 width: 100%;
                 height: 100%;
+                background-color: rgba(0, 0, 0, 0.4);
 
-                span {
-                    padding: 16px 40px;
+                .box {
+                    width: var(--boxWidth);
+                    height: var(--boxHeight);
+                    background: rgba(255, 255, 255, 0.4);
                     border-radius: 8px;
-                    background-color: rgba(0, 0, 0, 0.4);
-                    font-size: 30px;
-                    font-family: anta;
-                    color: rgba(255, 255, 255, 0.85);
-                    font-style: italic;
+                    padding: var(--boxPadding);
+
+                    .centerBox {
+                        display: flex;
+                        justify-content: space-between;
+                        width: 100%;
+                        height: 100%;
+
+                        .equalizer {
+                            position: relative;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 640px;
+                            height: 100%;
+                            outline: 1px solid rgba(100, 100, 100, 1);
+                            border-radius: 6px;
+                            box-shadow: inset 2px 2px 4px rgb(28, 28, 28);
+                            overflow: hidden;
+
+                            .barsBox {
+                                display: flex;
+                                align-items: end;
+                                width: 100%;
+                                height: 100%;
+
+                                .bar {
+                                    width: 8px; 
+                                    height: 100%;
+                                    border: 1px solid rgba(65, 65, 65, 1);
+                                    background: rgba(34, 34, 34, 1);
+                                    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+                                }
+                            }
+                            
+                            .text {
+                                position: absolute;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                width: 90%;
+                                height: fit-content;
+                                font-family: "Baumans";
+                                font-size: 20px;
+                                font-weight: bolder;
+                                text-indent: 20px;
+                                border-radius: 4px;
+                                color: whitesmoke;
+                                letter-spacing: 16px;
+                                text-indent: 16px;
+/*                                 background: rgba(0, 0, 0, 0.34);
+                                color: white;
+                                mix-blend-mode: overlay;
+ */                            }
+                        }
+
+                        .icon {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 56px;
+                            aspect-ratio: 1/1;
+                            outline: 1px solid rgba(100, 100, 100, 1);
+                            border-radius: 5px;
+                            box-shadow: 2px 2px 6px black;
+
+                            .heart {
+                                font-family: "material symbols outlined";
+                                font-size: 26px;
+                                font-weight: bolder;
+                                color: rgba(34, 34, 34, 1);
+                                transform: scale(1);
+                            }
+                        }
+                    }
                 }
+            }
+
+            @keyframes wave {
+                0% { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);}
+                50% { clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0);}
+                100% { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%); }
+            }
+
+            @keyframes beat {
+                0%   { transform: scale(1); }
+                5%  { transform: scale(1.6); }
+                10%  { transform: scale(1); }
+                15%  { transform: scale(1.6); }
+                20%  { transform: scale(1); }
+                100% { transform: scale(1); }
             }
         `
 
-        this.pause = { state: false }
+        this.pause = new Proxy({ state: false }, {
+            set: (target, prop, value) => {
+                target[prop] = value
+
+                if (prop === "state") this.pauseResume()
+                return true
+            }
+        })
+    }
+
+    connectedCallback() {
+        const startDelay = 1000
+        const text = "Test Mode"
+        const animationTime = 6500
+        const animationDelay = 80
+
+        const createBars = async (text) => {
+            const equalizer = this.dom.querySelector(".equalizer")
+            const eqWidth = equalizer.offsetWidth
+            const barsNum = eqWidth / 8
+
+            const barsBox = this.dom.querySelector(".barsBox")
+            for (let i = 0; i < barsNum; i++) {
+                const bar = element.add(barsBox, "div", null, "bar")
+                const textBar = element.add(bar, "div", null)
+            }
+
+            const bars = Array.from(this.dom.querySelectorAll(".bar"))
+            console.log(barsNum, eqWidth)
+            for (let i = 0; i < barsNum; i++) {
+                bars[i].style.animation = `wave ${animationTime}ms infinite ease-in-out ${i * animationDelay}ms`
+            }
+        }
+
+        const startBeats = () => {
+            const heart = this.dom.querySelector(".heart")
+            heart.style.animation = "beat 4s infinite ease-in-out"
+        }
+
+        this.pauseResume = () => {
+            const heart = this.dom.querySelector(".heart")
+            const bars = Array.from(this.dom.querySelectorAll(".bar"))
+
+            if (this.pause.state === true) {
+                bars.forEach(item => item.style.animationPlayState = "paused")
+                heart.style.animationPlayState = "paused"
+            }
+            if (this.pause.state === false) {
+                bars.forEach(item => item.style.animationPlayState = "running")
+                heart.style.animationPlayState = "running"
+            }
+        }
+
+        const main = async () => {
+            await new Promise(resolve => setTimeout(resolve, startDelay))
+            await createBars()
+                        await new Promise(resolve => setTimeout(resolve, 4000))
+
+            startBeats()
+        }
+
+        main()
     }
 }
 customElements.define("empty-component", emptyComponent)

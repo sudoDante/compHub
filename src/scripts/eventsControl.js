@@ -16,8 +16,7 @@ export const loadInterfaceEvents = () => {
     let component
     let pauseState = false
     let lastAutoPauseEvent = { value: 0 }
-    /*     let autoPauseState = { value: false }
-     */
+
     const loadMenuEvents = async () => {
         console.log("menu custom events READY: waiting")
 
@@ -108,8 +107,7 @@ export const loadInterfaceEvents = () => {
 
     const loadPauseEvents = async () => {
         console.log("pause custom events READY: waiting")
-/*         const componentBoxContainer = document.getElementById("componentBoxContainer")
- */        const testModeComponentTransition = parseFloat(getComputedStyle(document.getElementById("configMenu").shadowRoot.host).getPropertyValue("--fastTransition"))
+        const testModeComponentTransition = parseFloat(getComputedStyle(document.getElementById("configMenu").shadowRoot.host).getPropertyValue("--fastTransition"))
 
         document.addEventListener("testMode", async (e) => {
             const event = Object.entries(e.detail)[0][0]
