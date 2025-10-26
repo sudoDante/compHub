@@ -65,7 +65,7 @@ export const loadInfoArea = async (container) => {
     const infoPauseTimer = element.add(infoPauseBox, "span", "infoPauseTimer", "infoPauseTimer toIcon center")
     infoPauseTimer.textContent = "pause_circle"
 
-    const testModeActivatorBox = element.add(info, "div", "testModeActivatorBox", "testModeActivatorBox")
+    const testModeActivatorBox = await element.add(info, "div", "testModeActivatorBox", "testModeActivatorBox")
 }
 
 export const loadTestModeBox = async (box) => {

@@ -28,10 +28,6 @@ export class emptyComponent extends HTMLElement {
             :host {
                 width: 100%;
                 height: 100%;
-
-                --boxWidth: 720px;
-                --boxHeight: 48px;
-                --boxPadding: 8px;
             }
 
             * {
@@ -85,6 +81,7 @@ export class emptyComponent extends HTMLElement {
                                     border: 1px solid rgba(65, 65, 65, 1);
                                     background: rgba(34, 34, 34, 1);
                                     clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+                                    animation: wave var(--animationTime) infinite ease-in-out var(--animationDelay);
                                 }
                             }
                             
@@ -103,10 +100,7 @@ export class emptyComponent extends HTMLElement {
                                 color: whitesmoke;
                                 letter-spacing: 16px;
                                 text-indent: 16px;
-/*                                 background: rgba(0, 0, 0, 0.34);
-                                color: white;
-                                mix-blend-mode: overlay;
- */                            }
+                            }
                         }
 
                         .icon {
@@ -147,23 +141,46 @@ export class emptyComponent extends HTMLElement {
             }
         `
 
-        this.pause = new Proxy({ state: false }, {
-            set: (target, prop, value) => {
-                target[prop] = value
+        this.pause = {}
+        this.pauseControl = () => {
+            this.pause = new Proxy({ state: false }, {
+                set: (target, prop, value) => {
+                    target[prop] = value
 
-                if (prop === "state") this.pauseResume()
-                return true
-            }
-        })
+                    if (prop === "state") this.pauseResumeAnimation()
+                    return true
+                }
+            })
+        }
     }
 
-    connectedCallback() {
-        const startDelay = 1000
-        const text = "Test Mode"
-        const animationTime = 6500
-        const animationDelay = 80
 
-        const createBars = async (text) => {
+    connectedCallback() {
+        const startDelay = "1000ms"
+        const boxWidth = "720px"
+        const boxHeight = "48px"
+        const boxPadding = "8px"
+        const text = "Test Mode"
+        const animationTime = "6500ms"
+        const animationDelay = "80ms"
+
+        const css = {
+                "startDelay": startDelay,
+                "boxWidth": boxWidth,
+                "boxHeight": boxHeight,
+                "boxPadding": boxPadding,
+                "test": "Test Mode",
+                "animationTime": animationTime,
+                "animationDelay": animationDelay
+            }
+
+        const applyConfCss = (css) => {
+            Object.entries(css).forEach(([key, value]) => {
+                this.style.setProperty(`--${key}`, value)
+            })
+        }
+
+        const createBars = async () => {
             const equalizer = this.dom.querySelector(".equalizer")
             const eqWidth = equalizer.offsetWidth
             const barsNum = eqWidth / 8
@@ -177,7 +194,7 @@ export class emptyComponent extends HTMLElement {
             const bars = Array.from(this.dom.querySelectorAll(".bar"))
             console.log(barsNum, eqWidth)
             for (let i = 0; i < barsNum; i++) {
-                bars[i].style.animation = `wave ${animationTime}ms infinite ease-in-out ${i * animationDelay}ms`
+                bars[i].style.animation = `wave ${parseFloat(animationTime)}ms infinite ease-in-out ${i * parseFloat(animationDelay)}ms`
             }
         }
 
@@ -186,7 +203,7 @@ export class emptyComponent extends HTMLElement {
             heart.style.animation = "beat 4s infinite ease-in-out"
         }
 
-        this.pauseResume = () => {
+        this.pauseResumeAnimation = () => {
             const heart = this.dom.querySelector(".heart")
             const bars = Array.from(this.dom.querySelectorAll(".bar"))
 
@@ -201,11 +218,12 @@ export class emptyComponent extends HTMLElement {
         }
 
         const main = async () => {
+            applyConfCss(css)
             await new Promise(resolve => setTimeout(resolve, startDelay))
             await createBars()
-                        await new Promise(resolve => setTimeout(resolve, 4000))
-
-            startBeats()
+/*             startBeats()
+ */
+            this.pauseControl()
         }
 
         main()

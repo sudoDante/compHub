@@ -177,8 +177,8 @@ export class switchSlim extends HTMLElement {
             }
 
             input.addEventListener("change", () => {
-                changeText(input, [on, off])
                 this.eventDom.dispatchEvent(new CustomEvent(this.eventName, { detail: { [this.eventItem]: input.checked } }))
+                changeText(input, [on, off])
             })
         }
         main()

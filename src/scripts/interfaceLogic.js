@@ -3,7 +3,7 @@ import { componentsConfig } from "./../config/componentsConfig.js"
 import * as element from "./modules/elements.js"
 
 export const loadComponent = async (par) => {
-    const container = identifyBoxes("active")
+    const container = identifyBoxes("inactive")
     const url = par.url
     const tag = par.htmlTag
     const name = par.defaultName
@@ -13,14 +13,14 @@ export const loadComponent = async (par) => {
 }
 
 export const fullLoad = async (par, boolean, time) => {
-/*     movePanel(par, "right")
- */    await new Promise(resolve => setTimeout(resolve, parseFloat(time)))
+    await new Promise(resolve => setTimeout(resolve, parseFloat(time)))
 
     let component
     if (boolean) {
-        component = await loadComponent(par)
         moveHalo(parseFloat(time))
         await moveMask(parseFloat(time))
+        resetTestModeSwitch()
+        component = await loadComponent(par)
     }
     return component
 }
@@ -212,7 +212,16 @@ export const applyAutoPause = async (lastEvent, value, component) => {
     if (timer === true) component.pause.state = true
 }
 
-export const cancelAutoPause = (lastEvent, pauseState, component) => {
+export const cancelAutoPause = (lastEvent) => {
     pauseTimer(lastEvent, 0)
-    if (pauseState) component.pause.state = true
+}
+
+export const resetTestModeSwitch = async () => {
+    const line = document.getElementById("line")
+    const rangeTestMode = document.getElementById("testMode")
+    if (rangeTestMode && rangeTestMode.shadowRoot) {
+        const input = rangeTestMode.shadowRoot.querySelector("input")
+        input.checked = false
+        input.dispatchEvent(new Event("change"))
+    }
 }

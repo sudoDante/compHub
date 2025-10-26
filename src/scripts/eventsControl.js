@@ -14,7 +14,6 @@ export const loadInterfaceEvents = () => {
     let fullMode = false
     let eventDetail
     let component
-    let pauseState = false
     let lastAutoPauseEvent = { value: 0 }
 
     const loadMenuEvents = async () => {
@@ -25,9 +24,9 @@ export const loadInterfaceEvents = () => {
             const importedConfig = await ifaceLogic.importConfig(eventDetail)
             ifaceLogic.movePanel(true, "right")
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
-            ifaceLogic.drawInfo(eventDetail)
+            await ifaceLogic.drawInfo(eventDetail)
             component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
         })
 
@@ -55,7 +54,7 @@ export const loadInterfaceEvents = () => {
             ifaceLogic.placeTabletView(false)
             ifaceLogic.changePanelsWidth(false)
             eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
         })
 
         tablet.addEventListener("change", async () => {
@@ -66,7 +65,7 @@ export const loadInterfaceEvents = () => {
                 ifaceLogic.placeTabletView(fullMode)
             }
             eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
         })
 
         mobile.addEventListener("change", async () => {
@@ -75,7 +74,7 @@ export const loadInterfaceEvents = () => {
             ifaceLogic.placeTabletView(false)
             ifaceLogic.changePanelsWidth(false)
             eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
         })
 
         fullscreen.addEventListener("change", async (e) => {
@@ -101,7 +100,7 @@ export const loadInterfaceEvents = () => {
 
             await ifaceLogic.changeView(view)
             eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent, pauseState, component)
+            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
         })
     }
 
@@ -116,8 +115,7 @@ export const loadInterfaceEvents = () => {
             console.log(event, value)
 
             if (event === "activeTestMode") {
-                pauseState = value
-                component.pause.state = pauseState
+                component.pause.state = value
 
                 const configComponent = document.getElementById("configMenu").shadowRoot
                 configComponent.dispatchEvent(new CustomEvent("testMode", { detail: { state: value } }))
