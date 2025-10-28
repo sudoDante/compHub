@@ -1,4 +1,3 @@
-import { componentsConfig } from "../config/componentsConfig.js"
 import * as events from "./modules/customEvents.js"
 import * as ifaceLogic from "./interfaceLogic.js"
 import * as iface from "./interface.js"
@@ -7,32 +6,37 @@ export const loadInterfaceEvents = () => {
     const main = document.querySelector("main")
     const configMenu = document.getElementById("configMenu")
     const componentLoadTransition = getComputedStyle(document.documentElement).getPropertyValue("--componentLoad")
-    const testModeBox = document.getElementById("testModeActivatorBox")
+    const pauseModeSwitchBox = document.getElementById("pauseModeSwitchBox")
     const configBox = document.getElementById("configMenu").shadowRoot.getElementById("configBox")
 
     let view = "computerView"
     let fullMode = false
     let eventDetail
     let component
+    let pause = false
     let lastAutoPauseEvent = { value: 0 }
+    let autoPauseTime
 
     const loadMenuEvents = async () => {
         console.log("menu custom events READY: waiting")
 
         document.addEventListener("selectionMenu", async (e) => {
             eventDetail = e.detail
+            pause = false
+            ifaceLogic.resetPauseControl(lastAutoPauseEvent, false)
+
             const importedConfig = await ifaceLogic.importConfig(eventDetail)
             ifaceLogic.movePanel(true, "right")
             if (configBox.children.length > 0) await ifaceLogic.clearInfo()
             await ifaceLogic.drawInfo(eventDetail)
-            component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition)
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
             events.send(configMenu.shadowRoot, "loadConfig", { detail: importedConfig })
+
+            component = await ifaceLogic.newLoadSequence(eventDetail, componentLoadTransition, pause)
         })
 
         document.addEventListener("configLoaded", (e) => {
             ifaceLogic.movePanel(false, "right")
-            if (testModeBox.children.length === 0) iface.loadTestModeBox(testModeBox)
+            if (pauseModeSwitchBox.children.length === 0) iface.loadTestModeBox(pauseModeSwitchBox)
         })
 
         document.addEventListener("controlColorPicker", (e) => {
@@ -53,8 +57,8 @@ export const loadInterfaceEvents = () => {
             await ifaceLogic.changeView("computerView")
             ifaceLogic.placeTabletView(false)
             ifaceLogic.changePanelsWidth(false)
-            eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
+            eventDetail ? component = await ifaceLogic.newLoadSequence(eventDetail, componentLoadTransition, pause, lastAutoPauseEvent) : null
+            ifaceLogic.applyAutoPause(lastAutoPauseEvent, autoPauseTime, component)
         })
 
         tablet.addEventListener("change", async () => {
@@ -64,8 +68,8 @@ export const loadInterfaceEvents = () => {
                 ifaceLogic.changePanelsWidth(true)
                 ifaceLogic.placeTabletView(fullMode)
             }
-            eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
+            eventDetail ? component = await ifaceLogic.newLoadSequence(eventDetail, componentLoadTransition, pause, lastAutoPauseEvent) : null
+            ifaceLogic.applyAutoPause(lastAutoPauseEvent, autoPauseTime, component)
         })
 
         mobile.addEventListener("change", async () => {
@@ -73,8 +77,8 @@ export const loadInterfaceEvents = () => {
             await ifaceLogic.changeView("mobileView")
             ifaceLogic.placeTabletView(false)
             ifaceLogic.changePanelsWidth(false)
-            eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
+            eventDetail ? component = await ifaceLogic.newLoadSequence(eventDetail, componentLoadTransition, pause, lastAutoPauseEvent) : null
+            ifaceLogic.applyAutoPause(lastAutoPauseEvent, autoPauseTime, component)
         })
 
         fullscreen.addEventListener("change", async (e) => {
@@ -99,36 +103,34 @@ export const loadInterfaceEvents = () => {
             }
 
             await ifaceLogic.changeView(view)
-            eventDetail ? component = await ifaceLogic.fullLoad(eventDetail, true, componentLoadTransition) : null
-            ifaceLogic.cancelAutoPause(lastAutoPauseEvent)
+            eventDetail ? component = await ifaceLogic.newLoadSequence(eventDetail, componentLoadTransition, pause, lastAutoPauseEvent) : null
+            ifaceLogic.applyAutoPause(lastAutoPauseEvent, autoPauseTime, component)
         })
     }
 
     const loadPauseEvents = async () => {
         console.log("pause custom events READY: waiting")
-        const testModeComponentTransition = parseFloat(getComputedStyle(document.getElementById("configMenu").shadowRoot.host).getPropertyValue("--fastTransition"))
 
-        document.addEventListener("testMode", async (e) => {
-            const event = Object.entries(e.detail)[0][0]
-            const value = Object.entries(e.detail)[0][1]
+        document.addEventListener("pauseMode", async (e) => {
+            pause = e.detail
+            component.pause.state = e.detail
+            const transition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fastTransition"))
 
-            console.log(event, value)
-
-            if (event === "activeTestMode") {
-                component.pause.state = value
-
-                const configComponent = document.getElementById("configMenu").shadowRoot
-                configComponent.dispatchEvent(new CustomEvent("testMode", { detail: { state: value } }))
-                await new Promise(resolve => setTimeout(resolve, testModeComponentTransition))
-                configComponent.dispatchEvent(new CustomEvent("testMode", { detail: { rangeValue: 0 } }))
-                await ifaceLogic.expandInfoPauseBox(value)
-                ifaceLogic.pauseTimer(lastAutoPauseEvent, 0)
-            }
-
-            if (event === "autoPause") {
-                ifaceLogic.applyAutoPause(lastAutoPauseEvent, value, component)
+            if (e.detail) {
+                ifaceLogic.expandInfoPauseBox(true)
+                await new Promise(resolve => setTimeout(resolve, transition))
+                configMenu.autoPauseVisible.state = true
+            } else {
+                await ifaceLogic.expandInfoPauseBox(false)
+                await new Promise(resolve => setTimeout(resolve, transition))
+                configMenu.autoPauseVisible.state = false
             }
         })
+
+        document.addEventListener("autoPause", (e) => {
+            autoPauseTime = e.detail
+            ifaceLogic.applyAutoPause(lastAutoPauseEvent, autoPauseTime, component)
+       })
     }
 
     loadViewsEvents()

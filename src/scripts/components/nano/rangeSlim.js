@@ -211,7 +211,7 @@ export class rangeSlim extends HTMLElement {
             })
 
             input.addEventListener("mouseup", () => {
-                this.eventDom.dispatchEvent(new CustomEvent(this.eventName, { detail: { [this.eventItem]: Number(input.value) } }))
+                this.eventDom.dispatchEvent(new CustomEvent(this.eventName, { detail: Number(input.value) }))
             })
         }
 

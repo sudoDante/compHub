@@ -81,7 +81,6 @@ export class emptyComponent extends HTMLElement {
                                     border: 1px solid rgba(65, 65, 65, 1);
                                     background: rgba(34, 34, 34, 1);
                                     clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
-                                    animation: wave var(--animationTime) infinite ease-in-out var(--animationDelay);
                                 }
                             }
                             
@@ -133,27 +132,23 @@ export class emptyComponent extends HTMLElement {
 
             @keyframes beat {
                 0%   { transform: scale(1); }
-                5%  { transform: scale(1.6); }
-                10%  { transform: scale(1); }
-                15%  { transform: scale(1.6); }
-                20%  { transform: scale(1); }
+                2%  { transform: scale(1.6); }
+                4%  { transform: scale(1); }
+                6%  { transform: scale(1.6); }
+                8%  { transform: scale(1); }
                 100% { transform: scale(1); }
             }
         `
 
-        this.pause = {}
-        this.pauseControl = () => {
-            this.pause = new Proxy({ state: false }, {
-                set: (target, prop, value) => {
-                    target[prop] = value
+        this.pause = new Proxy({ state: false }, {
+            set: (target, prop, value) => {
+                target[prop] = value
 
-                    if (prop === "state") this.pauseResumeAnimation()
-                    return true
-                }
-            })
-        }
+                if (prop === "state") this.pauseResumeAnimation()
+                return true
+            }
+        })
     }
-
 
     connectedCallback() {
         const startDelay = "1000ms"
@@ -165,14 +160,14 @@ export class emptyComponent extends HTMLElement {
         const animationDelay = "80ms"
 
         const css = {
-                "startDelay": startDelay,
-                "boxWidth": boxWidth,
-                "boxHeight": boxHeight,
-                "boxPadding": boxPadding,
-                "test": "Test Mode",
-                "animationTime": animationTime,
-                "animationDelay": animationDelay
-            }
+            "startDelay": startDelay,
+            "boxWidth": boxWidth,
+            "boxHeight": boxHeight,
+            "boxPadding": boxPadding,
+            "test": "Test Mode",
+            "animationTime": animationTime,
+            "animationDelay": animationDelay
+        }
 
         const applyConfCss = (css) => {
             Object.entries(css).forEach(([key, value]) => {
@@ -190,17 +185,19 @@ export class emptyComponent extends HTMLElement {
                 const bar = element.add(barsBox, "div", null, "bar")
                 const textBar = element.add(bar, "div", null)
             }
+        }
 
+        const startAnimations = () => {
             const bars = Array.from(this.dom.querySelectorAll(".bar"))
-            console.log(barsNum, eqWidth)
-            for (let i = 0; i < barsNum; i++) {
+
+            for (let i = 0; i < bars.length; i++) {
                 bars[i].style.animation = `wave ${parseFloat(animationTime)}ms infinite ease-in-out ${i * parseFloat(animationDelay)}ms`
             }
         }
 
         const startBeats = () => {
             const heart = this.dom.querySelector(".heart")
-            heart.style.animation = "beat 4s infinite ease-in-out"
+            heart.style.animation = "beat 12s infinite ease-in-out 5s"
         }
 
         this.pauseResumeAnimation = () => {
@@ -219,11 +216,15 @@ export class emptyComponent extends HTMLElement {
 
         const main = async () => {
             applyConfCss(css)
-            await new Promise(resolve => setTimeout(resolve, startDelay))
             await createBars()
-/*             startBeats()
- */
-            this.pauseControl()
+
+
+
+            await new Promise(resolve => setTimeout(resolve, parseFloat(startDelay)))
+            startAnimations()
+            startBeats()
+
+            document.dispatchEvent(new CustomEvent("componentLoad", { detail: this }))
         }
 
         main()

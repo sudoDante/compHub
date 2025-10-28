@@ -77,7 +77,7 @@ export class matrix extends HTMLElement {
             }
         `
 
-        this.pause = {state: false}
+        this.pause = { state: false }
     }
 
 
@@ -219,6 +219,8 @@ export class matrix extends HTMLElement {
             }
 
             initMatrix()
+
+            document.dispatchEvent(new CustomEvent("componentLoad", { detail: this }))
 
             /* left to implement attributeChangedCallback REACTIVE*/
         }

@@ -162,6 +162,7 @@ export class switchSlim extends HTMLElement {
             const on = this.dom.getElementById("on")
             const off = this.dom.getElementById("off")
             const config = getConfig()
+            const transition = parseFloat(getComputedStyle(this).getPropertyValue("--transition"))
 
             if (config.logic.checked === "true") input.checked = true
 
@@ -176,9 +177,10 @@ export class switchSlim extends HTMLElement {
                 off.style.fontSize = "16px"
             }
 
-            input.addEventListener("change", () => {
-                this.eventDom.dispatchEvent(new CustomEvent(this.eventName, { detail: { [this.eventItem]: input.checked } }))
+            input.addEventListener("change", async () => {
                 changeText(input, [on, off])
+                await new Promise(resolve => setTimeout(resolve, transition))
+                this.eventDom.dispatchEvent(new CustomEvent(this.eventName, { detail: input.checked }))
             })
         }
         main()

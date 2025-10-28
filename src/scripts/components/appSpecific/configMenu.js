@@ -153,6 +153,29 @@ export class configMenu extends HTMLElement {
                 }
             }
         `
+
+        this.autoPauseVisible = new Proxy({ state: false }, {
+            set: (target, prop, value) => {
+                target[prop] = value
+
+                if (prop === "state") this.moveTestBox(value)
+                return true
+            }
+        })
+    }
+
+    moveTestBox = (boolean) => {
+        const testModeBox = this.dom.querySelector(".testModeBox")
+        const configBox = this.dom.querySelector(".configBox")
+        const testBoxHeight = parseFloat(getComputedStyle(this).getPropertyValue("--testBoxHeight"))
+
+        if (boolean) {
+            testModeBox.style.top = 0
+            configBox.style.top = 0
+        } else {
+            testModeBox.style.top = `${testBoxHeight * -1}px`
+            configBox.style.top = `${testBoxHeight * -1}px`
+        }
     }
 
     connectedCallback() {
@@ -194,7 +217,7 @@ export class configMenu extends HTMLElement {
             const testModeBox = this.dom.querySelector(".testModeBox")
             const iconBack = element.add(testModeBox, "div", null, "iconBack")
             iconBack.textContent = "timer_pause"
-            testModeBox.querySelector(".titleTest").textContent = "Test Mode"
+            testModeBox.querySelector(".titleTest").textContent = "Pause Mode"
             const range = await element.add(testModeBox, "range-slim", "pauseInput", "pauseInput", {
                 "title": "Auto-pause",
                 "min": 0,
@@ -211,23 +234,8 @@ export class configMenu extends HTMLElement {
                 "eventName": "pause"
             }, {
                 eventDom: document,
-                eventName: "testMode",
-                eventItem: "autoPause"
+                eventName: "autoPause"
             })
-        }
-
-        const moveTestBox = (boolean) => {
-            const testModeBox = this.dom.querySelector(".testModeBox")
-            const configBox = this.dom.querySelector(".configBox")
-            const testBoxHeight = parseFloat(getComputedStyle(this).getPropertyValue("--testBoxHeight"))
-
-            if (boolean) {
-                testModeBox.style.top = 0
-                configBox.style.top = 0
-            } else {
-                testModeBox.style.top = `${testBoxHeight * -1}px`
-                configBox.style.top = `${testBoxHeight * -1}px`
-            }
         }
 
         const drawConfig = async (config, container) => {
@@ -317,7 +325,6 @@ export class configMenu extends HTMLElement {
 
             this.dom.addEventListener("testMode", (e) => {
                 Object.entries(e.detail).forEach(([key, value]) => {
-                    if (key === "state") moveTestBox(value)
                     if (key === "rangeValue") {
                         const rangeInput = this.dom.getElementById("pauseInput")
                         rangeInput.applyRangeValue(value)

@@ -1,4 +1,3 @@
-import * as event from "./modules/customEvents.js"
 import { componentsConfig } from "./../config/componentsConfig.js"
 import * as element from "./modules/elements.js"
 
@@ -12,18 +11,31 @@ export const loadComponent = async (par) => {
     return component
 }
 
-export const fullLoad = async (par, boolean, time) => {
-    await new Promise(resolve => setTimeout(resolve, parseFloat(time)))
-
-    let component
-    if (boolean) {
-        moveHalo(parseFloat(time))
-        await moveMask(parseFloat(time))
-        resetTestModeSwitch()
-        component = await loadComponent(par)
+const pauseAtLoad = async (pauseState) => {
+    if (pauseState) {
+        console.log("esperando")
+        await new Promise(resolve => {
+            document.addEventListener("componentLoad", (e) => {
+                const component = e.detail
+                component.pause.state = true
+                console.log("pausa por estado anterior")
+                resolve()
+            }, { once: true })
+        })
     }
-    return component
 }
+
+export const newLoadSequence = async (par, time, pauseState, lastAutoPauseEvent = null) => {
+    let oldPauseTimer
+    if (pauseState && lastAutoPauseEvent) { oldPauseTimer = lastAutoPauseEvent.value; pauseTimer(lastAutoPauseEvent, 0) }
+    await new Promise(resolve => setTimeout(resolve, parseFloat(time)))
+    moveHalo(parseFloat(time))
+    await moveMask(parseFloat(time))
+    if (!lastAutoPauseEvent) pauseAtLoad(pauseState)
+    const component = await loadComponent(par)
+    if (pauseState && lastAutoPauseEvent) { pauseTimer(lastAutoPauseEvent, oldPauseTimer) }
+    return component
+} /* DONT TOUCH */
 
 export const applyBacksRestart = () => {
     const restartBackImage = document.getElementById("restartBackImage")
@@ -35,7 +47,6 @@ export const applyBacksRestart = () => {
 }
 
 export const changeView = async (view) => {
-
     const inactiveBox = identifyBoxes("inactive")
     inactiveBox.innerHTML = ""
     const widthBox = window.innerWidth
@@ -89,8 +100,8 @@ export const drawInfo = async (par) => {
     infoName.textContent = ""
     infoName.textContent = name.toUpperCase()
     infoFamily.textContent = family
-
     infoTitlesBox.style.clipPath = "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)"
+    
     await new Promise(resolve => { setTimeout(resolve, delay) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
 }
 
@@ -100,6 +111,7 @@ export const clearInfo = async () => {
     infoTitlesBox.style.transition = transition
     infoTitlesBox.style.clipPath = "polygon(0 0, 0 0, 0 100%, 0% 100%)"
     infoTitlesBox.style.transition = transition
+    
     await new Promise(resolve => { setTimeout(resolve, transition) }) /* <-- ATTENTION LIST TRANSITIONS DELAY. BETTER PERFORMANCE */
 }
 
@@ -148,11 +160,9 @@ export const importConfig = async (par) => {
     return componentConf.config
 }
 
-export const expandInfoPauseBox = async (boolean) => {
+export const expandInfoPauseBox = (boolean) => {
     const infoPauseBox = document.getElementById("infoPauseBox")
-    const transition = parseFloat(getComputedStyle(document.getElementById("infoPauseBox")).transition) * 1000
     infoPauseBox.style.width = boolean ? "54px" : 0
-    await new Promise(resolve => setTimeout(resolve, transition))
 }
 
 export const placeTabletView = (boolean) => {
@@ -172,37 +182,40 @@ export const changePanelsWidth = (boolean) => {
     }
 }
 
-export const pauseTimer = async (lastEvent, value) => {
+export const pauseTimer = async (lastAutoPauseEvent, value, component) => {
     const icon = document.getElementById("infoPauseIcon")
     const timer = document.getElementById("infoPauseTimer")
-    const defaultColor = getComputedStyle(document.documentElement).getPropertyValue("--textActive")
     let countDown = value
-    lastEvent.value = value
+    lastAutoPauseEvent.value = value
+
+    timer.classList.replace("toIcon", "toNumber")
+    timer.textContent = countDown
 
     if (value === 0) {
         timer.classList.replace("toNumber", "toIcon")
         timer.textContent = "pause_circle"
         icon.textContent = ""
-    } else {
-        icon.style.color = `${defaultColor}`
+        return
     }
 
-    while (countDown > 0) {
+    const loop = () => {
         icon.textContent = "play_pause"
         timer.classList.replace("toIcon", "toNumber")
-        countDown -= 1
 
-        if (countDown > 0) {
-            timer.textContent = countDown
-        } else {
+        if (countDown > 0) { timer.textContent = countDown }
+        else {
             timer.classList.replace("toNumber", "toIcon")
-            timer.textContent = "pause"
-            icon.style.color = "grey"
-            return true
+            timer.textContent = "pause_circle"
+            icon.textContent = ""
         }
+        countDown -= 1
+    }
 
+    for (let i = countDown; i >= 0; i--) {
+        loop()
+        if (i === 0) return true
         await new Promise(resolve => { setTimeout(resolve, 1000) })
-        if (value !== lastEvent.value) return
+        if (value !== lastAutoPauseEvent.value) return
     }
 }
 
@@ -212,16 +225,28 @@ export const applyAutoPause = async (lastEvent, value, component) => {
     if (timer === true) component.pause.state = true
 }
 
-export const cancelAutoPause = (lastEvent) => {
-    pauseTimer(lastEvent, 0)
+const changeAutoPause = (value) => {
+    const autoPauseRange = configMenu.shadowRoot.getElementById("pauseInput")
+    autoPauseRange.applyRangeValue(value)
+    autoPauseRange.applyInfoValue(value)
+    autoPauseRange.applyPosition(value)
 }
 
-export const resetTestModeSwitch = async () => {
-    const line = document.getElementById("line")
-    const rangeTestMode = document.getElementById("testMode")
-    if (rangeTestMode && rangeTestMode.shadowRoot) {
-        const input = rangeTestMode.shadowRoot.querySelector("input")
+export const resetPauseControl = async (lastAutoPauseEvent, boolean) => {
+    const pauseMode = document.getElementById("testMode")
+    const configMenu = document.getElementById("configMenu")
+    const menuTransition = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--barsTransition"))
+
+    if (pauseMode && pauseMode.shadowRoot) {
+        /* switch */
+        expandInfoPauseBox(false)
+        const input = pauseMode.shadowRoot.querySelector("input")
         input.checked = false
-        input.dispatchEvent(new Event("change"))
+        /* autoPauseBox */
+        await new Promise(resolve => setTimeout(resolve, menuTransition))
+        configMenu.autoPauseVisible.state = false
+        /* timer */
+        pauseTimer(lastAutoPauseEvent, 0)
+        changeAutoPause(0)
     }
 }
